@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-09-01",
+  "upstream": {
+    "promoted": {
+      "tag": "1.0.1",
+      "commit": "c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43"
+    },
+    "lastObserved": {
+      "stableTag": "1.0.1",
+      "stableCommit": "c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43",
+      "mainCommit": "1b22409b5297dbb710843cc4493d9b7a4a303bdc",
+      "observedAt": "2026-09-01T02:42:45-05:00"
+    },
+    "candidate": null,
+    "patchSetSha256": "8f9e051ed2d643a39a4618acd0c31f3072317732bd29ade1a8687256e91b9505",
+    "recursiveManifestSha256": "bebfa8f085ae40eafed4ca3d79fbbd7bf5566114a550b11878fba181c7ffc088"
+  },
+  "references": {
+    "dk64Recompiled": {
+      "url": "https://github.com/Rainchus/Donkey-Kong-64-Recompiled.git",
+      "commit": "c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43",
+      "purpose": "Promoted game implementation and archived initial desktop baseline",
+      "licensePath": "LICENSE"
+    },
+    "paperpad": {
+      "url": "https://github.com/chrissotraidis/paperpad.git",
+      "commit": "74b6e45830a06c7f274c5ac1ddd7c625bc13a557",
+      "purpose": "README/docs, touch UI including three-dot menu, and N64 Apple substrate reference",
+      "licensePath": "RIGHTS_AND_LICENSES.md"
+    },
+    "sdl2": {
+      "url": "https://github.com/libsdl-org/SDL.git",
+      "commit": "5d249570393f7a37e037abf22cd6012a4cc56a71",
+      "purpose": "SDL 2.32.10 source pinned by PaperPad for the static macOS and Apple mobile builds",
+      "licensePath": "LICENSE.txt"
+    },
+    "sunpad": {
+      "url": "https://github.com/chrissotraidis/sunpad.git",
+      "commit": "e43f0ea6b797e5110787171957c9dc3c6213269c",
+      "purpose": "Additional Apple product-shell, lifecycle, diagnostics, and acceptance reference",
+      "licensePath": "LICENSE"
+    },
+    "n64RecompHostTools": {
+      "url": "https://github.com/Mr-Wiseguy/N64Recomp.git",
+      "commit": "2b6f05688de2abc7d86da5b4a89b84c2c6acbabe",
+      "purpose": "Released DK64 workflow pin for N64Recomp and RSPRecomp host generation",
+      "licensePath": "LICENSE.md",
+      "recursiveManifestSha256": "27357f050f3dc6be8470d1471c2487557941d4a0161404019788a46e9d62ad6b"
+    }
+  },
+  "dk64DirectSubmodules": {
+    "N64ModernRuntime": "45bd0180f85c89c19ae45d30190be54c9d577904",
+    "RecompFrontend": "6d187f7964a44801a4095287acc23a043033aff3",
+    "dk64Decomp": "2431154b417d4e80a6bfaf38291213c059be59f7",
+    "rt64": "cc6d137a3cca95faa018f24ebb5ca765dbfa7cf2",
+    "vcpkg": "114d9fe62faf35856b45cf55cb93b57028a45d63"
+  },
+  "criticalNestedPins": {
+    "N64Recomp": "81213c1831fab2521a6a5459c67b63437d67e253",
+    "ELFIO": "ad8b641f9682b6091ba8b9f7c8152255c1a2c803",
+    "fmt": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+    "rabbitizer": "e0d8003047938e2ec3697eaf8d61a84d11d17b43",
+    "sljit": "f6326087b3404efb07c6d3deed97b3c3b8098c0c",
+    "tomlplusplus": "1f7884e59165e517462f922e7b6de131bd9844f3"
+  },
+  "paperpadAppleInputs": {
+    "sdl2": "5d249570393f7a37e037abf22cd6012a4cc56a71",
+    "zstd": "794ea1b0afca0f020f4e57b6732332231fb23c70",
+    "notes": "Resolve and validate the full compatible Apple graph during the controlled G3 integration decision; do not substitute floating packages."
+  },
+  "rom": {
+    "title": "Donkey Kong 64 (US/NTSC-U 1.0)",
+    "normalizedByteOrder": "z64-big-endian",
+    "size": 33554432,
+    "sha1": "cf806ff2603640a748fca5026ded28802f1f4a50",
+    "redistribution": "forbidden"
+  }
+}

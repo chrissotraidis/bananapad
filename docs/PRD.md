@@ -4,7 +4,9 @@ Status: approved for **gated autonomous execution**. Written 31 Aug 2026.
 Audience: an autonomous agentic system with full control of a macOS Apple Silicon machine.
 Companion document: `docs/GOAL-LOOP.md` (the operating loop). Read both before doing anything.
 
-Decision: **GO for a private technical porting program. NO-GO for public source or binary distribution until the static-code, complete-game, physical-device, package-safety, GPL/dependency, game-rights, and explicit-approval gates in this document are satisfied.**
+Decision: **GO for a private technical porting program. NO-GO for public source or binary distribution until the static-code, mobile-product, physical-device, package-safety, GPL/dependency, game-rights, and explicit-approval gates in this document are satisfied.**
+
+Scope correction (1 Sep 2026): DK64Recompiled is accepted as the working game implementation. Its boot/play baseline is already proven and is not the active workstream. BananaPad now finishes the iOS/iPadOS product: PaperPad's touch UI and persistent three-dot menu copied verbatim, DK64 control mapping and multi-touch chords, controller ownership, ROM/save management, lifecycle, mobile builds, documentation, and a reversible upstream-update lane. Full-game investigation is reopened only for a named BananaPad regression or an upstream-candidate compatibility failure.
 
 ---
 
@@ -17,8 +19,8 @@ This is an integration and hardening project, not a new DK64 recompilation from 
 Three references have different, non-interchangeable jobs:
 
 - **`ref/dk64-recompiled`** is the game implementation and currently promoted upstream desktop baseline; `1.0.1` is the archived initial anchor, not a forever pin.
-- **`ref/paperpad`** is the N64Recomp/N64ModernRuntime/RT64 Apple reference: AOT-only Apple builds, no-dynamic-code runtime profile, Metal integration, N64 touch/input plumbing, ROM management, controller ownership, lifecycle, diagnostics, deterministic scripts, and package audits.
-- **`ref/sunpad`** is the product-shell reference requested for the three-dot menu and touch experience: native UIKit layout, loading phases, normalized multi-touch input, editable device-specific layouts, controller handoff, Game Data & Saves organization, settings, diagnostics/reporting, app-icon provenance, and mobile acceptance discipline.
+- **`ref/paperpad`** is the authoritative N64 Apple UI and runtime reference: its applicable touch UI and persistent three-dot menu are copied verbatim, alongside its AOT-only Apple build, Metal, input, ROM-management, controller, lifecycle, diagnostics, deterministic-build, and package-safety mechanisms.
+- **`ref/sunpad`** is a secondary product-shell reference for additional loading, diagnostics, controller, app-identity, and acceptance ideas. It must not replace or cosmetically reinterpret the required PaperPad touch/menu implementation.
 
 The user supplies their own legally obtained supported ROM. The runtime app accepts only the standard verified US ROM. A separate ignored decompressed ROM is derived locally only for N64Recomp/RSPRecomp generation. No ROM, decompressed ROM, generated game code, generated patch code, extracted game data, or save is committed or distributed.
 
@@ -31,10 +33,10 @@ Order of delivery:
 3. **Upstream synchronization lane.** Provide scripts and records that discover newer stable tags or selected bug-fix commits, stage them in an isolated worktree, categorize the delta, reapply BananaPad's exact patch series, regenerate all derived output, run affected tests, and promote or roll back one reviewable pin change.
 4. **Mobile-safe static-code boundary.** Inventory upstream game patches, mod hooks, overlays, RSP, saves, and desktop services. Remove the need for writable-executable memory, JIT, LiveRecomp, TCC, runtime C compilation, dynamic user code, and the upstream writable-text linker route. Required game patches must be linked ahead of time or represented by writable data dispatch tables, never writable code pages.
 5. **Hardened macOS core.** Build BananaPad on macOS through the same static core and PaperPad-derived runtime profile intended for iOS/iPadOS. Replace the desktop RmlUi launcher with a minimal BananaPad-owned native shell before mobile promotion.
-6. **macOS first-play loop.** Verify ROM import, title, Adventure file creation, opening tutorial, DK Isles, first Golden Banana, Jungle Japes gameplay objective, persistence, clean exit, and reload.
-7. **Complete macOS game path.** Complete required progression through every world, required bosses, embedded arcade/Jetpac coin gates, Hideout Helm, K. Rool, credits, and save reload. Exercise all named compressed-code classes and major Kong/game systems.
+6. **Shared-core integration smoke.** Verify ROM import, title, Adventure file creation, real gameplay input, a map transition, persistence, clean exit, and reload. The accepted DK64Recompiled project owns full-game correctness.
+7. **Mobile product completion.** Finish the iPadOS/iOS touch controls, three-dot menu, settings, controller handoff, ROM/save management, lifecycle, orientation, diagnostics, and sustained-operation paths.
 8. **iPadOS and iOS Simulator cores.** Build iPad Simulator first, shut it down, then build iPhone Simulator, always with one Simulator and one game instance at a time.
-9. **SunPad/PaperPad Apple shell.** Port the three-dot menu, touch layout, settings, ROM/saves flow, controller handoff, loading states, diagnostics, lifecycle, and package machinery. Adapt the controls to DK64's N64 semantics and multi-touch chords.
+9. **PaperPad Apple shell.** Preserve PaperPad's touch layout and persistent three-dot menu verbatim; connect them to DK64's N64 semantics, multi-touch chords, settings, ROM/saves flow, controller handoff, loading states, diagnostics, lifecycle, and package machinery. Reuse SunPad only for complementary mechanisms that do not change the PaperPad UI contract.
 10. **Original app identity.** Create a rights-clean BananaPad app icon and asset catalog for iPhone/iPad, record provenance, and verify presentation in the Home Screen, app switcher, Settings/search, light/dark/tinted appearances where supported, and packaged candidate.
 11. **End-to-end and physical-device acceptance.** Complete the test matrix in Section 10, then obtain hands-on iPad/iPhone evidence from Chris against the exact artifact.
 12. **Public release gate.** Satisfy GPL and dependency obligations, separate source and binary rights decisions, audit every package boundary, and publish nothing until Section 12 is green.
@@ -43,7 +45,7 @@ Five requirements are hard, not aspirational:
 
 - **The mobile build must be genuinely AOT/static.** A sideloaded app that needs JIT, unsigned executable memory, writable text, a dynamic recompilation service, or user-supplied executable mods is not BananaPad's accepted iOS/iPadOS architecture.
 - **The first-play loop must work end to end.** Generated C, a successful link, a process ID, a launcher, a title screen, or a save file created without observed gameplay is not a playable port.
-- **The complete required game path and special code paths must work.** A Jungle Japes demo, controller-only mobile build, build that skips arcade/Jetpac, or build whose enhanced modes hide baseline defects is not complete.
+- **The mobile product paths must work.** A title-screen-only, controller-only, stale-input, unsafe-ROM-management, or misleading-settings build is not complete. DK64Recompiled remains responsible for the game path unless BananaPad introduces a named regression.
 - **BananaPad must not become a dead-end fork.** `1.0.1` is a bootstrap anchor. Later upstream stable releases and exact bug-fix commits must remain consumable through a scripted, isolated, reviewable, reversible update path; copied vendor source and untracked in-place edits are not acceptable architecture.
 - **A public candidate requires exact-artifact device testing and explicit release clearance.** GPL source availability and a ROM-free package do not by themselves decide whether the translated game binary may be distributed.
 
@@ -54,12 +56,12 @@ All of the following, each backed by evidence per Section 11:
 - **D1. Exact inputs and deterministic generation.** The supplied ROM is normalized to big-endian `.z64`, is exactly 33,554,432 bytes, and matches SHA-1 `cf806ff2603640a748fca5026ded28802f1f4a50`. The pinned decompressor produces the ignored `donkeykong64.decompressed.us.z64`; N64Recomp, RSPRecomp, symbol files, game output, patch output, patch data, and `rsp/n_aspMain.cpp` are generated reproducibly. Every input/output hash and command is recorded.
 - **D2. Initial upstream macOS baseline and update lane.** DK64Recompiled `1.0.1` builds from source on Apple Silicon macOS, accepts the standard ROM, reaches normal gameplay, produces working video/audio/input, writes progress, exits, relaunches, and restores progress. Its entitlements, writable-code assumptions, launcher behavior, save path/format, and known defects are archived as the initial comparison—not inherited silently. BananaPad can also detect, stage, patch-rebase, regenerate, test, promote, and roll back a later upstream tag or selected fix commit without mutating the last known-good promoted state.
 - **D3. Mobile-safe execution model.** BananaPad's game and required patch functions are ahead-of-time native code. The iOS/iPadOS profile excludes LiveRecomp, JIT, TCC, runtime compiler invocation, downloaded/user executable code, and writable-executable mappings. Required static patch behavior survives without the upstream `allow-jit`, `allow-unsigned-executable-memory`, `disable-executable-page-protection`, or disabled-library-validation exceptions. Every generated game/patch section and dispatch mechanism is inventoried and testable.
-- **D4. Hardened macOS first-play loop.** The BananaPad macOS app imports/verifies the standard ROM, reaches title/intro, creates or selects an Adventure file, completes the opening Training Grounds route, reaches DK Isles, collects the first Golden Banana, enters Jungle Japes, completes one documented in-level Golden Banana objective, persists progress, exits cleanly, relaunches, and visibly restores the same file/progress with working Metal rendering, audio, input, overlays, patches, and diagnostics.
-- **D5. Complete required progression.** From a fresh save, a golden path reaches Jungle Japes, Angry Aztec, Frantic Factory, Gloomy Galleon, Fungi Forest, Crystal Caves, Creepy Castle, and Hideout Helm; unlocks all five Kongs; obtains the moves/items/keys/coins required to progress; completes required bosses; obtains the Nintendo Coin and Rareware Coin through the embedded Donkey Kong arcade and Jetpac paths; completes Hideout Helm and the final K. Rool sequence; reaches credits; and reloads the completed save without a progression blocker.
-- **D6. Special-code and gameplay-system coverage.** The `menu`, `minecart`, `bonus`, `race`, `critter`, `boss`, `arcade`, and `jetpac` code classes each load, execute, return, and leave no stale mapping. Kong switching, tag barrels, Cranky/Funky/Candy/Snide flows, weapons, instruments, oranges, first-person aiming, fairy camera, swimming, boats, transformations/animal helpers, minecarts, races, bonus barrels, Troff 'n' Scoff, B. Locker, loading zones, boss doors, arcade, and Jetpac have observed representative coverage. The upstream multiplayer feature remains disabled/WIP unless separately approved and does not block baseline completion.
+- **D4. Hardened shared-core smoke.** The BananaPad macOS app imports/verifies the standard ROM, reaches title and real gameplay, accepts camera/action input, crosses a loading boundary, persists a save, exits cleanly, relaunches, and visibly restores the same file with working Metal rendering, audio, input, overlays, patches, and diagnostics.
+- **D5. Upstream gameplay contract preserved.** The promoted DK64Recompiled pin is the accepted game source of truth. BananaPad does not alter progression logic, compressed-game code, overlay layout, patch semantics, RSP behavior, or save format except through an explicit reviewed patch. Full-game replay is required only when an Apple-owned change or upstream update creates a named compatibility risk.
+- **D6. Mobile interaction coverage.** Every baseline N64 control, DK64 multi-touch chord, camera mode, native-menu boundary, controller takeover/release, lifecycle boundary, ROM action, and save-preservation path required by the Apple shell has observed coverage on the applicable form factors. Upstream multiplayer remains disabled/WIP unless separately approved.
 - **D7. Timing, rendering, audio, and enhancement correctness.** Original-framing and original-cadence modes provide a stable baseline. Frame pacing, game update timing, audio pitch/continuity, input response, cutscenes, HUD, fog/depth/effects, loading, and save behavior are measured. Upstream high-framerate, widescreen/ultrawide logic, analog camera, draw distance, story skip, lightning reduction, gyro/controller options, and other enhancements are retained only where their exact mobile settings pass the matrix and never hide a baseline failure.
 - **D8. Simulator core.** iPadOS Simulator and iOS Simulator builds complete the first-play loop with the same AOT/static core, overlay registration, static patch profile, RSP path, Metal renderer, and save implementation. Simulator measurements are diagnostic only and are never converted into physical-device claims.
-- **D9. Apple shell and app identity.** SunPad's three-dot menu and touch product architecture plus PaperPad's N64/RT64 Apple mechanisms are adapted as BananaPad. ROM import/reimport/remove, save status, settings, controller ownership, diagnostics, report flow, loading states, lifecycle, landscape safe areas, and all required DK64 controls/chords work on iPad and iPhone. A rights-clean original BananaPad app icon and provenance file are packaged correctly.
+- **D9. Apple shell and app identity.** PaperPad's applicable touch UI and persistent three-dot menu remain byte-identical; BananaPad connects that exact shell to DK64 and adapts only names, game-specific settings/controls, and required platform integration outside the protected UI source. ROM import/reimport/remove, save status, settings, controller ownership, diagnostics, report flow, loading states, lifecycle, landscape safe areas, and all required DK64 controls/chords work on iPad and iPhone. A rights-clean original BananaPad app icon and provenance file are packaged correctly.
 - **D10. Stability and persistence.** Background/foreground, phone interruption, audio route change, controller connect/disconnect, orientation reversal, native UI presentation, renderer recreation, memory warning, app termination, ROM reimport/removal, repeated loading zones, repeated special-overlay transitions, repeated EEPROM writes, and a minimum 90-minute soak complete without stuck input, save corruption, sustained audio underrun/static, orphan processes, unbounded memory growth, or an entitlement/runtime-code regression.
 - **D11. Reproducibility, updateability, and auditability.** Technical matrix rows 1–33 are green, host tests and scripted smoke routes are green, and the full macOS/Simulator pipeline reproduces from a clean checkout using scripts, pinned public source, and the user's local ROM alone. The upstream synchronization workflow has been rehearsed end to end in an isolated candidate state, including categorized diff, exact patch reapplication, regeneration, affected tests, promotion metadata, and rollback. No upstream private CI input or undocumented terminal/update step is required. Repository, entitlement, Mach-O, and package audits are executable and green.
 - **D12. Public candidate.** The exact source revision and exact binary/IPA candidate pass physical iPad/iPhone hands-on testing, repository/package audits, app-icon provenance review, third-party notices, GPL/dependency obligations, and the separate source/binary rights gate in Section 12. Chris explicitly approves that exact artifact.
@@ -72,7 +74,7 @@ Explicit non-goals for the baseline candidate:
 - Texture-pack loading or arbitrary replacement assets in the first mobile candidate. Revisit only after D1–D11.
 - Repairing or productizing upstream multiplayer. The upstream settings describe it as work in progress/non-functional; keep it disabled unless a separate PRD authorizes it.
 - New cheats, randomizer integration, save-state systems, free camera, gameplay rebalance, or new content.
-- A blanket “101% complete” claim. A fresh-save route to final credits is required; a 101% claim requires a separately observed 101% file and full-content evidence. Later-game fixtures do not justify that wording.
+- A blanket “101% complete” claim. BananaPad inherits the upstream game and makes no independent completion-percentage claim.
 - Making high frame rate, widescreen, analog camera, draw-distance expansion, gyro, or other enhancements the only supported path. Baseline correctness comes first; enhancements remain selectable only after their own evidence.
 - A new device-motion gyro implementation as a baseline blocker. Existing physical-controller gyro may remain experimental when inherited safely; mobile device motion requires a separate acceptance path.
 - Vision Pro, Apple TV, Android, Windows, Linux, Steam Deck, Intel macOS, or Mac App Store work. Upstream may support other desktops; BananaPad's scope is Apple Silicon macOS, iPadOS, and iOS.
@@ -97,7 +99,7 @@ Validated facts that materially reduce the porting risk:
 - **The upstream input/feature layer is source-visible.** DK64's A/B/Z/R/Start/C-button semantics, original/analog camera modes, inversion/sensitivity, story skip, lightning setting, draw distance, volume, rumble/gyro flags, high-frame-rate and widescreen hooks are visible and can be adapted deliberately.
 - **The renderer already has an Apple Metal path.** The upstream macOS build creates an SDL Metal window and passes a `CAMetalLayer` into RT64. BananaPad does not need to invent a renderer backend.
 - **PaperPad has already solved the closest N64 mobile substrate.** Its pinned build compiles generated N64 game/RSP code into an iOS/iPadOS app, turns on `N64MODERN_NO_DYNAMIC_CODE`, uses RT64 Metal, supports native ROM management, N64 multi-touch, physical controllers, diagnostics, lifecycle, clean exit, and package audits.
-- **SunPad has already solved the requested mobile interaction shell.** Its pinned iPhone/iPad implementation includes a three-dot menu, 1x–4x render scale, aspect modes, touch opacity/size/edit/reset, controller auto-hide/handoff, loading phases, Game Data & Saves actions, diagnostics/reporting, device-specific layouts, app-icon provenance, and physical iPad evidence.
+- **PaperPad supplies the requested mobile interaction shell.** Its pinned iPhone/iPad implementation is the source of the verbatim touch UI and persistent three-dot menu, including render/aspect options, touch opacity/size/edit/reset, controller auto-hide/handoff, ROM actions, diagnostics, and device-specific layouts. SunPad remains useful for complementary loading, testing, provenance, and physical-acceptance patterns.
 
 The following are **not** validated by this review and must be proven by execution:
 
@@ -251,21 +253,21 @@ Read in order:
 
 PaperPad proves an N64Recomp/RT64 mobile architecture, not DK64 correctness. Reuse the AOT/no-dynamic-code/Metal/ROM/input/lifecycle/package mechanisms; port a Paper Mario-specific timing/audio/save/game hook only after DK64 reproduces the same need.
 
-### 5.4 The requested UI reference: `ref/sunpad`
+### 5.4 The secondary product reference: `ref/sunpad`
 
 Clone `github.com/chrissotraidis/sunpad` and pin it to `e43f0ea6b797e5110787171957c9dc3c6213269c`.
 
 Read in order:
 
 1. `docs/ARCHITECTURE.md`, `docs/IOS_IPADOS.md`, `docs/TESTING.md`, `docs/STATUS.md`, `docs/KNOWN_ISSUES.md`, and `docs/TECH-DEBT.md`.
-2. `apple/ios/SunPadGameOverlay.mm` and `.h` — touch rendering, independent fingers, edit mode, safe bounds, device layouts, and utility button.
-3. `apple/ios/SunPadGameViewController.mm` — three-dot menu, loading phases, native presentation, lifecycle, controller visibility, diagnostics, and Game Data & Saves flows.
+2. `apple/ios/SunPadGameOverlay.mm` and `.h` — secondary comparison for independent fingers, edit mode, safe bounds, and device layouts; not the BananaPad UI source.
+3. `apple/ios/SunPadGameViewController.mm` — secondary loading, lifecycle, controller, diagnostics, and Game Data & Saves comparison; do not replace PaperPad's three-dot menu.
 4. `apple/shared/SunPadSettings.*`, `SunPadInputState.h`, `SunPadInputMixer.*`, `SunPadControllerMapping.*`, `SunPadDiagnostics.*`, and controller-slot code.
 5. `tests/` — controller mapping/disconnect, input encoding, diagnostics, game-data setup, touch defaults, and experimental-setting tests.
 6. `apple/ios/Assets.xcassets/AppIcon.appiconset/PROVENANCE.md` — provenance pattern for original app artwork.
 7. `scripts/audit-ios-package.sh`, packaging/provisioning scripts, privacy manifest, notices, and issue/report flow.
 
-Use SunPad's interaction architecture and UI quality directly where rights and code shape allow. Do **not** copy its GameCube/Dolphin runtime, disc extractor, Sunshine controls, FLUDD pressure mapping, performance flags, or nested dynamic module assumptions into an N64/RT64 app.
+Use SunPad only for complementary mechanisms where PaperPad has no applicable answer. Do **not** copy its touch/menu presentation over PaperPad, or copy its GameCube/Dolphin runtime, disc extractor, Sunshine controls, FLUDD pressure mapping, performance flags, or nested dynamic module assumptions into an N64/RT64 app.
 
 ### 5.5 Core toolchain and starting pins
 
@@ -339,7 +341,8 @@ Create `docs/SOURCE-MAP.md` and record at minimum:
 | DK64 `CMakeLists.txt` + macOS entitlements | Desktop frontend, writable-text/JIT exceptions, current Apple build boundary |
 | PaperPad `CMakeLists.txt` + architecture | Static generated libraries, no-dynamic-code profile, iOS RT64/SDL/Metal package |
 | PaperPad Apple shell/runtime paths | ROM manager, N64 input, controller ownership, lifecycle, logs, clean exit |
-| SunPad overlay/view-controller/shared paths | Requested menu, touch editor, settings, diagnostics, controller and loading UX |
+| PaperPad `apple/app/ios_main.mm` | Authoritative verbatim touch UI and persistent three-dot menu |
+| SunPad overlay/view-controller/shared paths | Secondary loading, diagnostics, controller-test, provenance, and acceptance patterns |
 
 Use source and generated manifests to turn every address, patch, and transition into a named behavior. Do not debug anonymous hex longer than necessary.
 
@@ -503,7 +506,7 @@ Required process:
 3. Confirm no unsupported runtime RSP overlay or hidden HLE fallback is required.
 4. Preserve the stable upstream audio task scheduling first; port a PaperPad audio patch only after reproducing its underlying need in DK64.
 5. Integrate the Apple audio session deliberately. Record SDL sample format/rate, guest cadence, host conversion/resampling, queue thresholds, and route state.
-6. Test title/intro music, DK Rap/cutscene audio where applicable, world music/ambience, Kong voices, UI/menu, weapons, instruments, animal/vehicle sounds, bosses, arcade, Jetpac, transitions, and credits.
+6. Test ordinary gameplay music/effects plus iOS interruption, route change, background/foreground, native-menu suppression, and resume. Reopen a specific upstream scene only when a named audio regression points to it.
 7. Measure queue depth, underruns/overruns, discontinuities, pitch, long-run drift, and resume behavior.
 8. Test macOS built-in, headphones/Bluetooth where available, and external/HDMI route; test iOS speaker, Bluetooth, wired/USB route where available, route change, phone/audio interruption, background/foreground, and controller audio if exposed.
 
@@ -542,7 +545,7 @@ Accessory policy:
 
 - Standard P1 controller input is required.
 - The no-Controller-Pak/no-accessory path is the default and must never hang.
-- The current source returns `PFS_ERR_DEVICE` for the Controller Pak initialization path; verify that this is the expected safe absence behavior.
+- The current source returns `PFS_ERR_NOPACK` for the Controller Pak initialization path; verify that this is the expected safe absence behavior.
 - Rumble is supported when the selected runtime and Apple controller expose it; absence alone is not a progression blocker. Capability/failure must be logged cleanly.
 - Physical-controller gyro may remain experimental when inherited safely; mobile device motion is not required for baseline.
 - Do not expose unsupported accessory or multiplayer claims.
@@ -560,7 +563,7 @@ Phase 1 is complete only when:
 - save/accessory behavior is explicit and tested at host level where possible;
 - warnings, removed desktop features, retained enhancements, and open risks are recorded.
 
-## 8. Phase 2: hardened macOS bring-up and complete-game path
+## 8. Phase 2: hardened macOS integration baseline
 
 Build the pipeline through scripts rather than terminal archaeology. Provide at minimum:
 
@@ -582,6 +585,7 @@ scripts/check-no-dynamic-code.sh
 scripts/check-repo-safety.sh
 scripts/audit-ios-package.sh
 scripts/package-unsigned-ipa.sh   # created/tested locally; publication not authorized
+scripts/manage-upstream.sh        # guided check/evaluate/status/promote/rollback workflow
 ```
 
 ### 8.1 Hardened macOS bring-up ladder
@@ -592,69 +596,22 @@ Each rung is tested immediately and backed by logs/screenshots:
 2. The native first-run UI accepts `.z64`/`.v64`/`.n64`, normalizes privately, verifies exact size/hash/identity, rejects wrong files, and stores no public/game data outside the private app path.
 3. Static game/RSP/patch libraries register; resident/boot code reaches the title without RecompFrontend/RmlUi.
 4. Keyboard and physical controller navigate title, intro, file select, and name/file creation where applicable.
-5. The opening Training Grounds route works: movement, jump, attack, Z actions, camera, first-person view, C controls, R center, pause, cutscene skip behavior, and relevant tutorial barrels are usable.
-6. DK Isles loads and the first Golden Banana outside the Jungle Japes entrance is collected.
-7. Jungle Japes loads; an exact, written in-level Golden Banana objective is completed. The route must exercise normal movement, camera/first-person aiming, combat or interaction, loading/transition, and a persistent state change.
+5. Real gameplay works: movement, jump, attack, Z actions, camera, first-person view, C controls, R center, pause, and a loading transition are usable.
+6. The game writes a persistent state change through the unmodified upstream save path.
+7. No BananaPad-owned input, renderer, audio, overlay, or lifecycle regression appears in the bounded smoke.
 8. Progress visibly updates, the app completes pending save work, and exits without a teardown crash or orphan process.
-9. Relaunching the same artifact with the same ROM restores the same Adventure file, first Golden Banana, world access, and in-level progress.
+9. Relaunching the same artifact with the same ROM restores the same Adventure file/save.
 10. The same route is repeatable from a clean local app-data directory through one scripted setup command plus hands-on gameplay.
 
 Only after rung 10 works may BananaPad be described as playable. Package a normal macOS `.app` for comparison/testing; macOS publication is not automatically authorized by this PRD.
 
-### 8.2 Complete required progression
+### 8.2 Upstream gameplay boundary
 
-Complete at least one observed fresh-save golden path through:
+DK64Recompiled owns progression and game-system correctness. BananaPad keeps a bounded exact-artifact smoke for boot, real input, loading, audio, save, exit, and reload. Do not spend project time replaying worlds, bosses, arcade, Jetpac, or credits unless a named BananaPad change or staged upstream update is suspected of breaking that path.
 
-- opening tutorial/Training Grounds;
-- DK Isles/K. Lumsy/B. Locker world progression;
-- Jungle Japes;
-- Angry Aztec;
-- Frantic Factory;
-- Gloomy Galleon;
-- Fungi Forest;
-- Crystal Caves;
-- Creepy Castle;
-- Hideout Helm;
-- required Nintendo Coin and Rareware Coin gates;
-- final K. Rool sequence;
-- credits and post-credit/completed-file return.
+### 8.3 Apple integration acceptance
 
-Record every required unlock and gate: all five Kongs, required Slam/weapon/instrument/potion progress, boss keys, world access, required Golden Bananas/colored bananas/medals/crowns/blueprints/fairies/coins only to the extent needed by the chosen legal route, and all persistent state.
-
-A later-game ignored save fixture is allowed for fast regression. Maintain several named local fixtures when useful:
-
-- first-play/Jungle Japes;
-- all-Kongs/mid-game;
-- arcade/Jetpac access;
-- late-game/Hideout Helm;
-- final boss/credits;
-- optional 101% content audit.
-
-Fixtures never replace the fresh-save proof and never enter Git or a public package.
-
-### 8.3 Special-code and system acceptance
-
-Maintain a route sheet that explicitly triggers:
-
-- main/global gameplay and world loading;
-- file select/options/menu code;
-- at least one minecart sequence and return;
-- representative bonus barrels and return;
-- representative race and return;
-- representative critter/minigame path and return;
-- every required boss class and return;
-- original Donkey Kong arcade play sufficient to obtain the Nintendo Coin;
-- Jetpac play sufficient to obtain the Rareware Coin;
-- final menu/game transitions after both embedded games.
-
-Also test:
-
-- each playable Kong, tag barrel switching, and Kong-specific move/weapon/instrument;
-- Cranky, Funky, Candy, Snide, Wrinkly, Troff 'n' Scoff, and B. Locker flows;
-- first-person aiming, analog camera option, fairy camera, zoom, swimming, boat/vehicle, transformations/animal helpers, oranges, instruments, weapon ammo, health/death/retry, pause, cutscene skip, and loading zones;
-- boss entrances/exits, game-over/continue, file erase/new file, and credits return.
-
-Do not mark D6 complete from source inspection or a cheat-warp title screenshot. The path must be observed against the exact build and save.
+Maintain route sheets for the Apple-owned boundaries: touch and chords, camera controls, native UI suppression, controller ownership, ROM import/reimport/removal, save preservation, background/foreground, orientation, memory warning, audio interruption, renderer return, diagnostics, and clean shutdown. These paths must be observed against the exact build on the applicable iPad/iPhone target.
 
 ### 8.4 Baseline and enhancement policy
 
@@ -703,8 +660,8 @@ Build and run **iPad Simulator first**. Shut it down completely before booting a
 
 Use the references by layer:
 
-- From **PaperPad**, take the N64 ROM manager/normalization/hash boundary, AOT/no-dynamic-code build shape, RT64 Metal bridge, N64 input snapshot, controller-slot ownership, paths, diagnostics privacy boundary, lifecycle, save completion, and clean-exit handling.
-- From **SunPad**, take the three-dot utility button/menu hierarchy, honest startup phases, overlay editor, device-specific normalized layouts, native settings organization, touch/controller auto-hide, Game Data & Saves UX, report flow, controller tests, and app-icon provenance pattern.
+- From **PaperPad**, preserve the applicable touch UI and persistent three-dot menu verbatim, and take the N64 ROM manager/normalization/hash boundary, AOT/no-dynamic-code build shape, RT64 Metal bridge, N64 input snapshot, controller-slot ownership, paths, diagnostics privacy boundary, lifecycle, save completion, and clean-exit handling.
+- From **SunPad**, take only complementary honest-startup, controller-test, report-flow, app-icon-provenance, and physical-acceptance patterns that do not modify PaperPad's touch/menu contract.
 - From **DK64Recompiled**, preserve game input semantics, settings values, static patches, game entry, overlay/RSP/save behavior, and enhancement logic.
 
 Do not rename copied code mechanically. First isolate game-neutral behavior, create BananaPad-owned types/settings/tests, and then adapt labels, paths, defaults, and controls.
@@ -761,7 +718,7 @@ Touch rules:
 
 ### 9.4 Three-dot menu
 
-Use SunPad's native three-dot menu organization and interaction discipline, adapted to RT64/DK64. Minimum entries:
+Use PaperPad's native persistent three-dot menu verbatim. Connect its existing sections to RT64/DK64 through adapters outside the protected UI source; do not redesign its organization. Required BananaPad capabilities include:
 
 **Resume**
 
@@ -922,7 +879,7 @@ Store current/previous bounded private logs under Application Support, exclude f
 
 Establish baseline and enhanced profiles separately:
 
-1. Record the original-mode game update cadence, VI/present cadence, audio task cadence, and input polling in title, Training Grounds, DK Isles, each world, boss, minecart/race/bonus, arcade, Jetpac, Hideout Helm, final fight, and credits.
+1. Record original-mode game update cadence, VI/present cadence, audio task cadence, and input polling in title and representative real gameplay on each Apple target. Expand to a named upstream scene only when diagnosing a specific regression.
 2. Record RT64 internal resolution, drawable size, scale, aspect/HUD mode, frame pacing, CPU/GPU time, memory, thermal state, and audio queue.
 3. On macOS, compare BananaPad static core against the app built from the currently promoted upstream pin in the same scenes/settings; retain the archived `1.0.1` comparison for bisecting when behavior changes across promotions.
 4. On Simulator, record diagnostic performance only.
@@ -950,29 +907,29 @@ Capture dated evidence for every row: target, hardware/Simulator, OS/SDK, build 
 | 7 | Static patch/no-dynamic-code audit | macOS + iOS build | Required patches are AOT/static; no W+X requirement, LiveRecomp/JIT/TCC/user executable code, forbidden entitlements, writable-text linker route, or unexpected executable writable segment |
 | 8 | BananaPad boot to title | macOS, iPad Sim, iPhone Sim | Native shell reaches title with Metal, audio, input, static patches, RSP, clean log; first-frame loading state clears |
 | 9 | ROM import/reimport/remove | macOS + both Sims | Correct ROM imports atomically; wrong/truncated ROM rejected; reimport preserves prior valid data on failure; remove stops runtime and preserves saves/settings |
-| 10 | First-play loop | macOS hands-on + iPad Sim hands-on | Adventure file, Training Grounds, DK Isles, first Golden Banana, Jungle Japes objective, save, exit/relaunch/load complete |
-| 11 | Jungle Japes | macOS hands-on | Required route/boss/progression, Kong interactions, audio/render/input/save and load transitions pass |
-| 12 | Angry Aztec | macOS hands-on | Required route/boss/progression and relevant Kong/vendor/temple/transition systems pass |
-| 13 | Frantic Factory | macOS hands-on | Required route/boss/progression, factory rendering/audio and arcade access/return pass |
-| 14 | Gloomy Galleon | macOS hands-on | Required route/boss/progression, swimming/water/boat/render/audio behavior pass |
-| 15 | Fungi Forest | macOS hands-on | Required route/boss/progression, time/lighting/cutscene and loading behavior pass |
-| 16 | Crystal Caves | macOS hands-on | Required route/boss/progression, heavy effects/particles/audio and transitions pass |
-| 17 | Creepy Castle | macOS hands-on | Required route/boss/progression, camera/lighting/audio and transitions pass |
-| 18 | Hideout Helm, K. Rool, credits | macOS hands-on | Required gates, timed Helm sequence, final fight phases, credits, post-credit return and completed-save reload pass |
-| 19 | All Kongs, moves, vendors, tag system | macOS + iPad Sim | Five Kongs, tag barrels, required Cranky/Funky/Candy/Snide flows, weapons/instruments/moves and persistence work |
+| 10 | Shared-core play/save smoke | macOS hands-on + iPad Sim hands-on | Adventure file, real gameplay input, loading transition, save, exit/relaunch/load complete |
+| 11 | Jungle Japes upstream contract | inherited | DK64Recompiled owns progression; BananaPad reopens this route only for a named integration or upstream-update regression |
+| 12 | Angry Aztec upstream contract | inherited | DK64Recompiled owns progression; BananaPad reopens this route only for a named regression |
+| 13 | Frantic Factory upstream contract | inherited | DK64Recompiled owns progression and arcade integration; BananaPad preserves the static code/overlay boundary |
+| 14 | Gloomy Galleon upstream contract | inherited | DK64Recompiled owns progression/water behavior; BananaPad separately validates controls, rendering, audio, and lifecycle |
+| 15 | Fungi Forest upstream contract | inherited | DK64Recompiled owns progression and game timing; BananaPad reopens only for a named regression |
+| 16 | Crystal Caves upstream contract | inherited | DK64Recompiled owns progression/effects; BananaPad reopens only for a named regression |
+| 17 | Creepy Castle upstream contract | inherited | DK64Recompiled owns progression; BananaPad reopens only for a named regression |
+| 18 | Hideout Helm, K. Rool, credits upstream contract | inherited | DK64Recompiled owns final progression and credits; BananaPad preserves the exact generated/static boundary |
+| 19 | Kongs, moves, vendors, tag system | inherited + mobile input | DK64Recompiled owns game semantics; BananaPad proves all required N64 inputs, chords, camera paths, and ownership transitions reach P1 correctly |
 | 20 | Menu overlay and file/options paths | all three | File select/options/pause/native utility transitions work; input suppression and return leave no stale mapping or held input |
-| 21 | Minecart, race, bonus, critter classes | macOS + iPad Sim | At least one representative of each class loads, plays, completes/fails/retries as applicable, returns, saves, and can be followed by another class |
-| 22 | Boss class | macOS | Required bosses load, play, defeat/retry, return, progress and save without stale overlay/patch/audio state |
-| 23 | Donkey Kong arcade / Nintendo Coin | macOS hands-on + iPad Sim hands-on | Arcade class loads, controls/audio/rendering work, required objective/coin is obtained, return and save pass |
-| 24 | Jetpac / Rareware Coin | macOS hands-on + iPad Sim hands-on | Jetpac class loads, controls/audio/rendering work, required score/coin is obtained, return and save pass |
+| 21 | Minecart, race, bonus, critter classes | inherited | DK64Recompiled owns class correctness; BananaPad preserves every required control mask and static overlay registration |
+| 22 | Boss class | inherited | DK64Recompiled owns boss correctness; reopen only for a named BananaPad regression |
+| 23 | Donkey Kong arcade / Nintendo Coin | inherited + input contract | DK64Recompiled owns arcade progression; BananaPad preserves D-pad/A/B/Start reachability and native-UI suppression |
+| 24 | Jetpac / Rareware Coin | inherited + input contract | DK64Recompiled owns Jetpac progression; BananaPad preserves D-pad/A/B/Start reachability and native-UI suppression |
 | 25 | EEPROM save and compatibility | macOS + iPad Sim | Blank/create/repeated write/relaunch/erase/recovery/termination/slot isolation pass; actual `Eep16k` host format documented; intended desktop compatibility verified |
-| 26 | Audio continuity and routes | macOS + iPad Sim + physical later | Music/voices/UI/weapons/instruments/arcade/Jetpac/transitions/credits have correct pitch and no sustained underrun/static; route/interruption/resume evidence captured |
+| 26 | Audio continuity and routes | macOS + iPad Sim + physical later | Ordinary gameplay audio has correct pitch; iOS route/interruption/background/resume behavior has no sustained underrun/static and is evidenced |
 | 27 | Baseline timing/rendering | macOS + physical later | Original framing/cadence measured; HUD/effects/fog/depth/water/cutscenes/frame pacing/memory remain within documented baseline |
 | 28 | Enhanced modes | macOS + both Sims + physical later | Each exposed high-FPS/widescreen/HUD/analog-camera/draw-distance/lighting/story setting works, persists, reports identity, and passes relevant gameplay; failed modes remain default-off/hidden |
 | 29 | DK64 touch overlay and chords | iPad Sim hands-on + iPhone Sim hands-on | Every required control and Z chord works with independent fingers; stick/camera/first-person/swimming/vehicle contexts, edit/reset/safe areas and no stuck input pass |
 | 30 | Three-dot menu/settings/controller | both Sims | Menu hierarchy works; settings persist/apply honestly; controller P1 handoff, touch hide/show, disconnect/reconnect, mapping, input clear, and native-UI suppression pass |
 | 31 | Lifecycle, orientation, memory, diagnostics, icon | both Sims + package | Background/foreground, interruption, landscape reversal, memory warning, renderer/audio return, clean stop, bounded privacy report, app-icon asset/provenance/presentation pass |
-| 32 | Repeated transitions and 90-minute soak | macOS + iPad Sim | Repeated world/menu/special-class/save/native-UI cycles complete; stable memory, overlays, patches, audio, input and saves; no orphan process |
+| 32 | Repeated mobile transitions and 90-minute soak | iPad Sim + physical later | Repeated native-menu/save/background/orientation/controller cycles complete with stable memory, renderer, audio, input and saves; no orphan process |
 | 33 | Regression suite, clean clone, audits, and upstream-update rehearsal | fresh directory + isolated candidate | Host/source tests and scripted smoke routes pass; full build reproduces from scripts/public pins/local ROM; repository/no-dynamic-code/Mach-O/package audits are green; the check/stage/patch/regenerate/impact-test/promote-metadata/rollback workflow is rehearsed without mutating the last known-good pin; no undocumented manual step |
 | 34 | Exact public candidate | physical iPad + physical iPhone + repo/package | Chris plays exact candidate through first-play and later-game/special fixtures; touch/controller/audio/lifecycle/sustained play pass; source/binary rights decisions and audits pass; hash recorded and explicitly approved |
 
@@ -1103,7 +1060,7 @@ A public candidate requires all of the following in `RELEASE-READINESS.md`:
 - required GPL/corresponding-source and third-party notices complete;
 - explicit source-release decision;
 - explicit binary/unsigned-IPA release decision;
-- no unresolved severity-1 progression, static-code, save, crash, audio, privacy, package, or rights issue;
+- no unresolved severity-1 BananaPad integration, static-code, save, crash, audio, privacy, package, or rights issue;
 - Chris's explicit final authorization.
 
 ## 13. Risk register
@@ -1125,7 +1082,7 @@ A public candidate requires all of the following in `RELEASE-READINESS.md`:
 | Audio route/static issues on Apple | Upstream macOS issue plus mobile session risk | RSP/audio queue instrumentation; PaperPad Apple audio mechanisms; AVAudioSession route/interruption tests; macOS HDMI/Bluetooth retest; no buffer guessing |
 | High frame rate/widescreen may expose timing/UI/cutscene defects | Upstream feature, Apple/mobile matrix unproven | Stable original baseline; per-mode identity; scene matrix; default-off/hide failing modes; no blanket support claim |
 | RT64 Metal memory/lifetime on iPhone/iPad | PaperPad path proven for another N64 game; DK64 load unproven | Port exact resource/lifetime fixes; physical memory/thermal profile; repeated background/orientation/scale changes; 90-minute soak |
-| Full-game regression cost is high | Inherent | One fresh route to credits plus ignored staged fixtures and scripted smokes; fixtures never replace fresh proof; exact special-class matrix |
+| Upstream game regression could be mistaken for a BananaPad defect | Inherent | Treat DK64Recompiled as the gameplay source of truth; use bounded exact-artifact smokes and reopen a game route only for a named integration or staged-update regression |
 | App icon or UI assets accidentally reuse protected game art | Avoidable release risk | Original generic BananaPad art; provenance/master hash; no upstream launcher art; package audit and visual review |
 | GPL/dependency compliance is mistaken for game-binary clearance | Material legal/release risk | Separate source and binary decisions; license inventory/corresponding source; explicit rights gate; no auto-publish |
 | Toolchain/upstream drift after a brand-new release | High; repository active | Keep `1.0.1` as archived initial anchor, not permanent freeze; track promoted/observed/candidate pins; scripted isolated staging; external patch series; categorized diff; regeneration; affected tests; full candidate matrix; explicit promotion/deferment and one-step rollback |

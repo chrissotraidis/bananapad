@@ -1,0 +1,2092 @@
+diff --git a/.github/macos/Info.plist.in b/.github/macos/Info.plist.in
+index bbcfde3..93f3740 100644
+--- a/.github/macos/Info.plist.in
++++ b/.github/macos/Info.plist.in
+@@ -11,7 +11,7 @@
+     <key>CFBundleShortVersionString</key>
+     <string>${MACOSX_BUNDLE_SHORT_VERSION_STRING}</string>
+     <key>CFBundleExecutable</key>
+-    <string>DK64Recompiled</string>
++    <string>BananaPad</string>
+     <key>CFBundleIconFile</key>
+     <string>${MACOSX_BUNDLE_ICON_FILE}</string>
+     <key>LSApplicationCategoryType</key>
+diff --git a/.github/macos/apple_bundle.cmake b/.github/macos/apple_bundle.cmake
+index 5e88650..ed49001 100644
+--- a/.github/macos/apple_bundle.cmake
++++ b/.github/macos/apple_bundle.cmake
+@@ -1,19 +1,32 @@
+ # Define the path to the entitlements file
+ set(ENTITLEMENTS_FILE ${CMAKE_SOURCE_DIR}/.github/macos/entitlements.plist)
+ 
++if(N64MODERN_NO_DYNAMIC_CODE)
++    set(BANANAPAD_CODESIGN_COMMAND
++        codesign --verbose=4 --options=runtime --no-strict --sign - --deep --force)
++else()
++    set(BANANAPAD_CODESIGN_COMMAND
++        codesign --verbose=4 --options=runtime --no-strict --sign - --entitlements ${ENTITLEMENTS_FILE} --deep --force)
++endif()
++
+ # Set bundle properties
+ set_target_properties(DK64Recompiled PROPERTIES
+         MACOSX_BUNDLE TRUE
+-        MACOSX_BUNDLE_BUNDLE_NAME "DK64Recompiled"
+-        MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.dk64recompiled"
++        OUTPUT_NAME "BananaPad"
++        MACOSX_BUNDLE_BUNDLE_NAME "BananaPad"
++        MACOSX_BUNDLE_GUI_IDENTIFIER "com.chrissotraidis.bananapad"
+         MACOSX_BUNDLE_BUNDLE_VERSION "1.0"
+         MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
+         MACOSX_BUNDLE_ICON_FILE "AppIcon.icns"
+         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist
+         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "-"
+-        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS ${ENTITLEMENTS_FILE}
+ )
+ 
++if(NOT N64MODERN_NO_DYNAMIC_CODE)
++    set_target_properties(DK64Recompiled PROPERTIES
++        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS ${ENTITLEMENTS_FILE})
++endif()
++
+ # Create icon files for macOS bundle
+ set(ICON_SOURCE ${CMAKE_SOURCE_DIR}/icons/app.png)
+ set(ICONSET_DIR ${CMAKE_BINARY_DIR}/AppIcon.iconset)
+@@ -77,10 +90,10 @@ add_custom_command(TARGET DK64Recompiled POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/recompcontrollerdb.txt $<TARGET_BUNDLE_DIR:DK64Recompiled>/Contents/Resources/
+ 
+     # Set RPATH
+-    COMMAND install_name_tool -add_rpath "@executable_path/../Frameworks/" $<TARGET_BUNDLE_DIR:DK64Recompiled>/Contents/MacOS/DK64Recompiled
++    COMMAND install_name_tool -add_rpath "@executable_path/../Frameworks/" $<TARGET_BUNDLE_DIR:DK64Recompiled>/Contents/MacOS/BananaPad
+ 
+     # Sign the bundle
+-    COMMAND codesign --verbose=4 --options=runtime --no-strict --sign - --entitlements ${ENTITLEMENTS_FILE} --deep --force $<TARGET_BUNDLE_DIR:DK64Recompiled>
++    COMMAND ${BANANAPAD_CODESIGN_COMMAND} $<TARGET_BUNDLE_DIR:DK64Recompiled>
+ 
+     COMMENT "Performing post-build steps for macOS bundle"
+     VERBATIM
+diff --git a/.github/macos/fixup_bundle.cmake b/.github/macos/fixup_bundle.cmake
+index 7c9d929..91dbfa9 100644
+--- a/.github/macos/fixup_bundle.cmake
++++ b/.github/macos/fixup_bundle.cmake
+@@ -10,10 +10,10 @@ if (CMAKE_GENERATOR STREQUAL "Xcode")
+ endif()
+ 
+ # Use generator expressions to get the absolute path to the bundle
+-set(APPS "${BUILD_PREFIX}DK64Recompiled.app/Contents/MacOS/DK64Recompiled")
++set(APPS "${BUILD_PREFIX}BananaPad.app/Contents/MacOS/BananaPad")
+ 
+ # Set up framework search paths
+-set(DIRS "${BUILD_PREFIX}DK64Recompiled.app/Contents/Frameworks")
++set(DIRS "${BUILD_PREFIX}BananaPad.app/Contents/Frameworks")
+ 
+ # Detect if we're using pkgx
+ if(PKGX_EXECUTABLE)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14db898..034a790 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,11 @@ endif()
+ include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+ 
+ if (APPLE)
+-    set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
++    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        set(CMAKE_OSX_DEPLOYMENT_TARGET "15.0" CACHE STRING "Minimum iOS deployment version" FORCE)
++    else()
++        set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
++    endif()
+ endif()
+ 
+ project(DK64Recompiled LANGUAGES C CXX)
+@@ -48,9 +52,37 @@ if (WIN32)
+ endif()
+ 
+ set(RT64_STATIC TRUE)
+-set(RT64_SDL_WINDOW_VULKAN TRUE)
++if (APPLE)
++    set(RT64_SDL_WINDOW_VULKAN FALSE)
++else()
++    set(RT64_SDL_WINDOW_VULKAN TRUE)
++endif()
+ add_compile_definitions(HLSL_CPU)
+ 
++set(BANANAPAD_SDL2_SOURCE_DIR "" CACHE PATH "Pinned SDL2 source directory")
++set(BANANAPAD_SDL2_STATIC_LIBRARY "" CACHE FILEPATH "Pinned SDL2 static library")
++if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++    if (NOT EXISTS "${BANANAPAD_SDL2_SOURCE_DIR}/CMakeLists.txt")
++        message(FATAL_ERROR "BANANAPAD_SDL2_SOURCE_DIR is required for iOS")
++    endif()
++    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
++    set(SDL_STATIC ON CACHE BOOL "" FORCE)
++    set(SDL_TEST OFF CACHE BOOL "" FORCE)
++    add_subdirectory("${BANANAPAD_SDL2_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/sdl2")
++    set(SDL2_INCLUDE_DIRS "${BANANAPAD_SDL2_SOURCE_DIR}/include")
++    set(SDL2_LIBRARIES SDL2::SDL2-static)
++elseif (APPLE AND BANANAPAD_SDL2_SOURCE_DIR AND BANANAPAD_SDL2_STATIC_LIBRARY)
++    if (NOT EXISTS "${BANANAPAD_SDL2_SOURCE_DIR}/include/SDL.h")
++        message(FATAL_ERROR "BANANAPAD_SDL2_SOURCE_DIR does not contain SDL.h")
++    endif()
++    if (NOT EXISTS "${BANANAPAD_SDL2_STATIC_LIBRARY}")
++        message(FATAL_ERROR "BANANAPAD_SDL2_STATIC_LIBRARY does not exist")
++    endif()
++    get_filename_component(BANANAPAD_SDL2_BUILD_DIR "${BANANAPAD_SDL2_STATIC_LIBRARY}" DIRECTORY)
++    set(SDL2_INCLUDE_DIRS "${BANANAPAD_SDL2_SOURCE_DIR}/include;${BANANAPAD_SDL2_BUILD_DIR}/include")
++    set(SDL2_LIBRARIES "${BANANAPAD_SDL2_STATIC_LIBRARY}")
++endif()
++
+ # SDL incorrectly includes a definition of _m_prefetch when compiling with clang-cl, which conflicts with the builtin definition and causes a build error. -
+ # Defining this guard prevents it from doing so
+ add_compile_definitions(__PRFCHWINTRIN_H)
+@@ -149,14 +181,26 @@ add_custom_command(OUTPUT
+ # Main executable
+ add_executable(DK64Recompiled)
+ 
++option(BANANAPAD_NATIVE_SHELL "Start the registered game directly without the desktop launcher" OFF)
++if (BANANAPAD_NATIVE_SHELL)
++    set(BANANAPAD_APPLE_CORE_DIR "" CACHE PATH "BananaPad-owned direct Apple core sources")
++    if (NOT EXISTS "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp")
++        message(FATAL_ERROR "BANANAPAD_APPLE_CORE_DIR is missing bananapad_rt64_context.cpp")
++    endif()
++    target_compile_definitions(DK64Recompiled PRIVATE BANANAPAD_NATIVE_SHELL=1)
++    target_compile_definitions(rt64 PRIVATE BANANAPAD_NATIVE_SHELL=1)
++    target_sources(DK64Recompiled PRIVATE
++        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native.cpp"
++        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native_config.cpp"
++        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp")
++    target_include_directories(DK64Recompiled PRIVATE "${BANANAPAD_APPLE_CORE_DIR}")
++endif()
++
+ set (SOURCES
+-    ${CMAKE_SOURCE_DIR}/src/main/launcher_animation.cpp
+     ${CMAKE_SOURCE_DIR}/src/main/main.cpp
+     ${CMAKE_SOURCE_DIR}/src/main/register_overlays.cpp
+     ${CMAKE_SOURCE_DIR}/src/main/register_patches.cpp
+-    ${CMAKE_SOURCE_DIR}/src/main/theme.cpp
+ 
+-    ${CMAKE_SOURCE_DIR}/src/game/config.cpp
+     ${CMAKE_SOURCE_DIR}/src/game/debug.cpp
+     ${CMAKE_SOURCE_DIR}/src/game/recomp_api.cpp
+     ${CMAKE_SOURCE_DIR}/src/game/recomp_extension_api.cpp
+@@ -166,6 +210,13 @@ set (SOURCES
+     ${CMAKE_SOURCE_DIR}/rsp/n_aspMain.cpp
+ )
+ 
++if (NOT BANANAPAD_NATIVE_SHELL)
++    list(APPEND SOURCES
++        ${CMAKE_SOURCE_DIR}/src/main/launcher_animation.cpp
++        ${CMAKE_SOURCE_DIR}/src/main/theme.cpp
++        ${CMAKE_SOURCE_DIR}/src/game/config.cpp)
++endif()
++
+ target_include_directories(DK64Recompiled PRIVATE
+     ${CMAKE_SOURCE_DIR}/include
+     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
+@@ -176,14 +227,18 @@ target_include_directories(DK64Recompiled PRIVATE
+     ${CMAKE_SOURCE_DIR}/lib/rt64/src
+     ${CMAKE_SOURCE_DIR}/lib/rt64/src/rhi
+     ${CMAKE_SOURCE_DIR}/lib/rt64/src/render
+-    ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompinput/include
+-    ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompui/include
+-    ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompui/src
+     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/nativefiledialog-extended/src/include
+     ${CMAKE_SOURCE_DIR}/lib/SlotMap
+     ${CMAKE_CURRENT_BINARY_DIR}
+ )
+ 
++if (NOT BANANAPAD_NATIVE_SHELL)
++    target_include_directories(DK64Recompiled PRIVATE
++        ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompinput/include
++        ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompui/include
++        ${CMAKE_SOURCE_DIR}/lib/RecompFrontend/recompui/src)
++endif()
++
+ # Generate icon_bytes.c from the app icon PNG.
+ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h
+     COMMAND file_to_c ${CMAKE_SOURCE_DIR}/icons/app.png icon_bytes ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h
+@@ -208,7 +263,7 @@ endif()
+ if (MSVC)
+     # Disable identical code folding, since this breaks mod function patching as multiple functions can get merged into one.
+     target_link_options(DK64Recompiled PRIVATE /OPT:NOICF)
+-elseif (APPLE)
++elseif (APPLE AND NOT N64MODERN_NO_DYNAMIC_CODE)
+     # Use a wrapper around ld64 that respects segprot's `max_prot` value in order
+     # to make our executable memory writable (required for mod function patching)
+     target_link_options(DK64Recompiled PRIVATE
+@@ -260,16 +315,68 @@ if (WIN32)
+ endif()
+ 
+ if (APPLE)
+-    find_package(SDL2 REQUIRED)
++    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        target_include_directories(DK64Recompiled PRIVATE ${SDL2_INCLUDE_DIRS})
++        set(BANANAPAD_APPLE_APP_DIR "" CACHE PATH "PaperPad-derived BananaPad UIKit shell")
++        target_sources(DK64Recompiled PRIVATE
++            "${BANANAPAD_APPLE_APP_DIR}/ios_main.mm"
++            "${BANANAPAD_APPLE_APP_DIR}/rom_setup.mm"
++            "${BANANAPAD_APPLE_APP_DIR}/diagnostics.mm"
++            "${BANANAPAD_APPLE_APP_DIR}/native_ui_state.mm"
++            "${BANANAPAD_APPLE_CORE_DIR}/paperpad_paths.mm"
++            "${BANANAPAD_APPLE_APP_DIR}/PrivacyInfo.xcprivacy"
++            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
++            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets")
++        set_source_files_properties(
++            "${BANANAPAD_APPLE_APP_DIR}/PrivacyInfo.xcprivacy"
++            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
++            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets"
++            PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
++        set(BANANAPAD_VERSION "0.1.0")
++        set(BANANAPAD_BUILD_NUMBER "1")
++        set(BANANAPAD_BUILD_PROFILE "simulator")
++        set(PAPERPAD_VERSION "${BANANAPAD_VERSION}")
++        set(PAPERPAD_BUILD_NUMBER "${BANANAPAD_BUILD_NUMBER}")
++        set(PAPERPAD_BUILD_PROFILE "${BANANAPAD_BUILD_PROFILE}")
++        set_target_properties(DK64Recompiled PROPERTIES
++            MACOSX_BUNDLE TRUE
++            MACOSX_BUNDLE_INFO_PLIST "${BANANAPAD_APPLE_APP_DIR}/Info.plist.in"
++            MACOSX_BUNDLE_BUNDLE_NAME "BananaPad"
++            MACOSX_BUNDLE_GUI_IDENTIFIER "com.chrissotraidis.bananapad"
++            MACOSX_BUNDLE_SHORT_VERSION_STRING "${BANANAPAD_VERSION}"
++            MACOSX_BUNDLE_BUNDLE_VERSION "${BANANAPAD_BUILD_NUMBER}"
++            OUTPUT_NAME "BananaPad"
++            XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "15.0"
++            XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.chrissotraidis.bananapad"
++            XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
++            XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2")
++        target_link_libraries(DK64Recompiled PRIVATE
++            SDL2::SDL2main SDL2::SDL2-static
++            "-framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework Foundation -framework UniformTypeIdentifiers")
++    elseif (BANANAPAD_SDL2_SOURCE_DIR AND BANANAPAD_SDL2_STATIC_LIBRARY)
++        get_filename_component(BANANAPAD_SDL2_BUILD_DIR "${BANANAPAD_SDL2_STATIC_LIBRARY}" DIRECTORY)
++        set(SDL2_INCLUDE_DIRS "${BANANAPAD_SDL2_SOURCE_DIR}/include;${BANANAPAD_SDL2_BUILD_DIR}/include")
++    else()
++        find_package(SDL2 REQUIRED)
++    endif()
+     target_include_directories(DK64Recompiled PRIVATE ${SDL2_INCLUDE_DIRS})
+ 
+     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+     find_package(Threads REQUIRED)
+ 
+-    target_link_libraries(DK64Recompiled PRIVATE ${CMAKE_DL_LIBS} Threads::Threads SDL2::SDL2)
++    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        target_link_libraries(DK64Recompiled PRIVATE ${CMAKE_DL_LIBS} Threads::Threads)
++    elseif (BANANAPAD_SDL2_SOURCE_DIR AND BANANAPAD_SDL2_STATIC_LIBRARY)
++        target_link_libraries(DK64Recompiled PRIVATE ${CMAKE_DL_LIBS} Threads::Threads "${BANANAPAD_SDL2_STATIC_LIBRARY}"
++            "-framework Cocoa -framework CoreVideo -framework IOKit -framework ForceFeedback -framework Carbon -framework CoreGraphics -framework AudioToolbox -framework CoreAudio -framework GameController -framework CoreHaptics")
++    else()
++        target_link_libraries(DK64Recompiled PRIVATE ${CMAKE_DL_LIBS} Threads::Threads SDL2::SDL2)
++    endif()
+ 
+-    include(${CMAKE_SOURCE_DIR}/.github/macos/apple_bundle.cmake)
++    if (NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        include(${CMAKE_SOURCE_DIR}/.github/macos/apple_bundle.cmake)
++    endif()
+ endif()
+ 
+ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+@@ -343,19 +449,22 @@ endif()
+ set(RECOMP_FRONTEND_N64MODERNRUNTIME_PATH ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
+ set(RECOMP_FRONTEND_RT64_PATH ${CMAKE_SOURCE_DIR}/lib/rt64)
+ 
+-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/RecompFrontend)
++if (NOT BANANAPAD_NATIVE_SHELL)
++    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/RecompFrontend)
++endif()
+ 
+ target_link_libraries(DK64Recompiled PRIVATE
+     PatchesLib
+     RecompiledFuncs
+-    recompui
+-    recompinput
+     librecomp
+     ultramodern
+     rt64
+-    nfd
+ )
+ 
++if (NOT BANANAPAD_NATIVE_SHELL)
++    target_link_libraries(DK64Recompiled PRIVATE recompui recompinput nfd)
++endif()
++
+ # Embed all .nrm files in the "mods" directory
+ file(GLOB NRM_FILES "${CMAKE_SOURCE_DIR}/mods/*.nrm")
+ 
+diff --git a/include/donk_config.h b/include/donk_config.h
+index b63a343..bd4a2d6 100644
+--- a/include/donk_config.h
++++ b/include/donk_config.h
+@@ -8,8 +8,8 @@
+ #include "json/json.hpp"
+ 
+ namespace dk64 {
+-    inline const std::u8string program_id = u8"DK64Recompiled";
+-    inline const std::string program_name = "DK64: Rekongpiled";
++    inline const std::u8string program_id = u8"BananaPad";
++    inline const std::string program_name = "BananaPad";
+ 
+     namespace configkeys {
+         namespace general {
+diff --git a/src/game/recomp_api.cpp b/src/game/recomp_api.cpp
+index eec6fba..c909f0d 100644
+--- a/src/game/recomp_api.cpp
++++ b/src/game/recomp_api.cpp
+@@ -3,10 +3,16 @@
+ #include "recomp.h"
+ #include "librecomp/overlays.hpp"
+ #include "librecomp/addresses.hpp"
++#include "librecomp/game.hpp"
+ #include "donk_config.h"
++#if defined(BANANAPAD_NATIVE_SHELL)
++#include "bananapad_native.h"
++#include "bananapad_rt64_context.h"
++#else
+ #include "recompinput/recompinput.h"
+ #include "recompui/recompui.h"
+ #include "recompui/renderer.h"
++#endif
+ #include "donk_sound.h"
+ #include "donk_draw.h"
+ #include "librecomp/helpers.hpp"
+@@ -19,7 +25,11 @@
+ #include "../lib/N64ModernRuntime/thirdparty/xxHash/xxh3.h"
+ 
+ extern "C" void recomp_update_inputs(uint8_t* rdram, recomp_context* ctx) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::poll_input();
++#else
+     recompinput::poll_inputs();
++#endif
+ }
+ 
+ extern "C" void recomp_puts(uint8_t* rdram, recomp_context* ctx) {
+@@ -43,7 +53,11 @@ extern "C" void recomp_error(uint8_t* rdram, recomp_context* ctx) {
+         str += (char)MEM_B(str_ptr, i);
+     }
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::show_message(str.c_str());
++#else
+     recompui::message_box(str.c_str());
++#endif
+     assert(false);
+     ultramodern::error_handling::quick_exit(__FILE__, __LINE__, __FUNCTION__);
+ }
+@@ -52,15 +66,25 @@ extern "C" void recomp_get_gyro_deltas(uint8_t* rdram, recomp_context* ctx) {
+     float* x_out = _arg<0, float*>(rdram, ctx);
+     float* y_out = _arg<1, float*>(rdram, ctx);
+ 
+-    // TODO: use controller number
++    // Gyro is not yet exposed by the native shell.
++#if defined(BANANAPAD_NATIVE_SHELL)
++    *x_out = 0.0f;
++    *y_out = 0.0f;
++#else
+     recompinput::get_gyro_deltas(0, x_out, y_out);
++#endif
+ }
+ 
+ extern "C" void recomp_get_mouse_deltas(uint8_t* rdram, recomp_context* ctx) {
+     float* x_out = _arg<0, float*>(rdram, ctx);
+     float* y_out = _arg<1, float*>(rdram, ctx);
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++    *x_out = 0.0f;
++    *y_out = 0.0f;
++#else
+     recompinput::get_mouse_deltas(x_out, y_out);
++#endif
+ }
+ 
+ extern "C" void recomp_powf(uint8_t* rdram, recomp_context* ctx) {
+@@ -78,7 +102,11 @@ extern "C" void recomp_get_target_framerate(uint8_t* rdram, recomp_context* ctx)
+ 
+ extern "C" void recomp_get_window_resolution(uint8_t* rdram, recomp_context* ctx) {
+     int width, height;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::get_window_size(width, height);
++#else
+     recompui::get_window_size(width, height);
++#endif
+ 
+     gpr width_out = _arg<0, PTR(u32)>(rdram, ctx);
+     gpr height_out = _arg<1, PTR(u32)>(rdram, ctx);
+@@ -91,7 +119,11 @@ extern "C" void recomp_get_target_aspect_ratio(uint8_t* rdram, recomp_context* c
+     ultramodern::renderer::GraphicsConfig graphics_config = ultramodern::renderer::get_graphics_config();
+     float original = _arg<0, float>(rdram, ctx);
+     int width, height;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::get_window_size(width, height);
++#else
+     recompui::get_window_size(width, height);
++#endif
+ 
+     switch (graphics_config.ar_option) {
+         case ultramodern::renderer::AspectRatio::Original:
+@@ -186,7 +218,11 @@ extern "C" void recomp_get_mp_enabled(uint8_t* rdram, recomp_context* ctx) {
+ extern "C" void recomp_get_ui_bounds(uint8_t* rdram, recomp_context* ctx) {
+     ultramodern::renderer::GraphicsConfig graphics_config = ultramodern::renderer::get_graphics_config();
+     int width, height;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::get_window_size(width, height);
++#else
+     recompui::get_window_size(width, height);
++#endif
+     switch (graphics_config.ar_option) {
+         case ultramodern::renderer::AspectRatio::Original:
+         default:
+@@ -209,7 +245,11 @@ extern "C" void recomp_get_ui_bounds(uint8_t* rdram, recomp_context* ctx) {
+ extern "C" void recomp_get_ui_pillar(uint8_t* rdram, recomp_context* ctx) {
+     ultramodern::renderer::GraphicsConfig graphics_config = ultramodern::renderer::get_graphics_config();
+     int width, height, delta;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::get_window_size(width, height);
++#else
+     recompui::get_window_size(width, height);
++#endif
+     switch (graphics_config.ar_option) {
+         case ultramodern::renderer::AspectRatio::Original:
+         default:
+@@ -260,7 +300,11 @@ extern "C" void recomp_load_overlays(uint8_t * rdram, recomp_context * ctx) {
+ }
+ 
+ extern "C" void recomp_high_precision_fb_enabled(uint8_t * rdram, recomp_context * ctx) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    _return(ctx, static_cast<s32>(bananapad::renderer::high_precision_framebuffer_enabled()));
++#else
+     _return(ctx, static_cast<s32>(recompui::renderer::RT64HighPrecisionFBEnabled()));
++#endif
+ }
+ 
+ extern "C" void recomp_get_resolution_scale(uint8_t* rdram, recomp_context* ctx) {
+@@ -312,6 +356,9 @@ extern "C" void recomp_get_right_analog_inputs(uint8_t* rdram, recomp_context* c
+     float* y_out = _arg<1, float*>(rdram, ctx);
+ 
+     // Don't return right analog inputs while game input is disabled.
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::get_right_analog(0, x_out, y_out);
++#else
+     if (recompinput::game_input_disabled()) {
+         *x_out = 0.0f;
+         *y_out = 0.0f;
+@@ -320,12 +367,17 @@ extern "C" void recomp_get_right_analog_inputs(uint8_t* rdram, recomp_context* c
+ 
+     // TODO: Use controller number.
+     recompinput::get_right_analog(0, x_out, y_out);
++#endif
+ }
+ 
+ extern "C" void recomp_set_right_analog_suppressed(uint8_t* rdram, recomp_context* ctx) {
+     s32 suppressed = _arg<0, s32>(rdram, ctx);
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::set_right_analog_suppressed(suppressed != 0);
++#else
+     recompinput::set_right_analog_suppressed(suppressed);
++#endif
+ }
+ 
+ constexpr uint32_t k1_to_phys(uint32_t addr) {
+@@ -363,7 +415,11 @@ extern "C" void recomp_load_overlays_by_rom(uint8_t* rdram, recomp_context* ctx)
+ 
+ extern "C" void recomp_abort(uint8_t* rdram, recomp_context* ctx) {
+     std::string msg = _arg_string<0>(rdram, ctx);
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::show_message(msg.c_str());
++#else
+     recompui::message_box(msg.c_str());
++#endif
+     assert(false);
+     ultramodern::error_handling::quick_exit(__FILE__, __LINE__, __FUNCTION__);
+ }
+@@ -485,4 +541,4 @@ extern "C" void osViGetCurrentMode_recomp(uint8_t* rdram, recomp_context* ctx) {
+     }
+ 
+     ctx->r2 = MEM_BU(0x3, modep);
+-}
+\ No newline at end of file
++}
+diff --git a/src/game/recomp_data_api.cpp b/src/game/recomp_data_api.cpp
+index 6aa5621..e2393c7 100644
+--- a/src/game/recomp_data_api.cpp
++++ b/src/game/recomp_data_api.cpp
+@@ -5,7 +5,11 @@
+ 
+ #include "slot_map.h"
+ #include "recomp_data.h"
++#if defined(BANANAPAD_NATIVE_SHELL)
++#include "bananapad_native.h"
++#else
+ #include "recompui/recompui.h"
++#endif
+ #include "librecomp/helpers.hpp"
+ #include "librecomp/overlays.hpp"
+ #include "librecomp/addresses.hpp"
+@@ -174,7 +178,11 @@ LockedSlotmap<MemorySlotmap> memory_slotmaps{};
+ 
+ static void show_fatal_error_message_box(const char* funcname, const char* errstr) {
+     std::string message = std::string{"Fatal error in mod - "} + funcname + " : " + errstr;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::show_message(message.c_str());
++#else
+     recompui::message_box(message.c_str());
++#endif
+ }
+ 
+ #define HANDLE_INVALID_ERROR() \
+diff --git a/src/game/recomp_extension_api.cpp b/src/game/recomp_extension_api.cpp
+index 56d4182..e313fd4 100644
+--- a/src/game/recomp_extension_api.cpp
++++ b/src/game/recomp_extension_api.cpp
+@@ -7,7 +7,11 @@
+ #include "librecomp/helpers.hpp"
+ #include "librecomp/addresses.hpp"
+ #include "ultramodern/error_handling.hpp"
++#if defined(BANANAPAD_NATIVE_SHELL)
++#include "bananapad_native.h"
++#else
+ #include "recompui/recompui.h"
++#endif
+ #include "recomp_data.h"
+ #include "../patches/object_extension_funcs.h"
+ 
+@@ -81,7 +85,11 @@ extern "C" void recomp_register_object_extension(uint8_t* rdram, recomp_context*
+     ExtensionContext& context = type_contexts[type_index];
+ 
+     if (!can_register) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++        bananapad::native::show_message("Fatal error in mod - attempted to register object extension data after objects have been spawned.");
++#else
+         recompui::message_box("Fatal error in mod - attempted to register object extension data after objects have been spawned.");
++#endif
+         assert(false);
+         ultramodern::error_handling::quick_exit(__FILE__, __LINE__, __FUNCTION__);
+     }
+@@ -257,4 +265,3 @@ extern "C" void recomp_get_object_spawn_index(uint8_t* rdram, recomp_context* ct
+ 
+     _return<u32>(ctx, data->object_spawn_index);
+ }
+-
+diff --git a/src/main/main.cpp b/src/main/main.cpp
+index ec03f76..91a211e 100644
+--- a/src/main/main.cpp
++++ b/src/main/main.cpp
+@@ -8,8 +8,13 @@
+ #include <stdexcept>
+ #include <cinttypes>
+ #include <chrono>
++#include <csignal>
++#include <cstdlib>
++#include <thread>
+ 
++#if !defined(BANANAPAD_NATIVE_SHELL)
+ #include "nfd.h"
++#endif
+ 
+ #include "ultramodern/ultra64.h"
+ #include "ultramodern/ultramodern.hpp"
+@@ -29,6 +34,16 @@
+ #undef Always
+ #endif
+ 
++#if defined(__APPLE__)
++#include <TargetConditionals.h>
++#endif
++
++#if defined(__APPLE__) && TARGET_OS_IPHONE
++extern "C" void paperpad_touch_attach(void* ui_window);
++extern "C" void paperpad_fix_metal_layer_scale(void* ui_window, void* metal_layer);
++#endif
++
++#if !defined(BANANAPAD_NATIVE_SHELL)
+ #include "recompui/recompui.h"
+ #include "recompui/program_config.h"
+ #include "recompui/renderer.h"
+@@ -37,19 +52,29 @@
+ #include "recompinput/input_events.h"
+ #include "recompinput/recompinput.h"
+ #include "recompinput/profiles.h"
++#endif
+ #include "donk_config.h"
+ #include "donk_sound.h"
+ #include "donk_draw.h"
+ #include "donk_support.h"
+ #include "donk_game.h"
++#if !defined(BANANAPAD_NATIVE_SHELL)
+ #include "donk_launcher.h"
++#endif
+ #include "recomp_data.h"
+ #include "ovl_patches.hpp"
++#if !defined(BANANAPAD_NATIVE_SHELL)
+ #include "theme.h"
++#endif
+ #include "librecomp/game.hpp"
+ #include "librecomp/mods.hpp"
+ #include "librecomp/helpers.hpp"
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++#include "bananapad_native.h"
++#include "bananapad_rt64_context.h"
++#endif
++
+ #include "../../patches/graphics.h"
+ #include "../../patches/input.h"
+ #include "../../patches/sound.h"
+@@ -59,6 +84,14 @@
+ 
+ namespace {
+ 
++#if defined(BANANAPAD_NATIVE_SHELL) && !defined(_WIN32)
++volatile std::sig_atomic_t native_exit_requested = 0;
++
++void request_native_exit(int) {
++    native_exit_requested = 1;
++}
++#endif
++
+ class PacingRendererContext final : public ultramodern::renderer::RendererContext {
+ public:
+     explicit PacingRendererContext(std::unique_ptr<ultramodern::renderer::RendererContext> inner_context)
+@@ -109,7 +142,11 @@ private:
+ 
+ std::unique_ptr<ultramodern::renderer::RendererContext> create_pacing_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
+     auto presentation_mode = ultramodern::renderer::PresentationMode::PresentEarly;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    auto render_context = bananapad::renderer::create_render_context(rdram, window_handle, presentation_mode, developer_mode);
++#else
+     auto render_context = recompui::renderer::create_render_context(rdram, window_handle, presentation_mode, developer_mode);
++#endif
+     return std::make_unique<PacingRendererContext>(std::move(render_context));
+ }
+ }
+@@ -154,6 +191,9 @@ ultramodern::gfx_callbacks_t::gfx_data_t create_gfx() {
+ }
+ 
+ ultramodern::input::connected_device_info_t get_connected_device_info(int controller_num) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    return bananapad::native::get_connected_device_info(controller_num);
++#else
+     if (recompinput::players::is_single_player_mode() || recompinput::players::get_player_is_assigned(controller_num)) {
+         return ultramodern::input::connected_device_info_t{
+             .connected_device = ultramodern::input::Device::Controller,
+@@ -165,6 +205,7 @@ ultramodern::input::connected_device_info_t get_connected_device_info(int contro
+         .connected_device = ultramodern::input::Device::None,
+         .connected_pak = ultramodern::input::Pak::None,
+     };
++#endif
+ }
+ 
+ #include "icon_bytes.h"
+@@ -227,11 +268,14 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
+     flags |= SDL_WINDOW_VULKAN;
+ #endif
+ 
+-    window = SDL_CreateWindow("DK64: Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900,  flags);
++    window = SDL_CreateWindow("BananaPad", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900,  flags);
+ 
+     if (window == nullptr) {
+         exit_error("Failed to create window: %s\n", SDL_GetError());
+     }
++#if defined(BANANAPAD_NATIVE_SHELL)
++    bananapad::native::attach_window(window);
++#endif
+ 
+     SDL_SysWMinfo wmInfo;
+     SDL_VERSION(&wmInfo.version);
+@@ -250,15 +294,33 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
+ #elif defined(__linux__) || defined(__ANDROID__)
+     return ultramodern::renderer::WindowHandle{ window };
+ #elif defined(__APPLE__)
++#if TARGET_OS_IPHONE
++    SDL_MetalView view = SDL_Metal_CreateView(window);
++    void* layer = SDL_Metal_GetLayer(view);
++    paperpad_fix_metal_layer_scale(wmInfo.info.uikit.window, layer);
++    paperpad_touch_attach(wmInfo.info.uikit.window);
++    return ultramodern::renderer::WindowHandle{ wmInfo.info.uikit.window, layer };
++#else
+     SDL_MetalView view = SDL_Metal_CreateView(window);
+     return ultramodern::renderer::WindowHandle{ wmInfo.info.cocoa.window,  SDL_Metal_GetLayer(view) };
++#endif
+ #else
+     static_assert(false && "Unimplemented");
+ #endif
+ }
+ 
+ void update_gfx(void*) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    #if !defined(_WIN32)
++    if (native_exit_requested != 0) {
++        native_exit_requested = 0;
++        ultramodern::quit();
++    }
++    #endif
++    bananapad::native::handle_events();
++#else
+     recompinput::handle_events();
++#endif
+ }
+ 
+ static SDL_AudioCVT audio_convert;
+@@ -300,7 +362,11 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
+ 
+     // Convert the audio from 16-bit values to floats and swap the audio channels into the
+     // swap buffer to correct for the address xor caused by endianness handling.
++#if defined(BANANAPAD_NATIVE_SHELL)
++    const float cur_main_volume = bananapad::native::audio_volume();
++#else
+     float cur_main_volume = static_cast<float>(recompui::config::sound::get_main_volume()) / 100.0f; // Get the current main volume, normalized to 0.0-1.0.
++#endif
+     for (size_t i = 0; i < sample_count; i += input_channels) {
+         swap_buffer[i + 0 + duplicated_input_frames * input_channels] = audio_data[i + 1] * (0.5f / 32768.0f) * cur_main_volume;
+         swap_buffer[i + 1 + duplicated_input_frames * input_channels] = audio_data[i + 0] * (0.5f / 32768.0f) * cur_main_volume;
+@@ -402,7 +468,11 @@ bool reset_audio(uint32_t output_freq) {
+     audio_device = SDL_OpenAudioDevice(nullptr, false, &spec_desired, nullptr, 0);
+     if (audio_device == 0) {
+         std::string audio_error = std::string("No audio device could be found. Please make sure an audio device is available.\nError opening audio device: ") + std::string(SDL_GetError());
++#if defined(BANANAPAD_NATIVE_SHELL)
++        bananapad::native::show_message(audio_error.c_str());
++#else
+         recompui::message_box(audio_error.c_str());
++#endif
+         return false;
+     }
+ 
+@@ -626,17 +696,29 @@ void release_preload(PreloadContext& context) {
+ #endif
+ 
+ void enable_texture_pack(recomp::mods::ModContext& context, const recomp::mods::ModHandle& mod) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    (void)context;
++    (void)mod;
++#else
+     recompui::renderer::enable_texture_pack(context, mod);
++#endif
+ }
+ 
+ void disable_texture_pack(recomp::mods::ModContext&, const recomp::mods::ModHandle& mod) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++    (void)mod;
++#else
+     recompui::renderer::disable_texture_pack(mod);
++#endif
+ }
+ 
+ void reorder_texture_pack(recomp::mods::ModContext&) {
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recompui::renderer::trigger_texture_pack_update();
++#endif
+ }
+ 
++#if !defined(BANANAPAD_NATIVE_SHELL)
+ void on_launcher_init(recompui::LauncherMenu *menu) {
+     auto game_options_menu = menu->init_game_options_menu(
+         supported_games[0].game_id,
+@@ -676,12 +758,27 @@ void on_launcher_init(recompui::LauncherMenu *menu) {
+ 
+     dk64::launcher_animation_setup(menu);
+ }
++#endif
+ 
+ #define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
+ 
+-int main(int argc, char** argv) {
++#if defined(__APPLE__) && TARGET_OS_IPHONE
++extern "C" int paperpad_recomp_main(int argc, char** argv);
++#define BANANAPAD_MAIN paperpad_recomp_main
++#else
++#define BANANAPAD_MAIN main
++#endif
++
++#if defined(__APPLE__) && TARGET_OS_IPHONE
++extern "C"
++#endif
++int BANANAPAD_MAIN(int argc, char** argv) {
+     (void)argc;
+     (void)argv;
++#if defined(BANANAPAD_NATIVE_SHELL) && !defined(_WIN32)
++    std::signal(SIGINT, request_native_exit);
++    std::signal(SIGTERM, request_native_exit);
++#endif
+     recomp::Version project_version{};
+     if (!recomp::Version::from_string(version_string, project_version)) {
+         ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
+@@ -749,12 +846,14 @@ int main(int argc, char** argv) {
+     std::filesystem::current_path("/var/data", ec);
+ #endif
+ 
+-    // Initialize native file dialogs.
++    // Initialize native file dialogs for the desktop launcher.
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     NFD_Init();
+ 
+     // Initialize program settings.
+     recompui::programconfig::set_program_name(dk64::program_name);
+     recompui::programconfig::set_program_id(dk64::program_id);
++#endif
+     
+     // Initialize SDL audio and set the output frequency.
+     SDL_InitSubSystem(SDL_INIT_AUDIO);
+@@ -764,17 +863,28 @@ int main(int argc, char** argv) {
+     }
+ 
+     // Source controller mappings file
+-    std::u8string controller_db_path = (recompui::file::get_program_path() / "recompcontrollerdb.txt").u8string();
++    std::u8string controller_db_path =
++#if defined(BANANAPAD_NATIVE_SHELL)
++        (std::filesystem::current_path() / "recompcontrollerdb.txt").u8string();
++#else
++        (recompui::file::get_program_path() / "recompcontrollerdb.txt").u8string();
++#endif
+     if (SDL_GameControllerAddMappingsFromFile(reinterpret_cast<const char *>(controller_db_path.c_str())) < 0) {
+         fprintf(stderr, "Failed to load controller mappings: %s\n", SDL_GetError());
+     }
+ 
+-    // Register fonts.
++    // Register desktop launcher fonts.
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recompui::register_primary_font("InterVariable.ttf", "Inter Variable");
+     recompui::register_extra_font("Suplexmentary Comic NC.ttf");
++#endif
+ 
+     // Register configuration path.
++#if defined(BANANAPAD_NATIVE_SHELL)
++    recomp::register_config_path(bananapad::native::app_support_path());
++#else
+     recomp::register_config_path(recompui::file::get_app_folder_path());
++#endif
+ 
+     // Register supported games and patches
+     for (const auto& game : supported_games) {
+@@ -801,9 +911,13 @@ int main(int argc, char** argv) {
+     REGISTER_FUNC(recomp_get_analog_inverted_axes);
+     REGISTER_FUNC(recomp_get_swimming_inverted_axes);
+     REGISTER_FUNC(recomp_get_first_person_inverted_axes);
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recompui::register_ui_exports();
++#endif
+     recomputil::register_data_api_exports();
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recomptheme::set_custom_theme();
++#endif
+ 
+     dk64::register_bk_overlays();
+     dk64::register_bk_patches();
+@@ -811,12 +925,16 @@ int main(int argc, char** argv) {
+     // Register extensions for two types: Props and ActorMarkers.
+     recomputil::init_extended_object_data(2);
+ 
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recompinput::players::set_single_player_mode(true);
++#endif
+ 
+     dk64::init_config();
+ 
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     recompui::register_launcher_init_callback(on_launcher_init);
+     recompui::register_launcher_update_callback(dk64::launcher_animation_update);
++#endif
+ 
+     recomp::rsp::callbacks_t rsp_callbacks{
+         .get_rsp_microcode = get_rsp_microcode,
+@@ -839,19 +957,33 @@ int main(int argc, char** argv) {
+     };
+ 
+     ultramodern::input::callbacks_t input_callbacks{
++#if defined(BANANAPAD_NATIVE_SHELL)
++        .poll_input = bananapad::native::poll_input,
++        .get_input = bananapad::native::get_input,
++        .set_rumble = bananapad::native::set_rumble,
++#else
+         .poll_input = recompinput::poll_inputs,
+         .get_input = recompinput::profiles::get_n64_input,
+         .set_rumble = recompinput::set_rumble,
++#endif
+         .get_connected_device_info = get_connected_device_info,
+     };
+ 
+     ultramodern::events::callbacks_t thread_callbacks{
++#if defined(BANANAPAD_NATIVE_SHELL)
++        .vi_callback = nullptr,
++#else
+         .vi_callback = recompinput::update_rumble,
++#endif
+         .gfx_init_callback = nullptr,
+     };
+ 
+     ultramodern::error_handling::callbacks_t error_handling_callbacks{
++#if defined(BANANAPAD_NATIVE_SHELL)
++        .message_box = bananapad::native::show_message,
++#else
+         .message_box = recompui::message_box,
++#endif
+     };
+ 
+     ultramodern::threads::callbacks_t threads_callbacks{
+@@ -859,6 +991,7 @@ int main(int argc, char** argv) {
+     };
+ 
+     // Register the texture pack content type with rt64.json as its content file.
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+     recomp::mods::ModContentType texture_pack_content_type{
+         .content_filename = "rt64.json",
+         .allow_runtime_toggle = true,
+@@ -870,6 +1003,7 @@ int main(int argc, char** argv) {
+ 
+     // Register the .rtz texture pack file format with the previous content type as its only allowed content type.
+     recomp::mods::register_mod_container_type("rtz", std::vector{ texture_pack_content_type_id }, false);
++#endif
+ 
+     recomp::Configuration cfg {
+         .project_version = project_version,
+@@ -887,9 +1021,37 @@ int main(int argc, char** argv) {
+         },
+     };
+ 
++    // PaperPad starts the registered game from a short-lived delayed thread.
++    // Keep the same path available for non-interactive BananaPad smoke tests,
++    // while preserving the normal desktop launcher unless explicitly enabled.
++    const char* test_autostart = std::getenv("BANANAPAD_AUTOSTART");
++    if (
++#if defined(BANANAPAD_NATIVE_SHELL)
++        true
++#else
++        test_autostart != nullptr && std::string_view(test_autostart) == "1"
++#endif
++    ) {
++        std::thread([]() {
++            std::this_thread::sleep_for(
++#if defined(BANANAPAD_NATIVE_SHELL)
++                std::chrono::milliseconds(750)
++#else
++                std::chrono::seconds(6)
++#endif
++            );
++            recomp::start_game(supported_games[0].game_id, {});
++#if !defined(BANANAPAD_NATIVE_SHELL)
++            recompui::hide_all_contexts();
++#endif
++        }).detach();
++    }
++
+     recomp::start(cfg);
+ 
++#if !defined(BANANAPAD_NATIVE_SHELL)
+     NFD_Quit();
++#endif
+ 
+     if (preloaded) {
+         release_preload(preload_context);
+diff --git a/lib/N64ModernRuntime/librecomp/CMakeLists.txt b/lib/N64ModernRuntime/librecomp/CMakeLists.txt
+index 716d48b..2c7eaba 100644
+--- a/lib/N64ModernRuntime/librecomp/CMakeLists.txt
++++ b/lib/N64ModernRuntime/librecomp/CMakeLists.txt
+@@ -4,6 +4,7 @@ project(librecomp)
+ set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED True)
+ set(CMAKE_CXX_EXTENSIONS OFF)
++option(N64MODERN_NO_DYNAMIC_CODE "Compile out runtime code generation and dynamic-library loading" OFF)
+ 
+ # Define the library
+ add_library(librecomp STATIC
+@@ -63,5 +64,11 @@ endif()
+ add_subdirectory(${PROJECT_SOURCE_DIR}/../thirdparty/miniz ${CMAKE_CURRENT_BINARY_DIR}/miniz)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/../N64Recomp ${CMAKE_CURRENT_BINARY_DIR}/N64Recomp EXCLUDE_FROM_ALL)
+ 
+-target_link_libraries(librecomp PRIVATE ultramodern N64Recomp LiveRecomp)
++target_link_libraries(librecomp PRIVATE ultramodern N64Recomp)
++if (N64MODERN_NO_DYNAMIC_CODE)
++    target_compile_definitions(librecomp PUBLIC N64MODERN_NO_DYNAMIC_CODE=1)
++    message(STATUS "librecomp: runtime code generation and dynamic loading disabled")
++else()
++    target_link_libraries(librecomp PRIVATE LiveRecomp)
++endif()
+ target_link_libraries(librecomp PUBLIC miniz)
+diff --git a/lib/N64ModernRuntime/librecomp/include/librecomp/mods.hpp b/lib/N64ModernRuntime/librecomp/include/librecomp/mods.hpp
+index 37556bd..baacddf 100644
+--- a/lib/N64ModernRuntime/librecomp/include/librecomp/mods.hpp
++++ b/lib/N64ModernRuntime/librecomp/include/librecomp/mods.hpp
+@@ -332,7 +332,9 @@ namespace recomp {
+ 
+         typedef std::variant<ModConfigQueueSaveMod, ModConfigQueueSave, ModConfigQueueEnd, ModConfigSetLatestGamemode> ModConfigQueueVariant;
+ 
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+         class LiveRecompilerCodeHandle;
++#endif
+         class ModContext {
+         public:
+             ModContext();
+@@ -425,17 +427,21 @@ namespace recomp {
+             std::filesystem::path mod_config_directory;
+             mutable std::mutex mod_config_storage_mutex;
+             std::vector<size_t> loaded_code_mods;
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+             // Code handle for vanilla code that was regenerated to add hooks.
+             std::unique_ptr<LiveRecompilerCodeHandle> regenerated_code_handle;
+             // Code handle for base patched code that was regenerated to add hooks.
+             std::unique_ptr<LiveRecompilerCodeHandle> base_patched_code_handle;
++#endif
+             // Map of hook definition to the entry hook slot's index.
+             std::unordered_map<HookDefinition, size_t> hook_slots;
+             // Tracks which hook slots have already been processed. Used to regenerate vanilla functions as needed
+             // to add hooks to any functions that weren't already replaced by a mod.
+             std::vector<bool> processed_hook_slots;
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+             // Generated shim functions to use for implementing shim exports.
+             std::vector<std::unique_ptr<N64Recomp::ShimFunction>> shim_functions;
++#endif
+             config::ConfigSchema empty_schema;
+             std::vector<char> empty_bytes;
+             size_t num_events = 0;
+@@ -539,6 +545,7 @@ namespace recomp {
+             int32_t* reference_section_addresses;
+         };
+ 
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+         class DynamicLibraryCodeHandle : public ModCodeHandle {
+         public:
+             DynamicLibraryCodeHandle(const std::filesystem::path& dll_path, const N64Recomp::Context& context, const ModCodeHandleInputs& inputs);
+@@ -603,6 +610,7 @@ namespace recomp {
+             bool is_good = false;
+             std::unique_ptr<int32_t[]> section_addresses;
+         };
++#endif
+ 
+         void setup_events(size_t num_events);
+         void register_event_callback(size_t event_index, size_t mod_index, GenericFunction callback);
+diff --git a/lib/N64ModernRuntime/librecomp/src/mods.cpp b/lib/N64ModernRuntime/librecomp/src/mods.cpp
+index 0f7de83..3c9bf89 100644
+--- a/lib/N64ModernRuntime/librecomp/src/mods.cpp
++++ b/lib/N64ModernRuntime/librecomp/src/mods.cpp
+@@ -9,7 +9,9 @@
+ #include "librecomp/game.hpp"
+ #include "librecomp/patcher.hpp"
+ #include "recompiler/context.h"
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+ #include "recompiler/live_recompiler.h"
++#endif
+ 
+ static bool read_json(std::ifstream input_file, nlohmann::json &json_out) {
+     if (!input_file.good()) {
+@@ -63,6 +65,23 @@ bool get_to_vec(const nlohmann::json& val, std::vector<T2>& out) {
+     return true;
+ }
+ 
++#if defined(_WIN32)
++#define PATHFMT "%ls"
++#else
++#define PATHFMT "%s"
++#endif
++
++template<class... Ts>
++struct overloaded : Ts... { using Ts::operator()...; };
++template<class... Ts>
++overloaded(Ts...) -> overloaded<Ts...>;
++
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++// Complete the forward declaration used by ModHandle's ownership container,
++// but expose no loader API or native handle in the AOT-only profile.
++class recomp::mods::DynamicLibrary {};
++#else
++
+ // Architecture detection.
+ 
+ // MSVC x86_64
+@@ -79,17 +98,6 @@ bool get_to_vec(const nlohmann::json& val, std::vector<T2>& out) {
+ #endif
+ 
+ 
+-#if defined(_WIN32)
+-#define PATHFMT "%ls"
+-#else
+-#define PATHFMT "%s"
+-#endif
+-
+-template<class... Ts>
+-struct overloaded : Ts... { using Ts::operator()...; };
+-template<class... Ts>
+-overloaded(Ts...) -> overloaded<Ts...>;
+-
+ #if defined(_WIN32)
+ #   define WIN32_LEAN_AND_MEAN
+ #   include "Windows.h"
+@@ -249,6 +257,8 @@ void protect(void* target_func, uint64_t old_flags) {
+ }
+ #endif
+ 
++#endif // N64MODERN_NO_DYNAMIC_CODE
++
+ namespace modpaths {
+     constexpr std::string_view default_mod_extension = "nrm";
+     constexpr std::string_view binary_path = "mod_binary.bin";
+@@ -306,6 +316,10 @@ void recomp::mods::ModHandle::populate_exports() {
+ }
+ 
+ recomp::mods::CodeModLoadError recomp::mods::ModHandle::load_native_library(const recomp::mods::NativeLibraryManifest& lib_manifest, std::string& error_param) {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    error_param = lib_manifest.name;
++    return CodeModLoadError::FailedToLoadNativeLibrary;
++#else
+     std::string lib_filename = lib_manifest.name + std::string{DynamicLibrary::PlatformExtension};
+     std::filesystem::path lib_path = manifest.mod_root_path.parent_path() / lib_filename;
+ 
+@@ -344,6 +358,7 @@ recomp::mods::CodeModLoadError recomp::mods::ModHandle::load_native_library(cons
+     }
+ 
+     return CodeModLoadError::Good;
++#endif
+ }
+ 
+ bool recomp::mods::ModHandle::get_export_function(const std::string& export_name, GenericFunction& out) const {
+@@ -383,6 +398,7 @@ bool recomp::mods::ModHandle::get_global_event_index(const std::string& event_na
+     return true;
+ }
+ 
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+ recomp::mods::DynamicLibraryCodeHandle::DynamicLibraryCodeHandle(const std::filesystem::path& dll_path, const N64Recomp::Context& context, const ModCodeHandleInputs& inputs) {
+     is_good = true;
+     // Load the DLL.
+@@ -480,6 +496,15 @@ recomp::mods::LiveRecompilerCodeHandle::LiveRecompilerCodeHandle(
+     const N64Recomp::Context& context, const ModCodeHandleInputs& inputs,
+     std::unordered_map<size_t, size_t>&& entry_func_hooks, std::unordered_map<size_t, size_t>&& return_func_hooks, std::vector<size_t>&& original_section_indices, bool regenerated)
+ {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    (void)context;
++    (void)inputs;
++    (void)entry_func_hooks;
++    (void)return_func_hooks;
++    (void)original_section_indices;
++    (void)regenerated;
++    is_good = false;
++#else
+     if (!regenerated) {
+        section_addresses = std::make_unique<int32_t[]>(context.sections.size());
+     }
+@@ -521,17 +546,28 @@ recomp::mods::LiveRecompilerCodeHandle::LiveRecompilerCodeHandle(
+     // Generate the code.
+     recompiler_output = std::make_unique<N64Recomp::LiveGeneratorOutput>(generator.finish());
+     is_good = !errored && recompiler_output->good;
++#endif
+ }
+ 
+ void recomp::mods::LiveRecompilerCodeHandle::set_imported_function(size_t import_index, GenericFunction func) {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    (void)import_index;
++    (void)func;
++#else
+     std::visit(overloaded {
+         [this, import_index](recomp_func_t* native_func) {
+             recompiler_output->populate_import_symbol_jumps(import_index, native_func);
+         }
+     }, func);
++#endif
+ }
+ 
+ recomp::mods::CodeModLoadError recomp::mods::LiveRecompilerCodeHandle::populate_reference_symbols(const N64Recomp::Context& context, std::string& error_param) {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    (void)context;
++    error_param = "Live recompilation is unavailable in this release build";
++    return CodeModLoadError::FailedToRecompile;
++#else
+     size_t num_reference_jumps = recompiler_output->num_reference_symbol_jumps();
+     for (size_t jump_index = 0; jump_index < num_reference_jumps; jump_index++) {
+         N64Recomp::ReferenceJumpDetails jump_details = recompiler_output->get_reference_symbol_jump_details(jump_index);
+@@ -549,10 +585,16 @@ recomp::mods::CodeModLoadError recomp::mods::LiveRecompilerCodeHandle::populate_
+         recompiler_output->set_reference_symbol_jump(jump_index, cur_func);
+     }
+     return CodeModLoadError::Good;
++#endif
+ }
+ 
+ recomp::mods::GenericFunction recomp::mods::LiveRecompilerCodeHandle::get_function_handle(size_t func_index) {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    (void)func_index;
++    return GenericFunction{ static_cast<recomp_func_t*>(nullptr) };
++#else
+     return GenericFunction{ recompiler_output->functions[func_index] };
++#endif
+ }
+ 
+ void patch_func(recomp_func_t* target_func, recomp::mods::GenericFunction replacement_func) {
+@@ -598,6 +640,7 @@ void unpatch_func(void* target_func, const recomp::mods::PatchData& data) {
+     memcpy(target_func, data.replaced_bytes.data(), data.replaced_bytes.size());
+     protect(target_func, old_flags);
+ }
++#endif // N64MODERN_NO_DYNAMIC_CODE
+ 
+ void recomp::mods::ModContext::add_opened_mod(ModManifest&& manifest, config::Config&& config, std::vector<size_t>&& game_indices, std::vector<ModContentTypeId>&& detected_content_types, std::vector<char>&& thumbnail) {
+     std::unique_lock lock(opened_mods_mutex);
+@@ -1572,6 +1615,14 @@ void recomp::mods::ModContext::set_latest_game_mode_id(const std::string& game_m
+ }
+ 
+ std::vector<recomp::mods::ModLoadErrorDetails> recomp::mods::ModContext::load_mods(const GameEntry& game_entry, const std::string& game_mode_id, uint8_t* rdram, int32_t load_address, uint32_t& ram_used) {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    (void)game_entry;
++    (void)game_mode_id;
++    (void)rdram;
++    (void)load_address;
++    ram_used = 0;
++    return {};
++#else
+     std::vector<recomp::mods::ModLoadErrorDetails> ret{};
+     ram_used = 0;
+     num_events = recomp::overlays::num_base_events();
+@@ -1826,8 +1877,10 @@ std::vector<recomp::mods::ModLoadErrorDetails> recomp::mods::ModContext::load_mo
+ 
+     active_game = mod_game_index;
+     return ret;
++#endif
+ }
+ 
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+ template <bool patched_regenlist>
+ std::vector<recomp::mods::ModLoadErrorDetails> build_regen_list(
+     const std::vector<std::pair<recomp::mods::HookDefinition, size_t>>& sorted_unprocessed_hooks,
+@@ -2654,6 +2707,12 @@ void recomp::mods::ModContext::unload_mods() {
+     num_events = recomp::overlays::num_base_events();
+     active_game = (size_t)-1;
+ }
++#else
++void recomp::mods::ModContext::unload_mods() {
++    loaded_mods_by_id.clear();
++    active_game = (size_t)-1;
++}
++#endif // N64MODERN_NO_DYNAMIC_CODE
+ 
+ void recomp::mods::unmet_dependency_handler(uint8_t* rdram, recomp_context* ctx, uintptr_t arg) {
+     size_t caller_mod_index = (arg >>  0) & uint64_t(0xFFFFFFFF);
+diff --git a/lib/N64ModernRuntime/librecomp/src/recomp.cpp b/lib/N64ModernRuntime/librecomp/src/recomp.cpp
+index ea1c49b..8ebae5e 100644
+--- a/lib/N64ModernRuntime/librecomp/src/recomp.cpp
++++ b/lib/N64ModernRuntime/librecomp/src/recomp.cpp
+@@ -23,7 +23,9 @@
+ #include "ultramodern/error_handling.hpp"
+ #include "librecomp/addresses.hpp"
+ #include "librecomp/mods.hpp"
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+ #include "recompiler/live_recompiler.h"
++#endif
+ 
+ #ifdef _WIN32
+ #    define WIN32_LEAN_AND_MEAN
+@@ -83,18 +85,24 @@ bool recomp::register_game(const recomp::GameEntry& entry) {
+         game_roms.insert({ entry.game_id, entry });
+     }
+     if (!entry.mod_game_id.empty()) {
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+         std::lock_guard<std::mutex> lock(mod_context_mutex);
+         mod_context->register_game(entry.mod_game_id);
++#endif
+     }
+     return true;
+ }
+ 
+ void recomp::mods::initialize_mods() {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    return;
++#else
+     N64Recomp::live_recompiler_init();
+     std::filesystem::create_directories(config_path / mods_directory);
+     std::filesystem::create_directories(config_path / mod_config_directory);
+     mod_context->set_mods_config_path(config_path / "mods.json");
+     mod_context->set_mod_config_directory(config_path / mod_config_directory);
++#endif
+ }
+ 
+ void recomp::mods::register_embedded_mod(const std::string &mod_id, std::span<const uint8_t> mod_bytes) {
+@@ -108,6 +116,9 @@ void recomp::mods::register_deprecated_mod(const std::string& mod_id, recomp::mo
+ }
+ 
+ void recomp::mods::scan_mods() {
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++    return;
++#else
+     std::vector<recomp::mods::ModOpenErrorDetails> mod_open_errors;
+     {
+         std::lock_guard mod_lock{ mod_context_mutex };
+@@ -118,6 +129,7 @@ void recomp::mods::scan_mods() {
+     }
+ 
+     mod_context->load_mods_config();
++#endif
+ }
+ 
+ void recomp::mods::close_mods() {
+@@ -718,7 +730,15 @@ bool wait_for_game_started(uint8_t* rdram, recomp_context* context) {
+                 }
+ 
+                 uint32_t mod_ram_used = 0;
++#if defined(N64MODERN_NO_DYNAMIC_CODE)
++                // The generated base recomp still triggers its built-in event
++                // indices even when user code mods are compiled out. Allocate
++                // the fixed callback table so those events remain valid empty
++                // dispatches in the AOT-only profile.
++                recomp::mods::setup_events(recomp::overlays::num_base_events());
++#endif
+                 if (!game_entry.mod_game_id.empty()) {
++#if !defined(N64MODERN_NO_DYNAMIC_CODE)
+                     std::vector<recomp::mods::ModLoadErrorDetails> mod_load_errors;
+                     {
+                         std::lock_guard lock { mod_context_mutex };
+@@ -746,6 +766,7 @@ bool wait_for_game_started(uint8_t* rdram, recomp_context* context) {
+                         game_status.store(GameStatus::None);
+                         return false;
+                     }
++#endif
+                 }
+ 
+                 recomp::init_heap(rdram, recomp::mod_rdram_start + mod_ram_used);
+@@ -886,10 +907,23 @@ void recomp::start(const recomp::Configuration& cfg) {
+ 
+     graphics_shutdown_ready.signal();
+ 
++#if !defined(__APPLE__) || !defined(N64MODERN_NO_DYNAMIC_CODE)
+     game_thread.join();
++#endif
+     ultramodern::join_event_threads();
+     ultramodern::join_thread_cleaner_thread();
+     ultramodern::join_saving_thread();
++
++#if defined(__APPLE__) && defined(N64MODERN_NO_DYNAMIC_CODE)
++    // Apple builds are single-session processes. DK64's guest game thread can
++    // remain parked after the renderer/event/save infrastructure has stopped,
++    // so waiting on it here prevents normal macOS and iOS termination. Do not
++    // unmap RDRAM or run process-wide destructors underneath that parked guest
++    // thread; flush completed save/log output and let the kernel reclaim the
++    // process atomically.
++    std::fflush(nullptr);
++    std::_Exit(EXIT_SUCCESS);
++#endif
+     
+     // Free rdram.
+     bool free_failed;
+diff --git a/lib/N64ModernRuntime/ultramodern/include/ultramodern/config.hpp b/lib/N64ModernRuntime/ultramodern/include/ultramodern/config.hpp
+index 2f22456..61fded6 100644
+--- a/lib/N64ModernRuntime/ultramodern/include/ultramodern/config.hpp
++++ b/lib/N64ModernRuntime/ultramodern/include/ultramodern/config.hpp
+@@ -12,6 +12,7 @@ namespace ultramodern {
+             Original,
+             Original2x,
+             Auto,
++            Manual,
+             OptionCount
+         };
+         enum class WindowMode {
+@@ -76,6 +77,7 @@ namespace ultramodern {
+             HighPrecisionFramebuffer hpfb_option;
+             int rr_manual_value;
+             int ds_option;
++            double resolution_multiplier = 2.0;
+ 
+             virtual ~GraphicsConfig() = default;
+ 
+@@ -89,6 +91,7 @@ namespace ultramodern {
+             {ultramodern::renderer::Resolution::Original, "Original"},
+             {ultramodern::renderer::Resolution::Original2x, "Original2x"},
+             {ultramodern::renderer::Resolution::Auto, "Auto"},
++            {ultramodern::renderer::Resolution::Manual, "Manual"},
+         });
+ 
+         NLOHMANN_JSON_SERIALIZE_ENUM(ultramodern::renderer::WindowMode, {
+diff --git a/lib/N64ModernRuntime/ultramodern/src/events.cpp b/lib/N64ModernRuntime/ultramodern/src/events.cpp
+index 2f1cfb5..30ca6a6 100644
+--- a/lib/N64ModernRuntime/ultramodern/src/events.cpp
++++ b/lib/N64ModernRuntime/ultramodern/src/events.cpp
+@@ -205,6 +205,12 @@ void vi_thread_func() {
+             next = std::chrono::high_resolution_clock::now();
+         }
+         ultramodern::sleep_until(next);
++        // A quit request can arrive while this thread is sleeping. Do not
++        // advance VI state after shutdown has started; the game thread may
++        // already be tearing down the state that backs the current mode.
++        if (exited.load()) {
++            break;
++        }
+         auto time_now = ultramodern::time_since_start();
+         // Calculate how many VIs have passed
+         uint64_t new_total_vis = (time_now * (60 * ultramodern::get_speed_multiplier()) / 1000ms) + 1;
+@@ -362,8 +368,11 @@ void gfx_thread_func(uint8_t* rdram, moodycamel::LightweightSemaphore* thread_re
+                 // Tell the game that the RSP completed instantly. This will allow it to queue other task types, but it won't
+                 // start another graphics task until the RDP is also complete. Games usually preserve the RSP inputs until the RDP
+                 // is finished as well, so sending this early shouldn't be an issue in most cases.
+-                // If this causes issues then the logic can be replaced with responding to yield requests.
++                // DK64 can replace its microcode data as soon as SP completes. The BananaPad renderer must consume the task first
++                // or RT64 can hash partially replaced microcode and fail to select its GBI.
++#if !defined(BANANAPAD_NATIVE_SHELL)
+                 sp_complete();
++#endif
+                 ultramodern::measure_input_latency();
+ 
+                 PTR(u64) displaylist = task_action->task.t.data_ptr;
+@@ -373,6 +382,9 @@ void gfx_thread_func(uint8_t* rdram, moodycamel::LightweightSemaphore* thread_re
+                 renderer_context->send_dl(&task_action->task);
+                 [[maybe_unused]] auto renderer_end = std::chrono::high_resolution_clock::now();
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++                sp_complete();
++#endif
+                 dp_complete();
+                 // TODO hook the parsed event up to the actual parsing point when a callback is added to RT64.
+                 ultramodern::extensions::on_displaylist_parsed(displaylist);
+@@ -614,6 +626,12 @@ void ultramodern::init_events(RDRAM_ARG ultramodern::renderer::WindowHandle wind
+         throw std::runtime_error("Failed to initialize the renderer");
+     }
+ 
++    // Native-shell autostart can mark the game running before the first VI
++    // iteration. Seed both buffers here so update_vi never observes a null
++    // mode during that startup race.
++    set_dummy_vi(false);
++    events_context.vi.states[events_context.vi.cur_state] =
++        *events_context.vi.get_next_state();
+     events_context.vi.thread = std::thread{ vi_thread_func };
+ }
+ 
+diff --git a/lib/rt64/CMakeLists.txt b/lib/rt64/CMakeLists.txt
+index 79dfc38..2867b4d 100644
+--- a/lib/rt64/CMakeLists.txt
++++ b/lib/rt64/CMakeLists.txt
+@@ -5,10 +5,13 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ 
+ if (APPLE)
+     enable_language(OBJC OBJCXX)
+-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
++    if (NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
++    endif()
+ endif()
+ 
+ option(RT64_STATIC "Build RT64 as a static library" OFF)
++option(RT64_BUILD_TOOLS "Build RT64 host-side helper and texture tools" ON)
+ 
+ 
+ option(RT64_SDL_WINDOW_VULKAN "Build RT64 to expect an SDL Window outside of Windows" OFF)
+@@ -69,7 +72,17 @@ set(ZSTD_LEGACY_SUPPORT OFF)
+ set(ZSTD_BUILD_STATIC ON)
+ set(ZSTD_BUILD_SHARED OFF)
+ 
+-add_subdirectory(src/tools/file_to_c)
++if (CMAKE_CROSSCOMPILING)
++    if (NOT FILE_TO_C_PATH OR NOT SPIRV_CROSS_MSL_PATH)
++        message(FATAL_ERROR "Cross-compiling RT64 requires native FILE_TO_C_PATH and SPIRV_CROSS_MSL_PATH tools")
++    endif()
++    add_executable(file_to_c IMPORTED GLOBAL)
++    set_target_properties(file_to_c PROPERTIES IMPORTED_LOCATION "${FILE_TO_C_PATH}")
++    add_executable(spirv_cross_msl IMPORTED GLOBAL)
++    set_target_properties(spirv_cross_msl PROPERTIES IMPORTED_LOCATION "${SPIRV_CROSS_MSL_PATH}")
++else()
++    add_subdirectory(src/tools/file_to_c)
++endif()
+ add_subdirectory(src/contrib/re-spirv)
+ add_subdirectory(src/contrib/nativefiledialog-extended)
+ add_subdirectory(src/contrib/zstd/build/cmake)
+@@ -104,6 +117,12 @@ set(ANDROID_ABI arm64-v8a)
+ 
+ # For DXC
+ set (DXC_COMMON_OPTS "-I${PROJECT_SOURCE_DIR}/src")
++if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++    # Apple mobile GPUs and Simulator expose at most 16 samplers per shader.
++    # RT64's optional native-sampler fast path declares 18 combinations; use
++    # the renderer's accurate software addressing/filtering path on iOS.
++    list(APPEND DXC_COMMON_OPTS "-D" "RT64_DISABLE_NATIVE_SAMPLERS=1")
++endif()
+ set (DXC_DXIL_OPTS "-Wno-ignored-attributes")
+ set (DXC_SPV_OPTS "-spirv" "-fspv-target-env=vulkan1.0" "-fvk-use-dx-layout")
+ set (DXC_LB_OPTS "${DXC_COMMON_OPTS}" "-D" "LIBRARY" "-T" "lib_6_3")
+@@ -136,6 +155,11 @@ function(build_shader_dxil_impl TARGETOBJ FILENAME TARGET_NAME OUTNAME)
+ endfunction()
+ 
+ function(build_shader_msl_impl TARGETOBJ FILENAME TARGET_NAME OUTNAME)
++    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        set(RT64_METAL_SDK "${CMAKE_OSX_SYSROOT}")
++    else()
++        set(RT64_METAL_SDK "macosx")
++    endif()
+     add_custom_command(OUTPUT ${OUTNAME}.spv
+             COMMAND ${DXC} ${DXC_SPV_OPTS} ${ARGN} ${FILENAME} /Fo ${OUTNAME}.spv
+             DEPENDS ${FILENAME})
+@@ -143,10 +167,10 @@ function(build_shader_msl_impl TARGETOBJ FILENAME TARGET_NAME OUTNAME)
+             COMMAND spirv_cross_msl ${OUTNAME}.spv ${OUTNAME}.metal
+             DEPENDS ${OUTNAME}.spv spirv_cross_msl)
+     add_custom_command(OUTPUT ${OUTNAME}.ir
+-            COMMAND xcrun -sdk macosx metal -o ${OUTNAME}.ir -c ${OUTNAME}.metal $<$<CONFIG:Debug>:-frecord-sources>
++            COMMAND xcrun -sdk ${RT64_METAL_SDK} metal -o ${OUTNAME}.ir -c ${OUTNAME}.metal $<$<CONFIG:Debug>:-frecord-sources>
+             DEPENDS ${OUTNAME}.metal)
+     add_custom_command(OUTPUT ${OUTNAME}.metallib
+-            COMMAND xcrun -sdk macosx metallib ${OUTNAME}.ir -o ${OUTNAME}.metallib
++            COMMAND xcrun -sdk ${RT64_METAL_SDK} metallib ${OUTNAME}.ir -o ${OUTNAME}.metallib
+             DEPENDS ${OUTNAME}.ir)
+     add_custom_command(OUTPUT ${OUTNAME}.metal.c
+             COMMAND file_to_c ${OUTNAME}.metallib ${TARGET_NAME}BlobMSL ${OUTNAME}.metal.c ${OUTNAME}.metal.h
+@@ -290,7 +314,9 @@ if (WIN32)
+     set(SDL2_LIBRARIES "SDL2" "SDL2main")
+     link_directories("${PROJECT_SOURCE_DIR}/src/contrib/mupen64plus-win32-deps/SDL2-2.26.3/lib/x64")
+ else()
+-    find_package(SDL2 REQUIRED)
++    if (NOT SDL2_INCLUDE_DIRS OR NOT SDL2_LIBRARIES)
++        find_package(SDL2 REQUIRED)
++    endif()
+ endif()
+ 
+ message(STATUS "${SDL2_INCLUDE_DIRS} ${SDL2_LIBRARIES}")
+@@ -445,19 +471,26 @@ target_link_libraries(rt64 nfd)
+ target_link_libraries(rt64 libzstd_static)
+ target_link_libraries(rt64 plume)
+ 
+-# Add tools.
+-add_subdirectory(src/tools/texture_hasher)
+-add_subdirectory(src/tools/texture_packer)
++# Add developer/packaging tools only for native host builds.
++if (RT64_BUILD_TOOLS AND NOT CMAKE_CROSSCOMPILING)
++    add_subdirectory(src/tools/texture_hasher)
++    add_subdirectory(src/tools/texture_packer)
++endif()
+ 
+ # Add any Apple-specific source files and libraries
+ if (APPLE)
+-    add_subdirectory(src/tools/spirv_cross_msl)
++    if (NOT TARGET spirv_cross_msl)
++        add_subdirectory(src/tools/spirv_cross_msl)
++    endif()
+ 
+     target_sources(rt64 PRIVATE
+         "${PROJECT_SOURCE_DIR}/src/apple/rt64_apple.mm"
+     )
+     target_include_directories(rt64 PRIVATE "${PROJECT_SOURCE_DIR}/src/contrib/metal-cpp")
+-    target_link_libraries(rt64 "-framework Metal -framework QuartzCore -framework CoreGraphics -framework IOKit")
++    target_link_libraries(rt64 "-framework Metal -framework QuartzCore -framework CoreGraphics")
++    if (NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
++        target_link_libraries(rt64 "-framework IOKit")
++    endif()
+ endif()
+ 
+ # Add any Windows-specific source files and libraries
+@@ -556,4 +589,3 @@ build_pixel_shader(  rt64 "src/shaders/Im3DPS.hlsl")
+ build_pixel_shader(  rt64 "src/shaders/PostProcessPS.hlsl")
+ 
+ target_include_directories(rt64 PRIVATE ${CMAKE_BINARY_DIR}/src)
+-
+diff --git a/lib/rt64/src/apple/rt64_apple.mm b/lib/rt64/src/apple/rt64_apple.mm
+index 2de90b9..4926c4d 100644
+--- a/lib/rt64/src/apple/rt64_apple.mm
++++ b/lib/rt64/src/apple/rt64_apple.mm
+@@ -1,6 +1,5 @@
+ #include "rt64_apple.h"
+ 
+-#import <AppKit/AppKit.h>
+ #import <Foundation/Foundation.h>
+ 
+ const char* GetHomeDirectory() {
+diff --git a/lib/rt64/src/gbi/rt64_gbi.cpp b/lib/rt64/src/gbi/rt64_gbi.cpp
+index 7006549..49ed3e8 100644
+--- a/lib/rt64/src/gbi/rt64_gbi.cpp
++++ b/lib/rt64/src/gbi/rt64_gbi.cpp
+@@ -160,7 +160,11 @@ namespace RT64 {
+     // 
+     //                  Length      Hash                    Known instances               
+     //     
++#if defined(BANANAPAD_NATIVE_SHELL)
++    static std::array<GBISegment, 95> textSegments = {
++#else
+     static std::array<GBISegment, 94> textSegments = {
++#endif
+             GBISegment{ 0x1408,     0x9C0926F5E466BE70ULL,  { &F3D_SDK_E } }, // Needs confirmation.
+             GBISegment{ 0x1400,     0x34EAA6E921BCF1B2ULL,  { &F3D_SDK_F, &F3D_SDK_UNKNOWN_G, &F3D_SDK_UNKNOWN_H } }, // Needs confirmation.
+             GBISegment{ 0x1408,     0x3E05E9BBE814C700ULL,  { &F3D_FIFO_SDK_E } }, // Needs confirmation.
+@@ -210,6 +214,13 @@ namespace RT64 {
+             GBISegment{ 0x1188,     0x6F800A00CF591778ULL,  { &F3DAM2_FIFO_2_05 } }, // Needs confirmation.
+             GBISegment{ 0x1390,     0x0B8FE363267ADCB4ULL,  { &F3DEX2_FIFO_2_06 } },
+             GBISegment{ 0x1390,     0x8C1C9814E75E1B4BULL,  { &F3DEX2_FIFO_2_07 } },
++#if defined(BANANAPAD_NATIVE_SHELL)
++            // DK64 can submit this stable alternate F3DEX2 2.07 text image on
++            // the Apple native path. Its data segment and embedded identity
++            // are the standard FIFO 2.07 values; classify the exact observed
++            // text hash instead of dropping the display list at startup.
++            GBISegment{ 0x1390,     0x8EDC2B2BC4D1E3B6ULL,  { &F3DEX2_FIFO_2_07 } },
++#endif
+             GBISegment{ 0x1390,     0xCF55FAE288BFE48DULL,  { &F3DEX2_FIFO_2_08 } }, // Needs confirmation.
+             GBISegment{ 0x1188,     0xB9FBB8E71F72B596ULL,  { &F3DEX2_FIFO_2_08_REJ } }, // Needs confirmation.
+             GBISegment{ 0x1188,     0x5235C026EC14B4FBULL,  { &F3DLX2_FIFO_2_08_REJ } }, // Needs confirmation.
+@@ -558,4 +569,4 @@ namespace RT64 {
+     GBIFunction GBIManager::getExtendedFunction() const {
+         return &GBI_EXTENDED::extendedOp;
+     }
+-};
+\ No newline at end of file
++};
+diff --git a/lib/rt64/src/render/rt64_render_target.cpp b/lib/rt64/src/render/rt64_render_target.cpp
+index 81917bc..0b5e592 100644
+--- a/lib/rt64/src/render/rt64_render_target.cpp
++++ b/lib/rt64/src/render/rt64_render_target.cpp
+@@ -6,6 +6,10 @@
+ 
+ #include <algorithm>
+ 
++#if defined(__APPLE__)
++#include <TargetConditionals.h>
++#endif
++
+ #include "gbi/rt64_f3d.h"
+ #include "shared/rt64_fb_common.h"
+ #include "shared/rt64_render_target_copy.h"
+@@ -18,7 +22,11 @@
+ namespace RT64 {
+     // RenderTarget
+     
++#if defined(__APPLE__) && TARGET_OS_IPHONE
++    const long RenderTarget::MaxDimension = 0x2000L;
++#else
+     const long RenderTarget::MaxDimension = 0x4000L;
++#endif
+ 
+     RenderTarget::RenderTarget(uint32_t addressForName, Framebuffer::Type type, const RenderMultisampling &multisampling, bool usesHDR) {
+         this->addressForName = addressForName;
+@@ -512,4 +520,4 @@ namespace RT64 {
+     RenderFormat RenderTarget::depthBufferFormat() {
+         return RenderFormat::D32_FLOAT;
+     }
+-};
+\ No newline at end of file
++};
+diff --git a/lib/rt64/src/render/rt64_shader_library.cpp b/lib/rt64/src/render/rt64_shader_library.cpp
+index d1c5273..2420f05 100644
+--- a/lib/rt64/src/render/rt64_shader_library.cpp
++++ b/lib/rt64/src/render/rt64_shader_library.cpp
+@@ -8,6 +8,10 @@
+ #include "shared/rt64_render_target_copy.h"
+ #include "shared/rt64_rsp_vertex_test_z.h"
+ 
++#if defined(__APPLE__)
++#include <TargetConditionals.h>
++#endif
++
+ #include "shaders/FbChangesClearCS.hlsl.spirv.h"
+ #include "shaders/FbChangesDrawColorPS.hlsl.spirv.h"
+ #include "shaders/FbChangesDrawDepthPS.hlsl.spirv.h"
+@@ -852,7 +856,11 @@ namespace RT64 {
+             postProcess.pipeline = device->createGraphicsPipeline(pipelineDesc);
+         }
+         
+-        // Raytracing debug.
++        // Raytracing debug. Simulator Metal supports fewer argument buffers
++        // than this optional visualization pipeline requires. Normal rendering
++        // does not use it, so avoid creating a pipeline that is guaranteed to
++        // fail while keeping it available on macOS and physical devices.
++#if !defined(__APPLE__) || !TARGET_OS_SIMULATOR
+         {
+             FramebufferRendererDescriptorCommonSet descriptorCommonSet(samplerLibrary, deviceCapabilities.raytracing);
+             FramebufferRendererDescriptorTextureSet descriptorTextureSet;
+@@ -876,6 +884,7 @@ namespace RT64 {
+             pipelineDesc.multisampling = multisampling;
+             debug.pipeline = device->createGraphicsPipeline(pipelineDesc);
+         }
++#endif
+ 
+         // RSP Vertex Test Z.
+         {
+diff --git a/lib/rt64/src/shaders/TextureSampler.hlsli b/lib/rt64/src/shaders/TextureSampler.hlsli
+index 1ceb2ce..dd322d9 100644
+--- a/lib/rt64/src/shaders/TextureSampler.hlsli
++++ b/lib/rt64/src/shaders/TextureSampler.hlsli
+@@ -112,6 +112,11 @@ float4 clampWrapMirrorSample(const RDPTile rdpTile, const GPUTile gpuTile, float
+ static const float LowPrecision = 128.0f;
+ 
+ float4 sampleTextureNative(Texture2D texture, uint nativeSampler, int2 texelBaseInt, float2 textureSize) {
++#if defined(RT64_DISABLE_NATIVE_SAMPLERS)
++    // Mobile Metal uses the RDP-compatible software sampling path below. Keep
++    // this helper sampler-free so DXC removes all 18 immutable sampler slots.
++    return texture.Load(int3(texelBaseInt, 0));
++#else
+     // Transform to native coordinate. Half pixel offset is required to reach the desired texel.
+     float2 nativeUVCoord = (float2(texelBaseInt) + 0.5f) / textureSize;
+             
+@@ -137,6 +142,7 @@ float4 sampleTextureNative(Texture2D texture, uint nativeSampler, int2 texelBase
+         default:
+             return texture.SampleLevel(gNearestClampClampSampler, nativeUVCoord, 0.0f);
+     }
++#endif
+ }
+ 
+ float4 sampleTextureLevel(const RDPTile rdpTile, const GPUTile gpuTile, bool filterBilerp, bool filterAverage, bool linearFiltering, float2 uvCoord, uint tlut, bool canDecodeTMEM, uint mipLevel, bool usesHDR) {
+@@ -148,7 +154,11 @@ float4 sampleTextureLevel(const RDPTile rdpTile, const GPUTile gpuTile, bool fil
+     int2 texelBaseInt = floor(uvCoord);
+     bool filtering = or(filterBilerp, linearFiltering);
+     float4 samples[4];
++#if defined(RT64_DISABLE_NATIVE_SAMPLERS)
++    const uint nativeSampler = NATIVE_SAMPLER_NONE;
++#else
+     const uint nativeSampler = rdpTile.nativeSampler;
++#endif
+     bool gpuTileUsesTMEM = canDecodeTMEM && gpuTileFlagRawTMEM(gpuTile.flags);
+     if ((nativeSampler == NATIVE_SAMPLER_NONE) || gpuTileUsesTMEM) {
+ #if USE_FOR_LOOPS
+@@ -262,7 +272,11 @@ float4 sampleTexture(OtherMode otherMode, RenderFlags renderFlags, float2 inputU
+     const uint tlut = otherMode.textLUT();
+     const bool canDecodeTMEM = renderFlagCanDecodeTMEM(renderFlags);
+     const bool usesHDR = renderFlagUsesHDR(renderFlags);
++#if defined(RT64_DISABLE_NATIVE_SAMPLERS)
++    const uint nativeSampler = NATIVE_SAMPLER_NONE;
++#else
+     const uint nativeSampler = rdpTile.nativeSampler;
++#endif
+     const bool flagHasMipmaps = gpuTileFlagHasMipmaps(gpuTile.flags);
+     uint numRDPSamples = 0;
+     uint RDPMipLevels[2];
+@@ -286,6 +300,7 @@ float4 sampleTexture(OtherMode otherMode, RenderFlags renderFlags, float2 inputU
+             numRDPSamples = 2;
+         }
+         else {
++#if !defined(RT64_DISABLE_NATIVE_SAMPLERS)
+             // Must normalize the texture coordinate and the derivatives.
+             float2 nativeUVCoord = uvCoord / gpuTile.textureDimensions.xy;
+             float2 originalSize = gpuTile.textureDimensions.xy / gpuTile.tcScale;
+@@ -314,6 +329,7 @@ float4 sampleTexture(OtherMode otherMode, RenderFlags renderFlags, float2 inputU
+                 default:
+                     return texture.SampleGrad(gLinearClampClampSampler, nativeUVCoord, ddxUVNorm, ddyUVNorm);
+             }
++#endif
+         }
+     }
+     else {
+@@ -356,4 +372,4 @@ float4 sampleTexture(OtherMode otherMode, RenderFlags renderFlags, float2 inputU
+     }
+     
+     return textureColor;
+-}
+\ No newline at end of file
++}
+diff --git a/lib/rt64/src/contrib/nativefiledialog-extended/CMakeLists.txt b/lib/rt64/src/contrib/nativefiledialog-extended/CMakeLists.txt
+index 86873e8..7277aa8 100644
+--- a/lib/rt64/src/contrib/nativefiledialog-extended/CMakeLists.txt
++++ b/lib/rt64/src/contrib/nativefiledialog-extended/CMakeLists.txt
+@@ -13,6 +13,8 @@ option(NFD_INSTALL "Generate install target for nfd" ${nfd_ROOT_PROJECT})
+ set(nfd_PLATFORM Undefined)
+ if(WIN32)
+   set(nfd_PLATFORM PLATFORM_WIN32)
++elseif(APPLE AND CMAKE_SYSTEM_NAME STREQUAL "iOS")
++  set(nfd_PLATFORM PLATFORM_NULL)
+ elseif(APPLE)
+   set(nfd_PLATFORM PLATFORM_MACOS)
+ elseif(UNIX AND NOT APPLE)
+diff --git a/lib/rt64/src/contrib/nativefiledialog-extended/src/CMakeLists.txt b/lib/rt64/src/contrib/nativefiledialog-extended/src/CMakeLists.txt
+index f83c583..a1a62da 100644
+--- a/lib/rt64/src/contrib/nativefiledialog-extended/src/CMakeLists.txt
++++ b/lib/rt64/src/contrib/nativefiledialog-extended/src/CMakeLists.txt
+@@ -56,6 +56,10 @@ if(nfd_PLATFORM STREQUAL PLATFORM_MACOS)
+   list(APPEND SOURCE_FILES nfd_cocoa.m)
+ endif()
+ 
++if(nfd_PLATFORM STREQUAL PLATFORM_NULL)
++  list(APPEND SOURCE_FILES nfd_null.cpp)
++endif()
++
+ # Define the library
+ add_library(${TARGET_NAME} ${SOURCE_FILES})
+ 
+diff --git a/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
+new file mode 100644
+index 0000000..9ff0e46
+--- /dev/null
++++ b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
+@@ -0,0 +1,47 @@
++#include "include/nfd.h"
++
++#include <cstdlib>
++
++extern "C" {
++
++nfdresult_t NFD_Init(void) { return NFD_OKAY; }
++void NFD_Quit(void) {}
++void NFD_FreePathN(nfdnchar_t *path) { free(path); }
++void NFD_FreePathU8(nfdu8char_t *path) { free(path); }
++
++nfdresult_t NFD_OpenDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogMultipleN(const nfdpathset_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogMultipleU8(const nfdpathset_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_SaveDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_SaveDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_PickFolderN(nfdnchar_t **, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_PickFolderU8(nfdu8char_t **, const nfdu8char_t *) { return NFD_CANCEL; }
++
++const char *NFD_GetError(void) { return "Native file dialogs are provided by BananaPad's UIKit shell"; }
++void NFD_ClearError(void) {}
++
++nfdresult_t NFD_PathSet_GetCount(const nfdpathset_t *, nfdpathsetsize_t *count) {
++    if (count != nullptr) *count = 0;
++    return NFD_OKAY;
++}
++nfdresult_t NFD_PathSet_GetPathN(const nfdpathset_t *, nfdpathsetsize_t, nfdnchar_t **) { return NFD_ERROR; }
++nfdresult_t NFD_PathSet_GetPathU8(const nfdpathset_t *, nfdpathsetsize_t, nfdu8char_t **) { return NFD_ERROR; }
++void NFD_PathSet_FreePathN(const nfdnchar_t *path) { free(const_cast<nfdnchar_t *>(path)); }
++void NFD_PathSet_FreePathU8(const nfdu8char_t *path) { free(const_cast<nfdu8char_t *>(path)); }
++nfdresult_t NFD_PathSet_GetEnum(const nfdpathset_t *, nfdpathsetenum_t *enumerator) {
++    if (enumerator != nullptr) *enumerator = {};
++    return NFD_OKAY;
++}
++void NFD_PathSet_FreeEnum(nfdpathsetenum_t *) {}
++nfdresult_t NFD_PathSet_EnumNextN(nfdpathsetenum_t *, nfdnchar_t **path) {
++    if (path != nullptr) *path = nullptr;
++    return NFD_OKAY;
++}
++nfdresult_t NFD_PathSet_EnumNextU8(nfdpathsetenum_t *, nfdu8char_t **path) {
++    if (path != nullptr) *path = nullptr;
++    return NFD_OKAY;
++}
++void NFD_PathSet_Free(const nfdpathset_t *) {}
++
++}
+diff --git a/lib/rt64/src/contrib/plume/CMakeLists.txt b/lib/rt64/src/contrib/plume/CMakeLists.txt
+index 0789c20..a51e745 100644
+--- a/lib/rt64/src/contrib/plume/CMakeLists.txt
++++ b/lib/rt64/src/contrib/plume/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ 
+-if(APPLE AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
++if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS" AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+     # 10.15 because of our use of supportsFamily()
+     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS deployment target")
+ endif()
+diff --git a/lib/rt64/src/contrib/plume/plume_apple.mm b/lib/rt64/src/contrib/plume/plume_apple.mm
+index 1384fe9..1ec8598 100644
+--- a/lib/rt64/src/contrib/plume/plume_apple.mm
++++ b/lib/rt64/src/contrib/plume/plume_apple.mm
+@@ -7,10 +7,16 @@
+ 
+ #include "plume_apple.h"
+ 
++#import <TargetConditionals.h>
++#if TARGET_OS_IPHONE
++#import <UIKit/UIKit.h>
++#else
+ #import <AppKit/AppKit.h>
+-#import <Foundation/Foundation.h>
+ #import <IOKit/IOKitLib.h>
++#endif
++#import <Foundation/Foundation.h>
+ 
++#if !TARGET_OS_IPHONE
+ static uint32_t plumeGetEntryProperty(io_registry_entry_t entry, CFStringRef propertyName) {
+     uint32_t value = 0;
+     CFTypeRef cfProp = IORegistryEntrySearchCFProperty(entry, kIOServicePlane, propertyName, kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+@@ -27,9 +33,14 @@ static uint32_t plumeGetEntryProperty(io_registry_entry_t entry, CFStringRef pro
+ 
+     return value;
+ }
++#endif
+ 
+ namespace plume {
+     RenderDeviceVendor getRenderDeviceVendor(uint64_t registryID) {
++#if TARGET_OS_IPHONE
++        (void)registryID;
++        return RenderDeviceVendor::APPLE;
++#else
+         io_service_t entry = IOServiceGetMatchingService(MACH_PORT_NULL, IORegistryEntryIDMatching(registryID));
+ 
+         if (entry) {
+@@ -44,8 +55,10 @@ namespace plume {
+         }
+         
+         return RenderDeviceVendor::UNKNOWN;
++#endif
+     }
+ 
++#if !TARGET_OS_IPHONE
+     CGFloat getScaleFactor(NSWindow *nsWindow) {
+ #ifdef PLUME_APPLE_RETINA_ENABLED
+         return [nsWindow backingScaleFactor];
+@@ -53,6 +66,7 @@ namespace plume {
+         return 1.0f;
+ #endif
+     }
++#endif
+ 
+     // MARK: - CocoaWindow
+ 
+@@ -61,19 +75,30 @@ namespace plume {
+         cachedAttributes = {0, 0, 0, 0};
+ 
+         if ([NSThread isMainThread]) {
++#if TARGET_OS_IPHONE
++            UIView *view = (__bridge UIView *)windowHandle;
++            CGRect contentFrame = view.bounds;
++            UIScreen *screen = view.window.screen ?: UIScreen.mainScreen;
++            CGFloat scaleFactor = MAX(screen.nativeScale, 1.0);
++#else
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             NSRect contentFrame = [[nsWindow contentView] frame];
+             CGFloat scaleFactor = getScaleFactor(nsWindow);
++#endif
+ 
+             cachedAttributes.x = (int)round(contentFrame.origin.x);
+             cachedAttributes.y = (int)round(contentFrame.origin.y);
+             cachedAttributes.width = (int)round(contentFrame.size.width * scaleFactor);
+             cachedAttributes.height = (int)round(contentFrame.size.height * scaleFactor);
+ 
++#if TARGET_OS_IPHONE
++            cachedRefreshRate.store((int)screen.maximumFramesPerSecond);
++#else
+             NSScreen *screen = [nsWindow screen];
+             if (@available(macOS 12.0, *)) {
+                 cachedRefreshRate.store((int)[screen maximumFramesPerSecond]);
+             }
++#endif
+         } else {
+             updateWindowAttributesInternal(true);
+             updateRefreshRateInternal(true);
+@@ -84,9 +109,16 @@ namespace plume {
+ 
+     void CocoaWindow::updateWindowAttributesInternal(bool forceSync) {
+         auto updateBlock = ^{
++#if TARGET_OS_IPHONE
++            UIView *view = (__bridge UIView *)windowHandle;
++            CGRect contentFrame = view.bounds;
++            UIScreen *screen = view.window.screen ?: UIScreen.mainScreen;
++            CGFloat scaleFactor = MAX(screen.nativeScale, 1.0);
++#else
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             NSRect contentFrame = [[nsWindow contentView] frame];
+             CGFloat scaleFactor = getScaleFactor(nsWindow);
++#endif
+ 
+             std::lock_guard<std::mutex> lock(attributesMutex);
+             cachedAttributes.x = (int)round(contentFrame.origin.x);
+@@ -95,8 +127,10 @@ namespace plume {
+             cachedAttributes.height = (int)round(contentFrame.size.height * scaleFactor);
+         };
+ 
+-        if (forceSync) {
++        if (forceSync && ![NSThread isMainThread]) {
+             dispatch_sync(dispatch_get_main_queue(), updateBlock);
++        } else if ([NSThread isMainThread]) {
++            updateBlock();
+         } else {
+             dispatch_async(dispatch_get_main_queue(), updateBlock);
+         }
+@@ -104,15 +138,21 @@ namespace plume {
+ 
+     void CocoaWindow::updateRefreshRateInternal(bool forceSync) {
+         auto updateBlock = ^{
++#if TARGET_OS_IPHONE
++            cachedRefreshRate.store((int)UIScreen.mainScreen.maximumFramesPerSecond);
++#else
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             NSScreen *screen = [nsWindow screen];
+             if (@available(macOS 12.0, *)) {
+                 cachedRefreshRate.store((int)[screen maximumFramesPerSecond]);
+             }
++#endif
+         };
+ 
+-        if (forceSync) {
++        if (forceSync && ![NSThread isMainThread]) {
+             dispatch_sync(dispatch_get_main_queue(), updateBlock);
++        } else if ([NSThread isMainThread]) {
++            updateBlock();
+         } else {
+             dispatch_async(dispatch_get_main_queue(), updateBlock);
+         }
+@@ -120,9 +160,16 @@ namespace plume {
+ 
+     void CocoaWindow::getWindowAttributes(CocoaWindowAttributes* attributes) const {
+         if ([NSThread isMainThread]) {
++#if TARGET_OS_IPHONE
++            UIView *view = (__bridge UIView *)windowHandle;
++            CGRect contentFrame = view.bounds;
++            UIScreen *screen = view.window.screen ?: UIScreen.mainScreen;
++            CGFloat scaleFactor = MAX(screen.nativeScale, 1.0);
++#else
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             NSRect contentFrame = [[nsWindow contentView] frame];
+             CGFloat scaleFactor = getScaleFactor(nsWindow);
++#endif
+ 
+             {
+                 std::lock_guard<std::mutex> lock(attributesMutex);
+@@ -145,6 +192,11 @@ namespace plume {
+ 
+     int CocoaWindow::getRefreshRate() const {
+         if ([NSThread isMainThread]) {
++#if TARGET_OS_IPHONE
++            int freshRate = (int)UIScreen.mainScreen.maximumFramesPerSecond;
++            const_cast<CocoaWindow*>(this)->cachedRefreshRate.store(freshRate);
++            return freshRate;
++#else
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             NSScreen *screen = [nsWindow screen];
+ 
+@@ -155,6 +207,7 @@ namespace plume {
+             }
+ 
+             return cachedRefreshRate.load();
++#endif
+         } else {
+             int rate = cachedRefreshRate.load();
+ 
+@@ -165,6 +218,7 @@ namespace plume {
+     }
+ 
+     void CocoaWindow::toggleFullscreen() {
++#if !TARGET_OS_IPHONE
+         if ([NSThread isMainThread]) {
+             NSWindow *nsWindow = (__bridge NSWindow *)windowHandle;
+             [nsWindow toggleFullScreen:NULL];
+@@ -174,5 +228,6 @@ namespace plume {
+                 [nsWindow toggleFullScreen:NULL];
+             });
+         }
++#endif
+     }
+ }
+diff --git a/lib/rt64/src/contrib/plume/plume_metal.cpp b/lib/rt64/src/contrib/plume/plume_metal.cpp
+index 373c87e..157ec44 100644
+--- a/lib/rt64/src/contrib/plume/plume_metal.cpp
++++ b/lib/rt64/src/contrib/plume/plume_metal.cpp
+@@ -13,6 +13,7 @@
+ #include <Metal/Metal.hpp>
+ #include <QuartzCore/QuartzCore.hpp>
+ #include <CoreFoundation/CoreFoundation.h>
++#include <TargetConditionals.h>
+ 
+ #include <algorithm>
+ #include <mutex>
+@@ -2212,13 +2213,24 @@ namespace plume {
+ 
+     MetalQueryPool::~MetalQueryPool() {
+         MetalAutoreleasePool releasePool;
+-        sampleBuffer->release();
++        if (sampleBuffer != nullptr) {
++            sampleBuffer->release();
++        }
+     }
+ 
+     void MetalQueryPool::queryResults() {
+         MetalAutoreleasePool releasePool;
++        if (sampleBuffer == nullptr) {
++            return;
++        }
++
+         const NS::Data* data = sampleBuffer->resolveCounterRange(NS::Range(0, results.size()));
+-        std::memcpy(results.data(), data->mutableBytes(), results.size() * sizeof(uint64_t));
++        const size_t resultBytes = results.size() * sizeof(uint64_t);
++        if ((data == nullptr) || (data->mutableBytes() == nullptr) || (data->length() < resultBytes)) {
++            return;
++        }
++
++        std::memcpy(results.data(), data->mutableBytes(), resultBytes);
+     }
+ 
+     const uint64_t *MetalQueryPool::getResults() const {
+@@ -3796,7 +3808,13 @@ namespace plume {
+ 
+         const std::string deviceName(mtl->name()->utf8String());
+         description.name = deviceName;
++#if TARGET_OS_IPHONE
++        // MTLDevice.location is a macOS-only API. The iOS Simulator device is
++        // always an integrated Apple GPU from the renderer's perspective.
++        description.type = RenderDeviceType::INTEGRATED;
++#else
+         description.type = mapDeviceType(mtl->location());
++#endif
+         description.driverVersion = 1; // Unavailable
+         description.vendor = mtl->supportsFamily(MTL::GPUFamilyApple1) ? RenderDeviceVendor::APPLE : getRenderDeviceVendor(mtl->registryID());
+         description.dedicatedVideoMemory = mtl->recommendedMaxWorkingSetSize();

@@ -1,0 +1,32 @@
+{
+  "acceptedTaskType": "M_AUDTASK",
+  "config": "generated/aot/current-game/n_aspMain.toml",
+  "configSha256": "29f0bfe438bce3af43506aff5d23c2c9a4374398eb9051aaf99a028623fdc6a1",
+  "extraIndirectBranchTargets": [
+    "0x000010E8",
+    "0x0000138C",
+    "0x00001190",
+    "0x00001A28",
+    "0x000011BC",
+    "0x000017C0",
+    "0x000011FC",
+    "0x00001C58",
+    "0x00001C58",
+    "0x0000126C",
+    "0x00001338",
+    "0x0000123C",
+    "0x00001C58",
+    "0x000012C4",
+    "0x000012B0",
+    "0x00001374"
+  ],
+  "generatedSourceSha256": "da1aed4b6ea7306d8fef72475b9c8a12fa1f1e23bd8801e7e5b90f72fc3a819d",
+  "hleFallback": false,
+  "outputFunction": "n_aspMain",
+  "registrationSourceSha256": "8491f8a826c5a5efb8c031569d0f0d88291a505b80aba7f8a3c66ddcb4d05544",
+  "schemaVersion": 1,
+  "textAddress": "0x04001080",
+  "textOffset": "0x02146010",
+  "textSize": "0x00000C30",
+  "unknownTaskBehavior": "log and return null; runtime treats missing microcode as fatal"
+}

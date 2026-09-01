@@ -1,0 +1,63 @@
+.DS_Store
+
+# Private source references and isolated update candidates.
+/ref/
+/worktrees/
+
+# ROM-derived and generated build inputs/outputs.
+/generated/
+/build/
+/out/
+/dist/
+/artifacts/
+/docs/artifacts/
+
+# Game data, saves, diagnostics, and crash material.
+*.z64
+*.v64
+*.n64
+*.rom
+*.eep
+*.sra
+*.fla
+*.sav
+*.save
+*.dmp
+*.ips
+*.bps
+*.xdelta
+*.crash
+*.ips.beta
+*.log
+
+# Apple build/signing products and local configuration.
+DerivedData/
+*.xcarchive
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.mobileprovision
+*.p12
+*.cer
+*.key
+*.entitlements.local
+xcuserdata/
+*.xcuserstate
+
+# Generated recompilation products must remain private.
+RecompiledFuncs/
+RecompiledPatches/
+recomp_overlays.inl
+n_aspMain.cpp
+*.patch.bin
+*.patch.data
+
+# Tool and editor caches.
+.DS_Store
+.temp
+.cache/
+.venv/
+__pycache__/
+*.pyc
+.idea/
+.vscode/

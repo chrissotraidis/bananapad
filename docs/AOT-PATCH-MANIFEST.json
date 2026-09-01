@@ -1,0 +1,3407 @@
+{
+  "classificationPolicy": {
+    "desktopFrontendConfigGlue": "excluded from BananaPad native shell",
+    "patchSources": "required baseline correctness or retained upstream enhancement; individual route coverage remains tracked by gameplay evidence",
+    "runtimeExecutableMods": "excluded"
+  },
+  "generated": {
+    "eventFunctions": [
+      {
+        "name": "recomp_on_init",
+        "offset": "0x00000000",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "dk64recomp_every_frame",
+        "offset": "0x00000008",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_music_bin_load",
+        "offset": "0x00000010",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_cutscene_play",
+        "offset": "0x00000018",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_autowalk",
+        "offset": "0x00000020",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_adjust_dl_allocation",
+        "offset": "0x00000028",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_file_start",
+        "offset": "0x00000030",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_new_file_start",
+        "offset": "0x00000038",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_dirty_file_start",
+        "offset": "0x00000040",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_flag_check",
+        "offset": "0x00000048",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "recomp_on_flag_change",
+        "offset": "0x00000050",
+        "romSize": "0x00000008"
+      }
+    ],
+    "events": [
+      "recomp_on_flag_check",
+      "recomp_on_init",
+      "dk64recomp_every_frame",
+      "recomp_on_music_bin_load",
+      "recomp_on_cutscene_play",
+      "recomp_on_autowalk",
+      "recomp_adjust_dl_allocation",
+      "recomp_on_flag_change",
+      "recomp_on_file_start",
+      "recomp_on_dirty_file_start"
+    ],
+    "exportFunctions": [
+      {
+        "name": "recomp_printf",
+        "offset": "0x00000000",
+        "romSize": "0x00000040"
+      }
+    ],
+    "exports": [
+      "recomp_printf"
+    ],
+    "generatedFunctionCount": 221,
+    "manualHostFunctions": [
+      {
+        "address": "0x8F000000",
+        "name": "recomp_puts"
+      },
+      {
+        "address": "0x8F000004",
+        "name": "recomp_exit"
+      },
+      {
+        "address": "0x8F000010",
+        "name": "osRecvMesg_recomp"
+      },
+      {
+        "address": "0x8F000014",
+        "name": "osSendMesg_recomp"
+      },
+      {
+        "address": "0x8F000018",
+        "name": "recomp_get_gyro_deltas"
+      },
+      {
+        "address": "0x8F00001C",
+        "name": "recomp_get_analog_cam_sensitivity"
+      },
+      {
+        "address": "0x8F000020",
+        "name": "recomp_get_right_analog_inputs"
+      },
+      {
+        "address": "0x8F000024",
+        "name": "recomp_powf"
+      },
+      {
+        "address": "0x8F000028",
+        "name": "recomp_get_target_framerate"
+      },
+      {
+        "address": "0x8F00002C",
+        "name": "recomp_get_lightning_intensity"
+      },
+      {
+        "address": "0x8F000030",
+        "name": "recomp_get_bgm_volume"
+      },
+      {
+        "address": "0x8F000034",
+        "name": "recomp_get_sfx_volume"
+      },
+      {
+        "address": "0x8F000038",
+        "name": "recomp_get_story_skip"
+      },
+      {
+        "address": "0x8F00003C",
+        "name": "recomp_get_camera_type"
+      },
+      {
+        "address": "0x8F000040",
+        "name": "recomp_get_ui_bounds"
+      },
+      {
+        "address": "0x8F000044",
+        "name": "recomp_get_ui_pillar"
+      },
+      {
+        "address": "0x8F000048",
+        "name": "osCreateMesgQueue_recomp"
+      },
+      {
+        "address": "0x8F00004C",
+        "name": "recomp_set_current_frame_poll_id"
+      },
+      {
+        "address": "0x8F000050",
+        "name": "recomp_time_us"
+      },
+      {
+        "address": "0x8F000054",
+        "name": "recomp_measure_latency"
+      },
+      {
+        "address": "0x8F000058",
+        "name": "osViGetCurrentFramebuffer_recomp"
+      },
+      {
+        "address": "0x8F00005C",
+        "name": "bzero_recomp"
+      },
+      {
+        "address": "0x8F000060",
+        "name": "osFlashWriteArray_recomp"
+      },
+      {
+        "address": "0x8F000064",
+        "name": "osFlashWriteBuffer_recomp"
+      },
+      {
+        "address": "0x8F000068",
+        "name": "osWritebackDCache_recomp"
+      },
+      {
+        "address": "0x8F000070",
+        "name": "osContStartReadData_recomp"
+      },
+      {
+        "address": "0x8F000074",
+        "name": "osContGetReadData_recomp"
+      },
+      {
+        "address": "0x8F000078",
+        "name": "osContStartQuery_recomp"
+      },
+      {
+        "address": "0x8F00007C",
+        "name": "osContGetQuery_recomp"
+      },
+      {
+        "address": "0x8F000080",
+        "name": "recomp_get_mouse_deltas"
+      },
+      {
+        "address": "0x8F000084",
+        "name": "bcmp_recomp"
+      },
+      {
+        "address": "0x8F000088",
+        "name": "osGetTime_recomp"
+      },
+      {
+        "address": "0x8F000090",
+        "name": "recomp_load_overlays"
+      },
+      {
+        "address": "0x8F000094",
+        "name": "osInvalICache_recomp"
+      },
+      {
+        "address": "0x8F0000A0",
+        "name": "recomp_set_right_analog_suppressed"
+      },
+      {
+        "address": "0x8F0000A4",
+        "name": "recomp_get_inverted_axes"
+      },
+      {
+        "address": "0x8F0000A8",
+        "name": "recomp_high_precision_fb_enabled"
+      },
+      {
+        "address": "0x8F0000AC",
+        "name": "recomp_get_resolution_scale"
+      },
+      {
+        "address": "0x8F0000B0",
+        "name": "recomp_get_analog_inverted_axes"
+      },
+      {
+        "address": "0x8F0000B4",
+        "name": "__divdi3_recomp"
+      },
+      {
+        "address": "0x8F0000B8",
+        "name": "__umoddi3_recomp"
+      },
+      {
+        "address": "0x8F0000BC",
+        "name": "__udivdi3_recomp"
+      },
+      {
+        "address": "0x8F0000C0",
+        "name": "osPiGetStatus_recomp"
+      },
+      {
+        "address": "0x8F0000C4",
+        "name": "osInvalDCache_recomp"
+      },
+      {
+        "address": "0x8F0000C8",
+        "name": "boot_osPiRawStartDma"
+      },
+      {
+        "address": "0x8F0000D0",
+        "name": "yield_self"
+      },
+      {
+        "address": "0x8F0000DC",
+        "name": "load_dk64_overlay"
+      },
+      {
+        "address": "0x8F0000E0",
+        "name": "osViSetSpecialFeatures_recomp"
+      },
+      {
+        "address": "0x8F0000E4",
+        "name": "osViBlack_recomp"
+      },
+      {
+        "address": "0x8F0000EC",
+        "name": "osStopThread_recomp"
+      },
+      {
+        "address": "0x8F0000F0",
+        "name": "osSetThreadPri_recomp"
+      },
+      {
+        "address": "0x8F0000F4",
+        "name": "__osSpSetStatus_recomp"
+      },
+      {
+        "address": "0x8F0000F8",
+        "name": "strlen_recomp"
+      },
+      {
+        "address": "0x8F0000FC",
+        "name": "osViSetMode_recomp"
+      },
+      {
+        "address": "0x8F000100",
+        "name": "osSetTimer_recomp"
+      },
+      {
+        "address": "0x8F000104",
+        "name": "osDpSetStatus_recomp"
+      },
+      {
+        "address": "0x8F000108",
+        "name": "osVirtualToPhysical_recomp"
+      },
+      {
+        "address": "0x8F00010C",
+        "name": "memcpy_recomp"
+      },
+      {
+        "address": "0x8F000110",
+        "name": "osViSwapBuffer_recomp"
+      },
+      {
+        "address": "0x8F000114",
+        "name": "osDpGetStatus_recomp"
+      },
+      {
+        "address": "0x8F000118",
+        "name": "osViGetNextFramebuffer_recomp"
+      },
+      {
+        "address": "0x8F00011C",
+        "name": "osAiGetLength_recomp"
+      },
+      {
+        "address": "0x8F000120",
+        "name": "osWritebackDCacheAll_recomp"
+      },
+      {
+        "address": "0x8F000124",
+        "name": "osAiSetNextBuffer_recomp"
+      },
+      {
+        "address": "0x8F00012C",
+        "name": "sqrtf_recomp"
+      },
+      {
+        "address": "0x8F000130",
+        "name": "recomp_get_cutscene_bordering"
+      },
+      {
+        "address": "0x8F000134",
+        "name": "recomp_get_swimming_inverted_axes"
+      },
+      {
+        "address": "0x8F000138",
+        "name": "recomp_get_first_person_inverted_axes"
+      },
+      {
+        "address": "0x8F00013C",
+        "name": "recomp_get_mp_enabled"
+      },
+      {
+        "address": "0x8F000140",
+        "name": "recomp_get_draw_distance"
+      },
+      {
+        "address": "0x8F000144",
+        "name": "osPiStartDma_recomp"
+      }
+    ],
+    "patchBinarySha256": "50a403238b22af54af24a2c62c2130a327aaf410a414708acf6165d90e7cea49",
+    "patchC": "generated/aot/current-patches/RecompiledPatches/patches.c",
+    "patchCSha256": "1ed9b7473450699578d964b1d88f64263bd48a7e3c6663ef5e2fdd116976d1f8",
+    "patchMapSha256": "609409f864622d8e76b0bb48ef74adad153fd4b1e3791e5afd6e7a8e3f0ed923",
+    "replacementFunctions": [
+      {
+        "name": "func_menu_8003292C",
+        "offset": "0x00000000",
+        "romSize": "0x0000063C"
+      },
+      {
+        "name": "func_global_asm_805FBFF4",
+        "offset": "0x0000063C",
+        "romSize": "0x00000664"
+      },
+      {
+        "name": "func_global_asm_805FBC5C",
+        "offset": "0x0000D374",
+        "romSize": "0x00000174"
+      },
+      {
+        "name": "func_global_asm_8070A934",
+        "offset": "0x000047BC",
+        "romSize": "0x00000394"
+      },
+      {
+        "name": "func_global_asm_8066AF40",
+        "offset": "0x0000344C",
+        "romSize": "0x000000EC"
+      },
+      {
+        "name": "func_global_asm_80600674",
+        "offset": "0x0000CD70",
+        "romSize": "0x00000294"
+      },
+      {
+        "name": "func_global_asm_80611730",
+        "offset": "0x0000CCA8",
+        "romSize": "0x000000C8"
+      },
+      {
+        "name": "raiseException",
+        "offset": "0x000020C0",
+        "romSize": "0x00000074"
+      },
+      {
+        "name": "func_global_asm_805FB7E4",
+        "offset": "0x00000CA0",
+        "romSize": "0x0000017C"
+      },
+      {
+        "name": "func_global_asm_806BE8BC",
+        "offset": "0x00000E1C",
+        "romSize": "0x0000099C"
+      },
+      {
+        "name": "isFlagSet",
+        "offset": "0x00021FB8",
+        "romSize": "0x000000B0"
+      },
+      {
+        "name": "playCutscene",
+        "offset": "0x0000B75C",
+        "romSize": "0x0000036C"
+      },
+      {
+        "name": "setFlag",
+        "offset": "0x00022068",
+        "romSize": "0x000000E4"
+      },
+      {
+        "name": "func_bonus_80029364",
+        "offset": "0x000017B8",
+        "romSize": "0x00000908"
+      },
+      {
+        "name": "func_bonus_8002733C",
+        "offset": "0x00017D00",
+        "romSize": "0x0000014C"
+      },
+      {
+        "name": "func_bonus_80029B9C",
+        "offset": "0x000195D0",
+        "romSize": "0x00000488"
+      },
+      {
+        "name": "func_global_asm_80630DCC",
+        "offset": "0x00002134",
+        "romSize": "0x000006D8"
+      },
+      {
+        "name": "func_global_asm_80658E8C",
+        "offset": "0x0000D4E8",
+        "romSize": "0x000001A0"
+      },
+      {
+        "name": "func_global_asm_80614B34",
+        "offset": "0x000116F8",
+        "romSize": "0x0000029C"
+      },
+      {
+        "name": "func_global_asm_806303C4",
+        "offset": "0x0000280C",
+        "romSize": "0x00000258"
+      },
+      {
+        "name": "func_global_asm_80689F80",
+        "offset": "0x00002A64",
+        "romSize": "0x000000B4"
+      },
+      {
+        "name": "func_global_asm_80689FEC",
+        "offset": "0x00002B18",
+        "romSize": "0x000000B0"
+      },
+      {
+        "name": "func_global_asm_8068A074",
+        "offset": "0x00002BC8",
+        "romSize": "0x000000BC"
+      },
+      {
+        "name": "func_global_asm_8068A118",
+        "offset": "0x00002C84",
+        "romSize": "0x00000090"
+      },
+      {
+        "name": "func_global_asm_8068A164",
+        "offset": "0x00002D14",
+        "romSize": "0x00000094"
+      },
+      {
+        "name": "func_global_asm_80727958",
+        "offset": "0x00002DA8",
+        "romSize": "0x000006A4"
+      },
+      {
+        "name": "getPointerTableFile",
+        "offset": "0x00003538",
+        "romSize": "0x000002EC"
+      },
+      {
+        "name": "func_global_asm_805FE398",
+        "offset": "0x00003824",
+        "romSize": "0x0000012C"
+      },
+      {
+        "name": "func_global_asm_8070A848",
+        "offset": "0x00003950",
+        "romSize": "0x0000005C"
+      },
+      {
+        "name": "func_global_asm_80629300",
+        "offset": "0x000039AC",
+        "romSize": "0x00000E10"
+      },
+      {
+        "name": "func_global_asm_8070AC74",
+        "offset": "0x00004B50",
+        "romSize": "0x00000330"
+      },
+      {
+        "name": "func_global_asm_805FE4D4",
+        "offset": "0x0002427C",
+        "romSize": "0x000000FC"
+      },
+      {
+        "name": "func_global_asm_80706F90",
+        "offset": "0x00004E80",
+        "romSize": "0x0000060C"
+      },
+      {
+        "name": "func_global_asm_80709BC4",
+        "offset": "0x0000548C",
+        "romSize": "0x000005B8"
+      },
+      {
+        "name": "func_global_asm_80704B20",
+        "offset": "0x00005A44",
+        "romSize": "0x000009D0"
+      },
+      {
+        "name": "func_global_asm_807069A4",
+        "offset": "0x00006414",
+        "romSize": "0x000005C4"
+      },
+      {
+        "name": "func_global_asm_80707980",
+        "offset": "0x000069D8",
+        "romSize": "0x00000848"
+      },
+      {
+        "name": "func_global_asm_80631FAC",
+        "offset": "0x00007220",
+        "romSize": "0x00000054"
+      },
+      {
+        "name": "func_global_asm_80600D50",
+        "offset": "0x00007274",
+        "romSize": "0x0000040C"
+      },
+      {
+        "name": "func_global_asm_80610350",
+        "offset": "0x00007680",
+        "romSize": "0x00000640"
+      },
+      {
+        "name": "func_global_asm_8060A1B0",
+        "offset": "0x00007CC0",
+        "romSize": "0x000001E8"
+      },
+      {
+        "name": "func_global_asm_806291B4",
+        "offset": "0x00007EA8",
+        "romSize": "0x00000114"
+      },
+      {
+        "name": "func_global_asm_806FFF88",
+        "offset": "0x00007FBC",
+        "romSize": "0x00000124"
+      },
+      {
+        "name": "func_global_asm_80699284",
+        "offset": "0x000080E0",
+        "romSize": "0x00000590"
+      },
+      {
+        "name": "func_global_asm_8061138C",
+        "offset": "0x00008670",
+        "romSize": "0x00000090"
+      },
+      {
+        "name": "func_global_asm_8061DBD4",
+        "offset": "0x00008700",
+        "romSize": "0x00000F9C"
+      },
+      {
+        "name": "func_global_asm_8061D1FC",
+        "offset": "0x00022804",
+        "romSize": "0x00000568"
+      },
+      {
+        "name": "func_global_asm_80620F00",
+        "offset": "0x0000969C",
+        "romSize": "0x00000260"
+      },
+      {
+        "name": "func_global_asm_80620628",
+        "offset": "0x00022D6C",
+        "romSize": "0x00000508"
+      },
+      {
+        "name": "func_global_asm_8068A508",
+        "offset": "0x000098FC",
+        "romSize": "0x00000154"
+      },
+      {
+        "name": "func_menu_8002FC1C",
+        "offset": "0x00009A50",
+        "romSize": "0x00000114"
+      },
+      {
+        "name": "func_global_asm_806ABC94",
+        "offset": "0x00009B64",
+        "romSize": "0x000001BC"
+      },
+      {
+        "name": "func_global_asm_806AA304",
+        "offset": "0x0001F098",
+        "romSize": "0x00001468"
+      },
+      {
+        "name": "func_global_asm_80724B5C",
+        "offset": "0x00009D20",
+        "romSize": "0x00000118"
+      },
+      {
+        "name": "func_global_asm_80613194",
+        "offset": "0x00009E38",
+        "romSize": "0x0000004C"
+      },
+      {
+        "name": "func_global_asm_806131D4",
+        "offset": "0x00009E84",
+        "romSize": "0x0000004C"
+      },
+      {
+        "name": "func_global_asm_80613214",
+        "offset": "0x00009ED0",
+        "romSize": "0x00000048"
+      },
+      {
+        "name": "func_global_asm_80727678",
+        "offset": "0x00009F18",
+        "romSize": "0x000002C0"
+      },
+      {
+        "name": "func_global_asm_806BFBF4",
+        "offset": "0x0000A1D8",
+        "romSize": "0x00001310"
+      },
+      {
+        "name": "drawSpriteAtPosition",
+        "offset": "0x000125E0",
+        "romSize": "0x00000048"
+      },
+      {
+        "name": "func_global_asm_8061C518",
+        "offset": "0x0000B4E8",
+        "romSize": "0x00000158"
+      },
+      {
+        "name": "func_global_asm_8061C600",
+        "offset": "0x0000B640",
+        "romSize": "0x0000011C"
+      },
+      {
+        "name": "func_global_asm_806F386C",
+        "offset": "0x0000BAC8",
+        "romSize": "0x0000012C"
+      },
+      {
+        "name": "func_global_asm_8068AD7C",
+        "offset": "0x0000BBF4",
+        "romSize": "0x00000AA4"
+      },
+      {
+        "name": "func_global_asm_8068ABE0",
+        "offset": "0x00021E0C",
+        "romSize": "0x000001AC"
+      },
+      {
+        "name": "func_global_asm_806443E4",
+        "offset": "0x0000C698",
+        "romSize": "0x00000500"
+      },
+      {
+        "name": "func_dk64_boot_8000102C",
+        "offset": "0x0000CB98",
+        "romSize": "0x00000098"
+      },
+      {
+        "name": "func_dk64_boot_80000450",
+        "offset": "0x0000CC30",
+        "romSize": "0x00000078"
+      },
+      {
+        "name": "func_dk64_boot_800009D0",
+        "offset": "0x0000D004",
+        "romSize": "0x00000050"
+      },
+      {
+        "name": "func_global_asm_805FE544",
+        "offset": "0x0000D054",
+        "romSize": "0x00000118"
+      },
+      {
+        "name": "func_global_asm_805FB944",
+        "offset": "0x0000D16C",
+        "romSize": "0x00000208"
+      },
+      {
+        "name": "func_global_asm_80714A68",
+        "offset": "0x0000D688",
+        "romSize": "0x0000002C"
+      },
+      {
+        "name": "func_global_asm_807132DC",
+        "offset": "0x0000D6B4",
+        "romSize": "0x000000A4"
+      },
+      {
+        "name": "func_global_asm_80714A9C",
+        "offset": "0x0000D758",
+        "romSize": "0x000000CC"
+      },
+      {
+        "name": "func_global_asm_80655DD0",
+        "offset": "0x0000D824",
+        "romSize": "0x00000A78"
+      },
+      {
+        "name": "func_global_asm_8065FD88",
+        "offset": "0x00014A0C",
+        "romSize": "0x00000260"
+      },
+      {
+        "name": "func_global_asm_80701CA0",
+        "offset": "0x0000E29C",
+        "romSize": "0x000004B4"
+      },
+      {
+        "name": "func_global_asm_8068D264",
+        "offset": "0x0000E750",
+        "romSize": "0x0000042C"
+      },
+      {
+        "name": "func_global_asm_80703AB0",
+        "offset": "0x0000EB7C",
+        "romSize": "0x0000010C"
+      },
+      {
+        "name": "func_global_asm_807035C4",
+        "offset": "0x0000EC88",
+        "romSize": "0x0000025C"
+      },
+      {
+        "name": "func_global_asm_806522CC",
+        "offset": "0x0000EEE4",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "func_global_asm_8062DBDC",
+        "offset": "0x0000EEEC",
+        "romSize": "0x0000043C"
+      },
+      {
+        "name": "func_global_asm_80601EE4",
+        "offset": "0x0000F328",
+        "romSize": "0x000001F0"
+      },
+      {
+        "name": "func_arcade_800259D0",
+        "offset": "0x0000F518",
+        "romSize": "0x0000019C"
+      },
+      {
+        "name": "func_global_asm_80704960",
+        "offset": "0x0000F6B4",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "func_global_asm_80658134",
+        "offset": "0x0000F6BC",
+        "romSize": "0x0000019C"
+      },
+      {
+        "name": "func_global_asm_80656F14",
+        "offset": "0x0000F858",
+        "romSize": "0x00000408"
+      },
+      {
+        "name": "func_global_asm_8066308C",
+        "offset": "0x0000FC60",
+        "romSize": "0x000002F0"
+      },
+      {
+        "name": "func_global_asm_80704484",
+        "offset": "0x0000FF50",
+        "romSize": "0x00000524"
+      },
+      {
+        "name": "createLight",
+        "offset": "0x00010474",
+        "romSize": "0x0000019C"
+      },
+      {
+        "name": "func_global_asm_8065A884",
+        "offset": "0x00010610",
+        "romSize": "0x00000D08"
+      },
+      {
+        "name": "func_global_asm_8065BAA0",
+        "offset": "0x00011318",
+        "romSize": "0x000003E0"
+      },
+      {
+        "name": "func_global_asm_80636FFC",
+        "offset": "0x00011994",
+        "romSize": "0x00000AA8"
+      },
+      {
+        "name": "func_global_asm_80714B84",
+        "offset": "0x0001243C",
+        "romSize": "0x000000B8"
+      },
+      {
+        "name": "func_global_asm_80714C08",
+        "offset": "0x000124F4",
+        "romSize": "0x000000EC"
+      },
+      {
+        "name": "func_global_asm_806A370C",
+        "offset": "0x00012628",
+        "romSize": "0x000005F0"
+      },
+      {
+        "name": "func_global_asm_806A4284",
+        "offset": "0x00012C18",
+        "romSize": "0x00000500"
+      },
+      {
+        "name": "func_global_asm_80637B6C",
+        "offset": "0x00013118",
+        "romSize": "0x0000123C"
+      },
+      {
+        "name": "func_global_asm_8069F904",
+        "offset": "0x00014354",
+        "romSize": "0x0000024C"
+      },
+      {
+        "name": "func_global_asm_8069FA40",
+        "offset": "0x000145A0",
+        "romSize": "0x0000046C"
+      },
+      {
+        "name": "func_global_asm_8070068C",
+        "offset": "0x00017E4C",
+        "romSize": "0x000000E0"
+      },
+      {
+        "name": "func_global_asm_806187E8",
+        "offset": "0x00014C6C",
+        "romSize": "0x00000064"
+      },
+      {
+        "name": "func_global_asm_80618820",
+        "offset": "0x00014CD0",
+        "romSize": "0x00000068"
+      },
+      {
+        "name": "func_global_asm_8068A764",
+        "offset": "0x00014D38",
+        "romSize": "0x00000054"
+      },
+      {
+        "name": "func_global_asm_8068A784",
+        "offset": "0x00014D8C",
+        "romSize": "0x00000058"
+      },
+      {
+        "name": "func_global_asm_80701098",
+        "offset": "0x00014DE4",
+        "romSize": "0x00000938"
+      },
+      {
+        "name": "func_global_asm_807007B8",
+        "offset": "0x0001571C",
+        "romSize": "0x00000248"
+      },
+      {
+        "name": "func_critter_80028A9C",
+        "offset": "0x00015964",
+        "romSize": "0x0000036C"
+      },
+      {
+        "name": "func_critter_80028EE8",
+        "offset": "0x00015CD0",
+        "romSize": "0x00000164"
+      },
+      {
+        "name": "func_global_asm_80715E94",
+        "offset": "0x00015E34",
+        "romSize": "0x00000DD8"
+      },
+      {
+        "name": "func_global_asm_806F9D8C",
+        "offset": "0x00016C0C",
+        "romSize": "0x000003F4"
+      },
+      {
+        "name": "func_menu_80030894",
+        "offset": "0x00017000",
+        "romSize": "0x00000238"
+      },
+      {
+        "name": "func_global_asm_806F9744",
+        "offset": "0x00017238",
+        "romSize": "0x0000014C"
+      },
+      {
+        "name": "func_global_asm_806FF144",
+        "offset": "0x00017384",
+        "romSize": "0x0000023C"
+      },
+      {
+        "name": "func_global_asm_8071338C",
+        "offset": "0x000175C0",
+        "romSize": "0x000000AC"
+      },
+      {
+        "name": "func_global_asm_807138CC",
+        "offset": "0x0001766C",
+        "romSize": "0x000001BC"
+      },
+      {
+        "name": "func_global_asm_8068D8C8",
+        "offset": "0x00017828",
+        "romSize": "0x000002F4"
+      },
+      {
+        "name": "func_global_asm_806F9B64",
+        "offset": "0x00017B1C",
+        "romSize": "0x000001E4"
+      },
+      {
+        "name": "func_global_asm_806A2B90",
+        "offset": "0x00017F2C",
+        "romSize": "0x00000510"
+      },
+      {
+        "name": "func_global_asm_8068DC54",
+        "offset": "0x0001843C",
+        "romSize": "0x00000954"
+      },
+      {
+        "name": "func_bonus_80024000",
+        "offset": "0x00018D90",
+        "romSize": "0x00000270"
+      },
+      {
+        "name": "func_bonus_800252A0",
+        "offset": "0x00019000",
+        "romSize": "0x000001E8"
+      },
+      {
+        "name": "func_bonus_80026940",
+        "offset": "0x000191E8",
+        "romSize": "0x000003E8"
+      },
+      {
+        "name": "func_bonus_8002CC08",
+        "offset": "0x00019A58",
+        "romSize": "0x00000460"
+      },
+      {
+        "name": "func_bonus_8002D010",
+        "offset": "0x00019EB8",
+        "romSize": "0x000003B8"
+      },
+      {
+        "name": "func_boss_800286B8",
+        "offset": "0x0001A270",
+        "romSize": "0x000001B8"
+      },
+      {
+        "name": "func_global_asm_806FF75C",
+        "offset": "0x0001A428",
+        "romSize": "0x000003B0"
+      },
+      {
+        "name": "func_race_8002BDDC",
+        "offset": "0x0001A7D8",
+        "romSize": "0x00000244"
+      },
+      {
+        "name": "func_race_8002CBEC",
+        "offset": "0x0001AA1C",
+        "romSize": "0x00000948"
+      },
+      {
+        "name": "func_race_8002C14C",
+        "offset": "0x0001B364",
+        "romSize": "0x000002E0"
+      },
+      {
+        "name": "func_race_8002C76C",
+        "offset": "0x0001B644",
+        "romSize": "0x00000444"
+      },
+      {
+        "name": "func_race_8002C2E8",
+        "offset": "0x0001BA88",
+        "romSize": "0x000005D4"
+      },
+      {
+        "name": "func_bonus_8002570C",
+        "offset": "0x0001C05C",
+        "romSize": "0x000009C0"
+      },
+      {
+        "name": "func_global_asm_80710CA0",
+        "offset": "0x0001CA1C",
+        "romSize": "0x000007D0"
+      },
+      {
+        "name": "func_global_asm_806F8170",
+        "offset": "0x0001D1EC",
+        "romSize": "0x0000012C"
+      },
+      {
+        "name": "func_global_asm_806FFB2C",
+        "offset": "0x0001D318",
+        "romSize": "0x00000100"
+      },
+      {
+        "name": "func_global_asm_806A92B4",
+        "offset": "0x0001D418",
+        "romSize": "0x000010B0"
+      },
+      {
+        "name": "func_global_asm_806AC07C",
+        "offset": "0x0001E4C8",
+        "romSize": "0x000008FC"
+      },
+      {
+        "name": "func_global_asm_806AB4EC",
+        "offset": "0x0001EDC4",
+        "romSize": "0x000002D4"
+      },
+      {
+        "name": "func_global_asm_805FD088",
+        "offset": "0x00020500",
+        "romSize": "0x00001034"
+      },
+      {
+        "name": "func_global_asm_806C75A4",
+        "offset": "0x00021534",
+        "romSize": "0x00000508"
+      },
+      {
+        "name": "func_global_asm_8068DBA4",
+        "offset": "0x00021A3C",
+        "romSize": "0x00000188"
+      },
+      {
+        "name": "func_global_asm_806FEF7C",
+        "offset": "0x00021BC4",
+        "romSize": "0x000000E0"
+      },
+      {
+        "name": "func_global_asm_8068DAF4",
+        "offset": "0x00021CA4",
+        "romSize": "0x00000168"
+      },
+      {
+        "name": "func_global_asm_807144B8",
+        "offset": "0x0002214C",
+        "romSize": "0x000001BC"
+      },
+      {
+        "name": "func_global_asm_80731030",
+        "offset": "0x00022308",
+        "romSize": "0x0000001C"
+      },
+      {
+        "name": "func_global_asm_80621174",
+        "offset": "0x00022324",
+        "romSize": "0x00000194"
+      },
+      {
+        "name": "func_global_asm_806EA200",
+        "offset": "0x000224B8",
+        "romSize": "0x000000F4"
+      },
+      {
+        "name": "func_global_asm_806EA26C",
+        "offset": "0x000225AC",
+        "romSize": "0x000000F4"
+      },
+      {
+        "name": "func_global_asm_806EA0A4",
+        "offset": "0x000226A0",
+        "romSize": "0x00000164"
+      },
+      {
+        "name": "func_global_asm_806E6B98",
+        "offset": "0x00023274",
+        "romSize": "0x00000278"
+      },
+      {
+        "name": "func_global_asm_806EA628",
+        "offset": "0x000234EC",
+        "romSize": "0x000002C4"
+      },
+      {
+        "name": "func_menu_8002D520",
+        "offset": "0x000237B0",
+        "romSize": "0x000001D0"
+      },
+      {
+        "name": "func_menu_8002CFA4",
+        "offset": "0x00023980",
+        "romSize": "0x00000208"
+      },
+      {
+        "name": "func_menu_8002DBDC",
+        "offset": "0x00023B88",
+        "romSize": "0x00000164"
+      },
+      {
+        "name": "func_menu_8002D8AC",
+        "offset": "0x00023CEC",
+        "romSize": "0x00000150"
+      },
+      {
+        "name": "func_global_asm_8060F730",
+        "offset": "0x00023E3C",
+        "romSize": "0x00000124"
+      },
+      {
+        "name": "func_global_asm_8060F254",
+        "offset": "0x00023F60",
+        "romSize": "0x0000031C"
+      }
+    ],
+    "sectionTableSha256": "fc0abc68291909f4906ca7f04d15da99833d692404d8f2a704013d96f65f1445",
+    "sections": [
+      {
+        "decompressedRomEndExclusive": "0x00003E60",
+        "decompressedRomStart": "0x00000000",
+        "functionCount": 51,
+        "functions": [
+          {
+            "name": "gfx_draw_textured_rect",
+            "offset": "0x00000000",
+            "romSize": "0x000002B8"
+          },
+          {
+            "name": "fixMPBoundary",
+            "offset": "0x000002B8",
+            "romSize": "0x00000030"
+          },
+          {
+            "name": "clear_actor_interpolation_lockdowns",
+            "offset": "0x00000D18",
+            "romSize": "0x0000004C"
+          },
+          {
+            "name": "recomp_filter_draw",
+            "offset": "0x000002F0",
+            "romSize": "0x00000048"
+          },
+          {
+            "name": "recomp_filter_draw_sq",
+            "offset": "0x00000338",
+            "romSize": "0x0000004C"
+          },
+          {
+            "name": "rdpStoreFB",
+            "offset": "0x00000390",
+            "romSize": "0x000001E4"
+          },
+          {
+            "name": "lockdown_handler",
+            "offset": "0x00000580",
+            "romSize": "0x0000001C"
+          },
+          {
+            "name": "set_interpolation_lockdown",
+            "offset": "0x0000059C",
+            "romSize": "0x00000020"
+          },
+          {
+            "name": "set_persp_interpolation_lockdown",
+            "offset": "0x000005BC",
+            "romSize": "0x00000020"
+          },
+          {
+            "name": "set_sprite_interpolation_lockdown",
+            "offset": "0x000005DC",
+            "romSize": "0x00000020"
+          },
+          {
+            "name": "skipInterpHandler",
+            "offset": "0x000005FC",
+            "romSize": "0x00000030"
+          },
+          {
+            "name": "set_sprite_interpolation_state",
+            "offset": "0x0000062C",
+            "romSize": "0x0000002C"
+          },
+          {
+            "name": "handle_interpolation",
+            "offset": "0x00000658",
+            "romSize": "0x0000012C"
+          },
+          {
+            "name": "set_actor_interpolation_lockdown",
+            "offset": "0x00000A28",
+            "romSize": "0x000002F0"
+          },
+          {
+            "name": "clearCutsceneBarInterp",
+            "offset": "0x00000784",
+            "romSize": "0x00000044"
+          },
+          {
+            "name": "updateLag",
+            "offset": "0x000007D0",
+            "romSize": "0x00000030"
+          },
+          {
+            "name": "AlterVolumes",
+            "offset": "0x000015D0",
+            "romSize": "0x000000D0"
+          },
+          {
+            "name": "determineChunkFix",
+            "offset": "0x00000800",
+            "romSize": "0x00000134"
+          },
+          {
+            "name": "set_model_matrix_group",
+            "offset": "0x00000940",
+            "romSize": "0x000000CC"
+          },
+          {
+            "name": "pop_model_matrix_group",
+            "offset": "0x00000A0C",
+            "romSize": "0x0000001C"
+          },
+          {
+            "name": "getActorMatrixTag",
+            "offset": "0x00000D64",
+            "romSize": "0x00000024"
+          },
+          {
+            "name": "getTextInterpolationId",
+            "offset": "0x00000D88",
+            "romSize": "0x00000030"
+          },
+          {
+            "name": "setHandLockdown",
+            "offset": "0x00000DB8",
+            "romSize": "0x00000040"
+          },
+          {
+            "name": "setSpriteAlignment",
+            "offset": "0x00000E00",
+            "romSize": "0x0000000C"
+          },
+          {
+            "name": "alignHUDTopBottom",
+            "offset": "0x00000E0C",
+            "romSize": "0x000000E4"
+          },
+          {
+            "name": "alignHUD",
+            "offset": "0x00000EF0",
+            "romSize": "0x000000E4"
+          },
+          {
+            "name": "alignHUDGameplay",
+            "offset": "0x00000FD4",
+            "romSize": "0x00000128"
+          },
+          {
+            "name": "popHUD",
+            "offset": "0x000010FC",
+            "romSize": "0x00000068"
+          },
+          {
+            "name": "displayImage_simple",
+            "offset": "0x00001164",
+            "romSize": "0x000003CC"
+          },
+          {
+            "name": "morphWeather",
+            "offset": "0x00001530",
+            "romSize": "0x00000068"
+          },
+          {
+            "name": "dummyFunc",
+            "offset": "0x000015A0",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "proutPrintf",
+            "offset": "0x000015A8",
+            "romSize": "0x00000024"
+          },
+          {
+            "name": "_Printf",
+            "offset": "0x0000342C",
+            "romSize": "0x00000604"
+          },
+          {
+            "name": "fixHelmMedalsBug",
+            "offset": "0x000016A0",
+            "romSize": "0x000000D8"
+          },
+          {
+            "name": "analog_cam_enabled",
+            "offset": "0x00001778",
+            "romSize": "0x00000028"
+          },
+          {
+            "name": "get_analog_allowed",
+            "offset": "0x000017A0",
+            "romSize": "0x00000080"
+          },
+          {
+            "name": "recomp_apply_per_axis_deadzone",
+            "offset": "0x00001820",
+            "romSize": "0x00000070"
+          },
+          {
+            "name": "recomp_analog_camera_get",
+            "offset": "0x00001890",
+            "romSize": "0x00000154"
+          },
+          {
+            "name": "getFrameDelta",
+            "offset": "0x000019F0",
+            "romSize": "0x00000440"
+          },
+          {
+            "name": "setActorOpacity",
+            "offset": "0x00001E30",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "setOverlayColor",
+            "offset": "0x00001E38",
+            "romSize": "0x00000010"
+          },
+          {
+            "name": "createWarpOptionTextObjs",
+            "offset": "0x00001E48",
+            "romSize": "0x000000C0"
+          },
+          {
+            "name": "destroyWarpOptionTextObjs",
+            "offset": "0x00001F08",
+            "romSize": "0x00000080"
+          },
+          {
+            "name": "handleMenuInputs",
+            "offset": "0x00001F88",
+            "romSize": "0x000001EC"
+          },
+          {
+            "name": "menuMain",
+            "offset": "0x00002174",
+            "romSize": "0x000001D8"
+          },
+          {
+            "name": "ldiv_recomp",
+            "offset": "0x00002350",
+            "romSize": "0x00000038"
+          },
+          {
+            "name": "_Ldtob",
+            "offset": "0x00002388",
+            "romSize": "0x00000C94"
+          },
+          {
+            "name": "lldiv_recomp",
+            "offset": "0x00003020",
+            "romSize": "0x00000108"
+          },
+          {
+            "name": "_Litob",
+            "offset": "0x00003128",
+            "romSize": "0x000002BC"
+          },
+          {
+            "name": "strchr_recomp",
+            "offset": "0x000033F0",
+            "romSize": "0x0000003C"
+          },
+          {
+            "name": "_Putfld",
+            "offset": "0x00003A30",
+            "romSize": "0x00000430"
+          }
+        ],
+        "index": 1,
+        "name": "text",
+        "runtimeRam": "0x80801000",
+        "size": "0x00003E60",
+        "symbolPrefix": "text"
+      },
+      {
+        "decompressedRomEndExclusive": "0x000281D8",
+        "decompressedRomStart": "0x00003E60",
+        "functionCount": 158,
+        "functions": [
+          {
+            "name": "func_menu_8003292C",
+            "offset": "0x00000000",
+            "romSize": "0x0000063C"
+          },
+          {
+            "name": "func_global_asm_805FBFF4",
+            "offset": "0x0000063C",
+            "romSize": "0x00000664"
+          },
+          {
+            "name": "func_global_asm_805FBC5C",
+            "offset": "0x0000D374",
+            "romSize": "0x00000174"
+          },
+          {
+            "name": "func_global_asm_8070A934",
+            "offset": "0x000047BC",
+            "romSize": "0x00000394"
+          },
+          {
+            "name": "func_global_asm_8066AF40",
+            "offset": "0x0000344C",
+            "romSize": "0x000000EC"
+          },
+          {
+            "name": "func_global_asm_80600674",
+            "offset": "0x0000CD70",
+            "romSize": "0x00000294"
+          },
+          {
+            "name": "func_global_asm_80611730",
+            "offset": "0x0000CCA8",
+            "romSize": "0x000000C8"
+          },
+          {
+            "name": "raiseException",
+            "offset": "0x000020C0",
+            "romSize": "0x00000074"
+          },
+          {
+            "name": "func_global_asm_805FB7E4",
+            "offset": "0x00000CA0",
+            "romSize": "0x0000017C"
+          },
+          {
+            "name": "func_global_asm_806BE8BC",
+            "offset": "0x00000E1C",
+            "romSize": "0x0000099C"
+          },
+          {
+            "name": "isFlagSet",
+            "offset": "0x00021FB8",
+            "romSize": "0x000000B0"
+          },
+          {
+            "name": "playCutscene",
+            "offset": "0x0000B75C",
+            "romSize": "0x0000036C"
+          },
+          {
+            "name": "setFlag",
+            "offset": "0x00022068",
+            "romSize": "0x000000E4"
+          },
+          {
+            "name": "func_bonus_80029364",
+            "offset": "0x000017B8",
+            "romSize": "0x00000908"
+          },
+          {
+            "name": "func_bonus_8002733C",
+            "offset": "0x00017D00",
+            "romSize": "0x0000014C"
+          },
+          {
+            "name": "func_bonus_80029B9C",
+            "offset": "0x000195D0",
+            "romSize": "0x00000488"
+          },
+          {
+            "name": "func_global_asm_80630DCC",
+            "offset": "0x00002134",
+            "romSize": "0x000006D8"
+          },
+          {
+            "name": "func_global_asm_80658E8C",
+            "offset": "0x0000D4E8",
+            "romSize": "0x000001A0"
+          },
+          {
+            "name": "func_global_asm_80614B34",
+            "offset": "0x000116F8",
+            "romSize": "0x0000029C"
+          },
+          {
+            "name": "func_global_asm_806303C4",
+            "offset": "0x0000280C",
+            "romSize": "0x00000258"
+          },
+          {
+            "name": "func_global_asm_80689F80",
+            "offset": "0x00002A64",
+            "romSize": "0x000000B4"
+          },
+          {
+            "name": "func_global_asm_80689FEC",
+            "offset": "0x00002B18",
+            "romSize": "0x000000B0"
+          },
+          {
+            "name": "func_global_asm_8068A074",
+            "offset": "0x00002BC8",
+            "romSize": "0x000000BC"
+          },
+          {
+            "name": "func_global_asm_8068A118",
+            "offset": "0x00002C84",
+            "romSize": "0x00000090"
+          },
+          {
+            "name": "func_global_asm_8068A164",
+            "offset": "0x00002D14",
+            "romSize": "0x00000094"
+          },
+          {
+            "name": "func_global_asm_80727958",
+            "offset": "0x00002DA8",
+            "romSize": "0x000006A4"
+          },
+          {
+            "name": "getPointerTableFile",
+            "offset": "0x00003538",
+            "romSize": "0x000002EC"
+          },
+          {
+            "name": "func_global_asm_805FE398",
+            "offset": "0x00003824",
+            "romSize": "0x0000012C"
+          },
+          {
+            "name": "func_global_asm_8070A848",
+            "offset": "0x00003950",
+            "romSize": "0x0000005C"
+          },
+          {
+            "name": "func_global_asm_80629300",
+            "offset": "0x000039AC",
+            "romSize": "0x00000E10"
+          },
+          {
+            "name": "func_global_asm_8070AC74",
+            "offset": "0x00004B50",
+            "romSize": "0x00000330"
+          },
+          {
+            "name": "func_global_asm_805FE4D4",
+            "offset": "0x0002427C",
+            "romSize": "0x000000FC"
+          },
+          {
+            "name": "func_global_asm_80706F90",
+            "offset": "0x00004E80",
+            "romSize": "0x0000060C"
+          },
+          {
+            "name": "func_global_asm_80709BC4",
+            "offset": "0x0000548C",
+            "romSize": "0x000005B8"
+          },
+          {
+            "name": "func_global_asm_80704B20",
+            "offset": "0x00005A44",
+            "romSize": "0x000009D0"
+          },
+          {
+            "name": "func_global_asm_807069A4",
+            "offset": "0x00006414",
+            "romSize": "0x000005C4"
+          },
+          {
+            "name": "func_global_asm_80707980",
+            "offset": "0x000069D8",
+            "romSize": "0x00000848"
+          },
+          {
+            "name": "func_global_asm_80631FAC",
+            "offset": "0x00007220",
+            "romSize": "0x00000054"
+          },
+          {
+            "name": "func_global_asm_80600D50",
+            "offset": "0x00007274",
+            "romSize": "0x0000040C"
+          },
+          {
+            "name": "func_global_asm_80610350",
+            "offset": "0x00007680",
+            "romSize": "0x00000640"
+          },
+          {
+            "name": "func_global_asm_8060A1B0",
+            "offset": "0x00007CC0",
+            "romSize": "0x000001E8"
+          },
+          {
+            "name": "func_global_asm_806291B4",
+            "offset": "0x00007EA8",
+            "romSize": "0x00000114"
+          },
+          {
+            "name": "func_global_asm_806FFF88",
+            "offset": "0x00007FBC",
+            "romSize": "0x00000124"
+          },
+          {
+            "name": "func_global_asm_80699284",
+            "offset": "0x000080E0",
+            "romSize": "0x00000590"
+          },
+          {
+            "name": "func_global_asm_8061138C",
+            "offset": "0x00008670",
+            "romSize": "0x00000090"
+          },
+          {
+            "name": "func_global_asm_8061DBD4",
+            "offset": "0x00008700",
+            "romSize": "0x00000F9C"
+          },
+          {
+            "name": "func_global_asm_8061D1FC",
+            "offset": "0x00022804",
+            "romSize": "0x00000568"
+          },
+          {
+            "name": "func_global_asm_80620F00",
+            "offset": "0x0000969C",
+            "romSize": "0x00000260"
+          },
+          {
+            "name": "func_global_asm_80620628",
+            "offset": "0x00022D6C",
+            "romSize": "0x00000508"
+          },
+          {
+            "name": "func_global_asm_8068A508",
+            "offset": "0x000098FC",
+            "romSize": "0x00000154"
+          },
+          {
+            "name": "func_menu_8002FC1C",
+            "offset": "0x00009A50",
+            "romSize": "0x00000114"
+          },
+          {
+            "name": "func_global_asm_806ABC94",
+            "offset": "0x00009B64",
+            "romSize": "0x000001BC"
+          },
+          {
+            "name": "func_global_asm_806AA304",
+            "offset": "0x0001F098",
+            "romSize": "0x00001468"
+          },
+          {
+            "name": "func_global_asm_80724B5C",
+            "offset": "0x00009D20",
+            "romSize": "0x00000118"
+          },
+          {
+            "name": "func_global_asm_80613194",
+            "offset": "0x00009E38",
+            "romSize": "0x0000004C"
+          },
+          {
+            "name": "func_global_asm_806131D4",
+            "offset": "0x00009E84",
+            "romSize": "0x0000004C"
+          },
+          {
+            "name": "func_global_asm_80613214",
+            "offset": "0x00009ED0",
+            "romSize": "0x00000048"
+          },
+          {
+            "name": "func_global_asm_80727678",
+            "offset": "0x00009F18",
+            "romSize": "0x000002C0"
+          },
+          {
+            "name": "func_global_asm_806BFBF4",
+            "offset": "0x0000A1D8",
+            "romSize": "0x00001310"
+          },
+          {
+            "name": "drawSpriteAtPosition",
+            "offset": "0x000125E0",
+            "romSize": "0x00000048"
+          },
+          {
+            "name": "func_global_asm_8061C518",
+            "offset": "0x0000B4E8",
+            "romSize": "0x00000158"
+          },
+          {
+            "name": "func_global_asm_8061C600",
+            "offset": "0x0000B640",
+            "romSize": "0x0000011C"
+          },
+          {
+            "name": "func_global_asm_806F386C",
+            "offset": "0x0000BAC8",
+            "romSize": "0x0000012C"
+          },
+          {
+            "name": "func_global_asm_8068AD7C",
+            "offset": "0x0000BBF4",
+            "romSize": "0x00000AA4"
+          },
+          {
+            "name": "func_global_asm_8068ABE0",
+            "offset": "0x00021E0C",
+            "romSize": "0x000001AC"
+          },
+          {
+            "name": "func_global_asm_806443E4",
+            "offset": "0x0000C698",
+            "romSize": "0x00000500"
+          },
+          {
+            "name": "func_dk64_boot_8000102C",
+            "offset": "0x0000CB98",
+            "romSize": "0x00000098"
+          },
+          {
+            "name": "func_dk64_boot_80000450",
+            "offset": "0x0000CC30",
+            "romSize": "0x00000078"
+          },
+          {
+            "name": "func_dk64_boot_800009D0",
+            "offset": "0x0000D004",
+            "romSize": "0x00000050"
+          },
+          {
+            "name": "func_global_asm_805FE544",
+            "offset": "0x0000D054",
+            "romSize": "0x00000118"
+          },
+          {
+            "name": "func_global_asm_805FB944",
+            "offset": "0x0000D16C",
+            "romSize": "0x00000208"
+          },
+          {
+            "name": "func_global_asm_80714A68",
+            "offset": "0x0000D688",
+            "romSize": "0x0000002C"
+          },
+          {
+            "name": "func_global_asm_807132DC",
+            "offset": "0x0000D6B4",
+            "romSize": "0x000000A4"
+          },
+          {
+            "name": "func_global_asm_80714A9C",
+            "offset": "0x0000D758",
+            "romSize": "0x000000CC"
+          },
+          {
+            "name": "func_global_asm_80655DD0",
+            "offset": "0x0000D824",
+            "romSize": "0x00000A78"
+          },
+          {
+            "name": "func_global_asm_8065FD88",
+            "offset": "0x00014A0C",
+            "romSize": "0x00000260"
+          },
+          {
+            "name": "func_global_asm_80701CA0",
+            "offset": "0x0000E29C",
+            "romSize": "0x000004B4"
+          },
+          {
+            "name": "func_global_asm_8068D264",
+            "offset": "0x0000E750",
+            "romSize": "0x0000042C"
+          },
+          {
+            "name": "func_global_asm_80703AB0",
+            "offset": "0x0000EB7C",
+            "romSize": "0x0000010C"
+          },
+          {
+            "name": "func_global_asm_807035C4",
+            "offset": "0x0000EC88",
+            "romSize": "0x0000025C"
+          },
+          {
+            "name": "func_global_asm_806522CC",
+            "offset": "0x0000EEE4",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "func_global_asm_8062DBDC",
+            "offset": "0x0000EEEC",
+            "romSize": "0x0000043C"
+          },
+          {
+            "name": "func_global_asm_80601EE4",
+            "offset": "0x0000F328",
+            "romSize": "0x000001F0"
+          },
+          {
+            "name": "func_arcade_800259D0",
+            "offset": "0x0000F518",
+            "romSize": "0x0000019C"
+          },
+          {
+            "name": "func_global_asm_80704960",
+            "offset": "0x0000F6B4",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "func_global_asm_80658134",
+            "offset": "0x0000F6BC",
+            "romSize": "0x0000019C"
+          },
+          {
+            "name": "func_global_asm_80656F14",
+            "offset": "0x0000F858",
+            "romSize": "0x00000408"
+          },
+          {
+            "name": "func_global_asm_8066308C",
+            "offset": "0x0000FC60",
+            "romSize": "0x000002F0"
+          },
+          {
+            "name": "func_global_asm_80704484",
+            "offset": "0x0000FF50",
+            "romSize": "0x00000524"
+          },
+          {
+            "name": "createLight",
+            "offset": "0x00010474",
+            "romSize": "0x0000019C"
+          },
+          {
+            "name": "func_global_asm_8065A884",
+            "offset": "0x00010610",
+            "romSize": "0x00000D08"
+          },
+          {
+            "name": "func_global_asm_8065BAA0",
+            "offset": "0x00011318",
+            "romSize": "0x000003E0"
+          },
+          {
+            "name": "func_global_asm_80636FFC",
+            "offset": "0x00011994",
+            "romSize": "0x00000AA8"
+          },
+          {
+            "name": "func_global_asm_80714B84",
+            "offset": "0x0001243C",
+            "romSize": "0x000000B8"
+          },
+          {
+            "name": "func_global_asm_80714C08",
+            "offset": "0x000124F4",
+            "romSize": "0x000000EC"
+          },
+          {
+            "name": "func_global_asm_806A370C",
+            "offset": "0x00012628",
+            "romSize": "0x000005F0"
+          },
+          {
+            "name": "func_global_asm_806A4284",
+            "offset": "0x00012C18",
+            "romSize": "0x00000500"
+          },
+          {
+            "name": "func_global_asm_80637B6C",
+            "offset": "0x00013118",
+            "romSize": "0x0000123C"
+          },
+          {
+            "name": "func_global_asm_8069F904",
+            "offset": "0x00014354",
+            "romSize": "0x0000024C"
+          },
+          {
+            "name": "func_global_asm_8069FA40",
+            "offset": "0x000145A0",
+            "romSize": "0x0000046C"
+          },
+          {
+            "name": "func_global_asm_8070068C",
+            "offset": "0x00017E4C",
+            "romSize": "0x000000E0"
+          },
+          {
+            "name": "func_global_asm_806187E8",
+            "offset": "0x00014C6C",
+            "romSize": "0x00000064"
+          },
+          {
+            "name": "func_global_asm_80618820",
+            "offset": "0x00014CD0",
+            "romSize": "0x00000068"
+          },
+          {
+            "name": "func_global_asm_8068A764",
+            "offset": "0x00014D38",
+            "romSize": "0x00000054"
+          },
+          {
+            "name": "func_global_asm_8068A784",
+            "offset": "0x00014D8C",
+            "romSize": "0x00000058"
+          },
+          {
+            "name": "func_global_asm_80701098",
+            "offset": "0x00014DE4",
+            "romSize": "0x00000938"
+          },
+          {
+            "name": "func_global_asm_807007B8",
+            "offset": "0x0001571C",
+            "romSize": "0x00000248"
+          },
+          {
+            "name": "func_critter_80028A9C",
+            "offset": "0x00015964",
+            "romSize": "0x0000036C"
+          },
+          {
+            "name": "func_critter_80028EE8",
+            "offset": "0x00015CD0",
+            "romSize": "0x00000164"
+          },
+          {
+            "name": "func_global_asm_80715E94",
+            "offset": "0x00015E34",
+            "romSize": "0x00000DD8"
+          },
+          {
+            "name": "func_global_asm_806F9D8C",
+            "offset": "0x00016C0C",
+            "romSize": "0x000003F4"
+          },
+          {
+            "name": "func_menu_80030894",
+            "offset": "0x00017000",
+            "romSize": "0x00000238"
+          },
+          {
+            "name": "func_global_asm_806F9744",
+            "offset": "0x00017238",
+            "romSize": "0x0000014C"
+          },
+          {
+            "name": "func_global_asm_806FF144",
+            "offset": "0x00017384",
+            "romSize": "0x0000023C"
+          },
+          {
+            "name": "func_global_asm_8071338C",
+            "offset": "0x000175C0",
+            "romSize": "0x000000AC"
+          },
+          {
+            "name": "func_global_asm_807138CC",
+            "offset": "0x0001766C",
+            "romSize": "0x000001BC"
+          },
+          {
+            "name": "func_global_asm_8068D8C8",
+            "offset": "0x00017828",
+            "romSize": "0x000002F4"
+          },
+          {
+            "name": "func_global_asm_806F9B64",
+            "offset": "0x00017B1C",
+            "romSize": "0x000001E4"
+          },
+          {
+            "name": "func_global_asm_806A2B90",
+            "offset": "0x00017F2C",
+            "romSize": "0x00000510"
+          },
+          {
+            "name": "func_global_asm_8068DC54",
+            "offset": "0x0001843C",
+            "romSize": "0x00000954"
+          },
+          {
+            "name": "func_bonus_80024000",
+            "offset": "0x00018D90",
+            "romSize": "0x00000270"
+          },
+          {
+            "name": "func_bonus_800252A0",
+            "offset": "0x00019000",
+            "romSize": "0x000001E8"
+          },
+          {
+            "name": "func_bonus_80026940",
+            "offset": "0x000191E8",
+            "romSize": "0x000003E8"
+          },
+          {
+            "name": "func_bonus_8002CC08",
+            "offset": "0x00019A58",
+            "romSize": "0x00000460"
+          },
+          {
+            "name": "func_bonus_8002D010",
+            "offset": "0x00019EB8",
+            "romSize": "0x000003B8"
+          },
+          {
+            "name": "func_boss_800286B8",
+            "offset": "0x0001A270",
+            "romSize": "0x000001B8"
+          },
+          {
+            "name": "func_global_asm_806FF75C",
+            "offset": "0x0001A428",
+            "romSize": "0x000003B0"
+          },
+          {
+            "name": "func_race_8002BDDC",
+            "offset": "0x0001A7D8",
+            "romSize": "0x00000244"
+          },
+          {
+            "name": "func_race_8002CBEC",
+            "offset": "0x0001AA1C",
+            "romSize": "0x00000948"
+          },
+          {
+            "name": "func_race_8002C14C",
+            "offset": "0x0001B364",
+            "romSize": "0x000002E0"
+          },
+          {
+            "name": "func_race_8002C76C",
+            "offset": "0x0001B644",
+            "romSize": "0x00000444"
+          },
+          {
+            "name": "func_race_8002C2E8",
+            "offset": "0x0001BA88",
+            "romSize": "0x000005D4"
+          },
+          {
+            "name": "func_bonus_8002570C",
+            "offset": "0x0001C05C",
+            "romSize": "0x000009C0"
+          },
+          {
+            "name": "func_global_asm_80710CA0",
+            "offset": "0x0001CA1C",
+            "romSize": "0x000007D0"
+          },
+          {
+            "name": "func_global_asm_806F8170",
+            "offset": "0x0001D1EC",
+            "romSize": "0x0000012C"
+          },
+          {
+            "name": "func_global_asm_806FFB2C",
+            "offset": "0x0001D318",
+            "romSize": "0x00000100"
+          },
+          {
+            "name": "func_global_asm_806A92B4",
+            "offset": "0x0001D418",
+            "romSize": "0x000010B0"
+          },
+          {
+            "name": "func_global_asm_806AC07C",
+            "offset": "0x0001E4C8",
+            "romSize": "0x000008FC"
+          },
+          {
+            "name": "func_global_asm_806AB4EC",
+            "offset": "0x0001EDC4",
+            "romSize": "0x000002D4"
+          },
+          {
+            "name": "func_global_asm_805FD088",
+            "offset": "0x00020500",
+            "romSize": "0x00001034"
+          },
+          {
+            "name": "func_global_asm_806C75A4",
+            "offset": "0x00021534",
+            "romSize": "0x00000508"
+          },
+          {
+            "name": "func_global_asm_8068DBA4",
+            "offset": "0x00021A3C",
+            "romSize": "0x00000188"
+          },
+          {
+            "name": "func_global_asm_806FEF7C",
+            "offset": "0x00021BC4",
+            "romSize": "0x000000E0"
+          },
+          {
+            "name": "func_global_asm_8068DAF4",
+            "offset": "0x00021CA4",
+            "romSize": "0x00000168"
+          },
+          {
+            "name": "func_global_asm_807144B8",
+            "offset": "0x0002214C",
+            "romSize": "0x000001BC"
+          },
+          {
+            "name": "func_global_asm_80731030",
+            "offset": "0x00022308",
+            "romSize": "0x0000001C"
+          },
+          {
+            "name": "func_global_asm_80621174",
+            "offset": "0x00022324",
+            "romSize": "0x00000194"
+          },
+          {
+            "name": "func_global_asm_806EA200",
+            "offset": "0x000224B8",
+            "romSize": "0x000000F4"
+          },
+          {
+            "name": "func_global_asm_806EA26C",
+            "offset": "0x000225AC",
+            "romSize": "0x000000F4"
+          },
+          {
+            "name": "func_global_asm_806EA0A4",
+            "offset": "0x000226A0",
+            "romSize": "0x00000164"
+          },
+          {
+            "name": "func_global_asm_806E6B98",
+            "offset": "0x00023274",
+            "romSize": "0x00000278"
+          },
+          {
+            "name": "func_global_asm_806EA628",
+            "offset": "0x000234EC",
+            "romSize": "0x000002C4"
+          },
+          {
+            "name": "func_menu_8002D520",
+            "offset": "0x000237B0",
+            "romSize": "0x000001D0"
+          },
+          {
+            "name": "func_menu_8002CFA4",
+            "offset": "0x00023980",
+            "romSize": "0x00000208"
+          },
+          {
+            "name": "func_menu_8002DBDC",
+            "offset": "0x00023B88",
+            "romSize": "0x00000164"
+          },
+          {
+            "name": "func_menu_8002D8AC",
+            "offset": "0x00023CEC",
+            "romSize": "0x00000150"
+          },
+          {
+            "name": "func_global_asm_8060F730",
+            "offset": "0x00023E3C",
+            "romSize": "0x00000124"
+          },
+          {
+            "name": "func_global_asm_8060F254",
+            "offset": "0x00023F60",
+            "romSize": "0x0000031C"
+          }
+        ],
+        "index": 2,
+        "name": "recomp_patch",
+        "runtimeRam": "0x80804E60",
+        "size": "0x00024378",
+        "symbolPrefix": "recomp_patch"
+      },
+      {
+        "decompressedRomEndExclusive": "0x00028218",
+        "decompressedRomStart": "0x000281D8",
+        "functionCount": 1,
+        "functions": [
+          {
+            "name": "recomp_printf",
+            "offset": "0x00000000",
+            "romSize": "0x00000040"
+          }
+        ],
+        "index": 3,
+        "name": "recomp_export",
+        "runtimeRam": "0x808291D8",
+        "size": "0x00000040",
+        "symbolPrefix": "recomp_export"
+      },
+      {
+        "decompressedRomEndExclusive": "0x00028270",
+        "decompressedRomStart": "0x00028218",
+        "functionCount": 11,
+        "functions": [
+          {
+            "name": "recomp_on_init",
+            "offset": "0x00000000",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "dk64recomp_every_frame",
+            "offset": "0x00000008",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_music_bin_load",
+            "offset": "0x00000010",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_cutscene_play",
+            "offset": "0x00000018",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_autowalk",
+            "offset": "0x00000020",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_adjust_dl_allocation",
+            "offset": "0x00000028",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_file_start",
+            "offset": "0x00000030",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_new_file_start",
+            "offset": "0x00000038",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_dirty_file_start",
+            "offset": "0x00000040",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_flag_check",
+            "offset": "0x00000048",
+            "romSize": "0x00000008"
+          },
+          {
+            "name": "recomp_on_flag_change",
+            "offset": "0x00000050",
+            "romSize": "0x00000008"
+          }
+        ],
+        "index": 4,
+        "name": "recomp_event",
+        "runtimeRam": "0x80829218",
+        "size": "0x00000058",
+        "symbolPrefix": "recomp_event"
+      }
+    ],
+    "textFunctions": [
+      {
+        "name": "gfx_draw_textured_rect",
+        "offset": "0x00000000",
+        "romSize": "0x000002B8"
+      },
+      {
+        "name": "fixMPBoundary",
+        "offset": "0x000002B8",
+        "romSize": "0x00000030"
+      },
+      {
+        "name": "clear_actor_interpolation_lockdowns",
+        "offset": "0x00000D18",
+        "romSize": "0x0000004C"
+      },
+      {
+        "name": "recomp_filter_draw",
+        "offset": "0x000002F0",
+        "romSize": "0x00000048"
+      },
+      {
+        "name": "recomp_filter_draw_sq",
+        "offset": "0x00000338",
+        "romSize": "0x0000004C"
+      },
+      {
+        "name": "rdpStoreFB",
+        "offset": "0x00000390",
+        "romSize": "0x000001E4"
+      },
+      {
+        "name": "lockdown_handler",
+        "offset": "0x00000580",
+        "romSize": "0x0000001C"
+      },
+      {
+        "name": "set_interpolation_lockdown",
+        "offset": "0x0000059C",
+        "romSize": "0x00000020"
+      },
+      {
+        "name": "set_persp_interpolation_lockdown",
+        "offset": "0x000005BC",
+        "romSize": "0x00000020"
+      },
+      {
+        "name": "set_sprite_interpolation_lockdown",
+        "offset": "0x000005DC",
+        "romSize": "0x00000020"
+      },
+      {
+        "name": "skipInterpHandler",
+        "offset": "0x000005FC",
+        "romSize": "0x00000030"
+      },
+      {
+        "name": "set_sprite_interpolation_state",
+        "offset": "0x0000062C",
+        "romSize": "0x0000002C"
+      },
+      {
+        "name": "handle_interpolation",
+        "offset": "0x00000658",
+        "romSize": "0x0000012C"
+      },
+      {
+        "name": "set_actor_interpolation_lockdown",
+        "offset": "0x00000A28",
+        "romSize": "0x000002F0"
+      },
+      {
+        "name": "clearCutsceneBarInterp",
+        "offset": "0x00000784",
+        "romSize": "0x00000044"
+      },
+      {
+        "name": "updateLag",
+        "offset": "0x000007D0",
+        "romSize": "0x00000030"
+      },
+      {
+        "name": "AlterVolumes",
+        "offset": "0x000015D0",
+        "romSize": "0x000000D0"
+      },
+      {
+        "name": "determineChunkFix",
+        "offset": "0x00000800",
+        "romSize": "0x00000134"
+      },
+      {
+        "name": "set_model_matrix_group",
+        "offset": "0x00000940",
+        "romSize": "0x000000CC"
+      },
+      {
+        "name": "pop_model_matrix_group",
+        "offset": "0x00000A0C",
+        "romSize": "0x0000001C"
+      },
+      {
+        "name": "getActorMatrixTag",
+        "offset": "0x00000D64",
+        "romSize": "0x00000024"
+      },
+      {
+        "name": "getTextInterpolationId",
+        "offset": "0x00000D88",
+        "romSize": "0x00000030"
+      },
+      {
+        "name": "setHandLockdown",
+        "offset": "0x00000DB8",
+        "romSize": "0x00000040"
+      },
+      {
+        "name": "setSpriteAlignment",
+        "offset": "0x00000E00",
+        "romSize": "0x0000000C"
+      },
+      {
+        "name": "alignHUDTopBottom",
+        "offset": "0x00000E0C",
+        "romSize": "0x000000E4"
+      },
+      {
+        "name": "alignHUD",
+        "offset": "0x00000EF0",
+        "romSize": "0x000000E4"
+      },
+      {
+        "name": "alignHUDGameplay",
+        "offset": "0x00000FD4",
+        "romSize": "0x00000128"
+      },
+      {
+        "name": "popHUD",
+        "offset": "0x000010FC",
+        "romSize": "0x00000068"
+      },
+      {
+        "name": "displayImage_simple",
+        "offset": "0x00001164",
+        "romSize": "0x000003CC"
+      },
+      {
+        "name": "morphWeather",
+        "offset": "0x00001530",
+        "romSize": "0x00000068"
+      },
+      {
+        "name": "dummyFunc",
+        "offset": "0x000015A0",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "proutPrintf",
+        "offset": "0x000015A8",
+        "romSize": "0x00000024"
+      },
+      {
+        "name": "_Printf",
+        "offset": "0x0000342C",
+        "romSize": "0x00000604"
+      },
+      {
+        "name": "fixHelmMedalsBug",
+        "offset": "0x000016A0",
+        "romSize": "0x000000D8"
+      },
+      {
+        "name": "analog_cam_enabled",
+        "offset": "0x00001778",
+        "romSize": "0x00000028"
+      },
+      {
+        "name": "get_analog_allowed",
+        "offset": "0x000017A0",
+        "romSize": "0x00000080"
+      },
+      {
+        "name": "recomp_apply_per_axis_deadzone",
+        "offset": "0x00001820",
+        "romSize": "0x00000070"
+      },
+      {
+        "name": "recomp_analog_camera_get",
+        "offset": "0x00001890",
+        "romSize": "0x00000154"
+      },
+      {
+        "name": "getFrameDelta",
+        "offset": "0x000019F0",
+        "romSize": "0x00000440"
+      },
+      {
+        "name": "setActorOpacity",
+        "offset": "0x00001E30",
+        "romSize": "0x00000008"
+      },
+      {
+        "name": "setOverlayColor",
+        "offset": "0x00001E38",
+        "romSize": "0x00000010"
+      },
+      {
+        "name": "createWarpOptionTextObjs",
+        "offset": "0x00001E48",
+        "romSize": "0x000000C0"
+      },
+      {
+        "name": "destroyWarpOptionTextObjs",
+        "offset": "0x00001F08",
+        "romSize": "0x00000080"
+      },
+      {
+        "name": "handleMenuInputs",
+        "offset": "0x00001F88",
+        "romSize": "0x000001EC"
+      },
+      {
+        "name": "menuMain",
+        "offset": "0x00002174",
+        "romSize": "0x000001D8"
+      },
+      {
+        "name": "ldiv_recomp",
+        "offset": "0x00002350",
+        "romSize": "0x00000038"
+      },
+      {
+        "name": "_Ldtob",
+        "offset": "0x00002388",
+        "romSize": "0x00000C94"
+      },
+      {
+        "name": "lldiv_recomp",
+        "offset": "0x00003020",
+        "romSize": "0x00000108"
+      },
+      {
+        "name": "_Litob",
+        "offset": "0x00003128",
+        "romSize": "0x000002BC"
+      },
+      {
+        "name": "strchr_recomp",
+        "offset": "0x000033F0",
+        "romSize": "0x0000003C"
+      },
+      {
+        "name": "_Putfld",
+        "offset": "0x00003A30",
+        "romSize": "0x00000430"
+      }
+    ]
+  },
+  "profile": "N64MODERN_NO_DYNAMIC_CODE=ON",
+  "registration": {
+    "mechanism": "register_patches plus writable data lookup tables",
+    "source": "worktrees/bananapad-static-macos/src/main/register_patches.cpp"
+  },
+  "schemaVersion": 1,
+  "sourceFiles": [
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 3,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8003292C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FBFF4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FB7E4"
+        }
+      ],
+      "path": "patches/boot_logos_patches.c",
+      "sha256": "40619efcd5385f2b44846cfaada24311b3204e19fea83f31cbebe1d56cdf401e"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 2,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806BE8BC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_80029364"
+        }
+      ],
+      "path": "patches/patches_balancing.c",
+      "sha256": "0a07329168adb887055895c83d82d30526110ee4b7185ba48f61eb110b79dc4c"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 2,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "raiseException"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FE71C"
+        }
+      ],
+      "path": "patches/patches_debug.c",
+      "sha256": "6f125659edcb21b54cbfe7ef66f5598e4accae947dc3c626713e3bb17539a7b0"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 10,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80630DCC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806303C4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80689F80"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80689FEC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A074"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A118"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A164"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80727958"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8066AF40"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "getPointerTableFile"
+        }
+      ],
+      "path": "patches/patches_draw.c",
+      "sha256": "2d95cd7885f76b5a777e8c7eadc3aa50ddf807b4e8261bf100bbbcbf15e40337"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 10,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FE398"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8070A848"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80629300"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8070A934"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8070AC74"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80706F90"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80709BC4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80704B20"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807069A4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80707980"
+        }
+      ],
+      "path": "patches/patches_framebuffer.c",
+      "sha256": "0eb3ce5ed8080ea95416ca551a2212c2f968523918054f3ceb0db163c3647036"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 8,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80631FAC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80600D50"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80610350"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8060A1B0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806291B4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806FFF88"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80699284"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8061138C"
+        }
+      ],
+      "path": "patches/patches_heap.c",
+      "sha256": "fd959f6ede0f9ad3247447995386f6a694c4e849d7e888089d5f275b13068e81"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 15,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8061DBD4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80620F00"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A508"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8002FC1C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806ABC94"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80724B5C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80613194"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806131D4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80613214"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80727678"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806BFBF4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8061C518"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8061C600"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "playCutscene"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806F386C"
+        }
+      ],
+      "path": "patches/patches_interpolation.c",
+      "sha256": "f2cfb59cf9d41202fc03f52982bc202a12937dec0b3feeaabd6bdc154034755a"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 2,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068AD7C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806443E4"
+        }
+      ],
+      "path": "patches/patches_lightning.c",
+      "sha256": "bb02365fec953485fc2fe56a43d57056a9485381b1699a9be91d45224a2fd3fa"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 30,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_dk64_boot_8000102C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_dk64_boot_80000450"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80611730"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80600674"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_dk64_boot_800009D0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FE544"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FB5C4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FB944"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FBC5C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80658E8C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80714A68"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807132DC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80714A9C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80655DD0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80701CA0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068D264"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80703AB0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807035C4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806522CC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8062DBDC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80601EE4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_arcade_800259D0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80704960"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80658134"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80656F14"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8066308C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80704484"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "createLight"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8065A884"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8065BAA0"
+        }
+      ],
+      "path": "patches/patches_main.c",
+      "sha256": "b008c0dadab6d61373b8a1774c1a15f52614236457878a137fc6baf67c116fac"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 19,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80614B34"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80636FFC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80714B84"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80714C08"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "drawSpriteAtPosition"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806A370C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806A4284"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80637B6C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8069F904"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8069FA40"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8065FD88"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806187E8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80618820"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A764"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068A784"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80701098"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807007B8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_critter_80028A9C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_critter_80028EE8"
+        }
+      ],
+      "path": "patches/patches_matrix.c",
+      "sha256": "7116398fe39e755f6eaff39e87a3430bac3b87d1792e8a7a8af707d86df862ee"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 39,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80715E94"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806F9D8C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_80030894"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806F9744"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806FF144"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8071338C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807138CC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068D8C8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806F9B64"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_8002733C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8070068C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806A2B90"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068DC54"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_80024000"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_800252A0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_80026940"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_80029B9C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_8002CC08"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_8002D010"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_boss_800286B8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806FF75C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_race_8002BDDC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_race_8002CBEC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_race_8002C14C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_race_8002C76C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_race_8002C2E8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_bonus_8002570C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80710CA0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806F8170"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806FFB2C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806A92B4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806AC07C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806AB4EC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806AA304"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FD088"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806C75A4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068DBA4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806FEF7C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068DAF4"
+        }
+      ],
+      "path": "patches/patches_ui.c",
+      "sha256": "36e90c8231e08b1aecfe6097770e5c10482dfb864b376b9340d121653810d6a1"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 1,
+      "patchDefinitionCount": 0,
+      "patchDefinitions": [],
+      "path": "patches/print.c",
+      "sha256": "444939470e2d512ae56fad06e534f7b09a88ddebdf0f2cb22c0830195a902995"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 17,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8068ABE0"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_807144B8"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80621174"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806EA200"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806EA26C"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806EA0A4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8061D1FC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80620628"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806E6B98"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_806EA628"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8002D520"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8002CFA4"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8002DBDC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_menu_8002D8AC"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "isFlagSet"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "setFlag"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_80731030"
+        }
+      ],
+      "path": "patches/sound_options_patches.c",
+      "sha256": "a5605f99f2e370ae9a8d45991de181d42c95c44fa160b9f7b9960e4ed05d51d6"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 3,
+      "patchDefinitions": [
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8060F730"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_8060F254"
+        },
+        {
+          "kind": "RECOMP_PATCH",
+          "name": "func_global_asm_805FE4D4"
+        }
+      ],
+      "path": "patches/timing_fixes.c",
+      "sha256": "d63ba22ee528aaab0da772ecfc63e20a13c234a1dc4dcbe7e1a930fedb7d18cf"
+    },
+    {
+      "classification": "retained-upstream-enhancement",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 0,
+      "patchDefinitions": [],
+      "path": "patches/warp_menu.c",
+      "sha256": "40e73b79dd655b9ce276bad15659afde43fc8ddd525ab4f6222d86f7bd0ff96a"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 0,
+      "patchDefinitions": [],
+      "path": "patches/xldtob.c",
+      "sha256": "ac5ab1f7e04f69882df555230d50c0b8853fb970cf1f55acf926a8337634347e"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 0,
+      "patchDefinitions": [],
+      "path": "patches/xlitob.c",
+      "sha256": "56bc58782ea12a736891a5681c803e2cf5ab34dee566a76277d7cab26b2144a5"
+    },
+    {
+      "classification": "required-baseline-correctness",
+      "eventDefinitionCount": 0,
+      "exportDefinitionCount": 0,
+      "patchDefinitionCount": 0,
+      "patchDefinitions": [],
+      "path": "patches/xprintf.c",
+      "sha256": "3a74698670db344f9347134922b3caf5771784a32b96193b1afcf0fcedf67d1e"
+    }
+  ]
+}

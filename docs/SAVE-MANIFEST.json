@@ -1,0 +1,24 @@
+{
+  "backupSuffix": ".bak",
+  "blockSizeBytes": 8,
+  "controllerPak": {
+    "returnCode": 1,
+    "supported": false,
+    "symbolicReturn": "PFS_ERR_NOPACK"
+  },
+  "gameId": "DK64",
+  "guestProbeValue": "0x02",
+  "hostLengthBytes": 2048,
+  "hostRelativePath": "saves/DK64.bin",
+  "saveType": "Eep16k",
+  "schemaVersion": 1,
+  "sources": {
+    "worktrees/bananapad-static-macos/lib/N64ModernRuntime/librecomp/src/eep.cpp": "981ac13ab7b3f1a1eeded6ae14bb7cc2a925f5d4e397a4b0edf9fdcdaae489aa",
+    "worktrees/bananapad-static-macos/lib/N64ModernRuntime/librecomp/src/files.cpp": "81a7e94f53859b5ca534c9e864d460a819eb1d2ebe5415d4bfeb4631509f7887",
+    "worktrees/bananapad-static-macos/lib/N64ModernRuntime/librecomp/src/pak.cpp": "7eaf2d4f806d300d4cdab7b10d471a6d8290e5129d6d9000c250514f4e7c7e23",
+    "worktrees/bananapad-static-macos/lib/N64ModernRuntime/librecomp/src/pi.cpp": "13b01743d2f179ea15880963a904a708aee60aaeba712d6375fa8d63eb4fdc17",
+    "worktrees/bananapad-static-macos/src/main/main.cpp": "8491f8a826c5a5efb8c031569d0f0d88291a505b80aba7f8a3c66ddcb4d05544"
+  },
+  "temporarySuffix": ".temp",
+  "writeBoundsChecked": true
+}
