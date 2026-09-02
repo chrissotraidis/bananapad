@@ -8,6 +8,8 @@ Last updated: 2026-09-02
 
 This authorization covers the exact source tag, GitHub prerelease, IPA, and checksum named in the Preview 1 release notes. It does not authorize ROMs, saves, generated private game inputs, screenshots containing unreviewed game material, signing assets, or user/device data.
 
+Preview 1 publication is complete. The hosted IPA and checksum were downloaded without GitHub authentication and matched the audited local artifacts byte-for-byte.
+
 ## Current boundary
 
 - The user supplies a legally obtained Donkey Kong 64 US/NTSC-U 1.0 ROM. The original, normalized copy, decompressed build ROM, generated game/patch/RSP code, saves, crash memory, private logs, and app-container data remain local and ignored.
@@ -19,6 +21,6 @@ This authorization covers the exact source tag, GitHub prerelease, IPA, and chec
 
 ## Decisions still required
 
-The release operator must download the hosted IPA and checksum after publication, compare them byte-for-byte with the audited local artifacts, and verify the checksum before announcement.
+Future releases require the same exact-artifact authorization and hosted-byte verification.
 
 This document is an engineering gate, not legal advice.
