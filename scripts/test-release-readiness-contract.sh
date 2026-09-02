@@ -6,11 +6,15 @@ source "$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
 readiness="$BANANAPAD_ROOT/docs/RELEASE-READINESS.md"
 receipt="$BANANAPAD_ROOT/generated/validation/ios-simulator-last-run.json"
 ui_receipt="$BANANAPAD_ROOT/generated/validation/mobile-ui-last-run.json"
-candidate_app="$BANANAPAD_ROOT/generated/build/bananapad-ios-candidate/Release/BananaPad.app"
+candidate_app="${BANANAPAD_RELEASE_CANDIDATE_APP:-$BANANAPAD_ROOT/generated/build/bananapad-ios-candidate/Release/BananaPad.app}"
+
+if [[ ! -f "$ui_receipt" ]]; then
+  ui_receipt="$receipt"
+fi
 
 [[ -f "$readiness" ]] || die "release-readiness document is missing"
 [[ -f "$receipt" ]] || die "Simulator receipt is missing"
-[[ -f "$ui_receipt" ]] || die "mobile UI receipt is missing"
+[[ -f "$ui_receipt" ]] || die "mobile UI/Simulator receipt is missing"
 [[ -x "$candidate_app/BananaPad" ]] || die "current clean Simulator candidate is missing"
 
 python3 - "$readiness" <<'PY'

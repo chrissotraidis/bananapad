@@ -13,7 +13,8 @@ Decision: **GO for the private source rollup and exact local IPA candidate; NO-G
 - The last isolated `1.0.2` build/audit Simulator executable was `12e963eac4685900621554d245af735f7eb691e088d487a388e985d64311c560`; that candidate was archived after the later Xbox input repair changed the product identity and must be restaged before qualification.
 - Branding-accepted Simulator executable SHA-256: `96b80b1a61b796634de558c7eca5ae0a5d1be706506206d07a8a606f0b353b22`; its three-dot action sheet, accessibility label, and native Settings sheet use BananaPad naming.
 - Signed physical-iPad executable SHA-256: `0cf47f413d544a59d6fd7b96b4838a4325b03044bd40f217226b47711f1b5abd`; arm64, iOS 15 minimum, and both iPhone/iPad families. Package/no-dynamic-code/signature audits, exact generated SDL patching, in-place install, preserved ROM/save/preferences, launch, and visible DK64 rendering pass on the attached iPad. The SDL-level Xbox A duplicate-Start repair awaits the user's direct jump/pause retest.
-- The exact first ROM-free unsigned IPA candidate is authorized for local deterministic build and audit. Its final executable and IPA hashes are recorded after the source rollup build; no upload is authorized by this pass.
+- Exact unsigned release executable SHA-256: `ee876b51aec617563963ee898c6ec36f87a3dffbfc10c2dc2636182c8a7a0442`; clean arm64 iPhoneOS build, iOS 15 minimum, iPhone/iPad families, no personal build paths, no forbidden dynamic-code behavior, and no signature/profile.
+- Exact local IPA candidate: `BananaPad-v0.1.0-preview.1-unsigned.ipa`, 7,479,430 bytes, SHA-256 `a7f3a7a280770644bb175553c2d70c5af032959fd1e425d89b164f721b53d55e`. Two independent deterministic package runs are byte-identical; ZIP integrity, complete licenses/notices/install/rights content, ROM/save/private/signing exclusion, Mach-O, privacy, dependency, and no-dynamic-code audits pass. No upload is authorized by this pass.
 - Last full touch/play/save/reload candidate executable SHA-256: `f4fab84e2b0b99c8cba45ccfd576f256810eebd660f25fbf00805564b910f182`; the current delta is confined to ROM-management safety and native-modal controller suppression, not game code.
 - Archived `1.0.2` rehearsal worktree SHA-256: `08a83782323421d4b9f684faa8518011881b1956e95526b93ca942ada142085d`.
 - BananaPad-branded PaperPad-derived `ios_main.mm` SHA-256: `75759c9137c416d19df7612b8abe4beb892553d6ee7fe752776c0d7aa526fb39`; the fidelity gate allows only the reviewed product-label substitutions.
@@ -72,6 +73,5 @@ The command validates the current clean build, PaperPad fidelity, touch/settings
 
 ## Remaining release blockers
 
-1. Build the exact unsigned device app from the rolled-up source, package it twice, and record the matching hashes in this document and the README.
-2. If a public release is requested, separately authorize repository visibility, the exact tag/release, and upload of the named IPA; then download and compare the hosted bytes before announcing it.
-3. Complete the remaining Apple-shell matrix independently: controller handoff/reconnect, audio interruption/routes, memory pressure, and sustained iPad/iPhone operation. Preview status must not imply those unobserved checks passed.
+1. If a public release is requested, separately authorize repository visibility, the exact tag/release, and upload of the named IPA; then download and compare the hosted bytes before announcing it.
+2. Complete the remaining Apple-shell matrix independently: controller handoff/reconnect, audio interruption/routes, memory pressure, and sustained iPad/iPhone operation. Preview status must not imply those unobserved checks passed.

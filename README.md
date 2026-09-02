@@ -20,7 +20,7 @@ BananaPad is an integration and hardening project built around [Donkey Kong 64: 
 
 BananaPad is game-specific, not a general Nintendo 64 emulator. It targets only an unmodified **Donkey Kong 64 (US/NTSC-U 1.0)** ROM supplied by the user.
 
-This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, saves, or a playable ROM-derived package. A public developer-preview source release is being prepared. A ROM-free unsigned IPA is planned to follow soon, but it is not available until it appears on the official [Releases page](https://github.com/chrissotraidis/bananapad/releases). See the [rights and publication status](docs/RIGHTS-STATUS.md).
+This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, saves, or a playable ROM-derived package. The first ROM-free unsigned IPA candidate has been built and audited for the developer preview, but it is not a public download until the exact asset appears on the official [Releases page](https://github.com/chrissotraidis/bananapad/releases). See the [rights and publication status](docs/RIGHTS-STATUS.md).
 
 ## Project status
 
@@ -116,9 +116,9 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 ### Install on iPhone or iPad
 
 > [!IMPORTANT]
-> The official BananaPad IPA is **coming soon**. Until an IPA appears on this repository's [Releases page](https://github.com/chrissotraidis/bananapad/releases), there is no public binary to install. Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
+> BananaPad Preview 1 has an audited release candidate, but it has not been uploaded publicly. Until the exact asset appears on this repository's [Releases page](https://github.com/chrissotraidis/bananapad/releases), there is no official public binary to install. Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
 
-The forthcoming IPA will be an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. It will not install by tapping it: you must re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install), then install it on your device. BananaPad does not require JIT.
+The audited candidate is `BananaPad-v0.1.0-preview.1-unsigned.ipa`, SHA-256 `a7f3a7a280770644bb175553c2d70c5af032959fd1e425d89b164f721b53d55e`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Once officially released, verify that checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
 
 After installation:
 
@@ -332,7 +332,7 @@ Yes. BananaPad preserves the pinned PaperPad `ios_main.mm` touch/settings behavi
 <details>
 <summary><strong>Can I publish the source or IPA?</strong></summary>
 
-The public developer-preview source release is being prepared, and an official ROM-free unsigned IPA is planned to follow soon. Until those exact assets appear on the official Releases page, do not redistribute working-tree builds or unofficial packages. The release will never include a ROM, save, generated private input, signing material, or other user data.
+The source rollup is on the existing private `main` branch, and the exact first ROM-free unsigned IPA candidate has been built twice with matching bytes and audited. Repository visibility, a public tag/release, and upload remain separate publication actions. Until an exact asset appears on the official Releases page, do not redistribute working-tree builds or unofficial packages. The release will never include a ROM, save, generated private input, signing material, or other user data.
 </details>
 
 ## Documentation
@@ -352,6 +352,7 @@ The public developer-preview source release is being prepared, and an official R
 - [Apple touch and Simulator validation](docs/VALIDATION-APPLE-TOUCH-2026-09-01.md)
 - [Physical iPhone/iPad acceptance checklist](docs/DEVICE-ACCEPTANCE.md)
 - [IPA installation guide](docs/INSTALL_IPA.md)
+- [Preview 1 release notes](docs/RELEASE_NOTES-v0.1.0-preview.1.md)
 - [Release readiness and PRD matrix](docs/RELEASE-READINESS.md)
 - [Upstream synchronization](docs/UPSTREAM-SYNC.md)
 - [New upstream candidate qualification](docs/UPSTREAM-CANDIDATE-QUALIFICATION.md)
