@@ -137,7 +137,7 @@ index 14db898..034a790 100644
  # SDL incorrectly includes a definition of _m_prefetch when compiling with clang-cl, which conflicts with the builtin definition and causes a build error. -
  # Defining this guard prevents it from doing so
  add_compile_definitions(__PRFCHWINTRIN_H)
-@@ -149,14 +181,26 @@ add_custom_command(OUTPUT
+@@ -149,14 +181,27 @@ add_custom_command(OUTPUT
  # Main executable
  add_executable(DK64Recompiled)
  
@@ -152,7 +152,8 @@ index 14db898..034a790 100644
 +    target_sources(DK64Recompiled PRIVATE
 +        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native.cpp"
 +        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native_config.cpp"
-+        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp")
++        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp"
++        "${BANANAPAD_APPLE_CORE_DIR}/paperpad_paths.mm")
 +    target_include_directories(DK64Recompiled PRIVATE "${BANANAPAD_APPLE_CORE_DIR}")
 +endif()
 +
@@ -212,7 +213,7 @@ index 14db898..034a790 100644
      # Use a wrapper around ld64 that respects segprot's `max_prot` value in order
      # to make our executable memory writable (required for mod function patching)
      target_link_options(DK64Recompiled PRIVATE
-@@ -260,16 +315,68 @@ if (WIN32)
+@@ -260,16 +316,67 @@ if (WIN32)
  endif()
  
  if (APPLE)
@@ -225,7 +226,6 @@ index 14db898..034a790 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/rom_setup.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/diagnostics.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/native_ui_state.mm"
-+            "${BANANAPAD_APPLE_CORE_DIR}/paperpad_paths.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/PrivacyInfo.xcprivacy"
 +            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets")
@@ -929,14 +929,12 @@ index ec03f76..91a211e 100644
      recomp::mods::ModContentType texture_pack_content_type{
          .content_filename = "rt64.json",
          .allow_runtime_toggle = true,
-@@ -870,6 +1003,7 @@ int main(int argc, char** argv) {
+@@ -870,4 +1003,5 @@ int main(int argc, char** argv) {
  
      // Register the .rtz texture pack file format with the previous content type as its only allowed content type.
      recomp::mods::register_mod_container_type("rtz", std::vector{ texture_pack_content_type_id }, false);
 +#endif
  
-     recomp::Configuration cfg {
-         .project_version = project_version,
 @@ -887,9 +1021,37 @@ int main(int argc, char** argv) {
          },
      };

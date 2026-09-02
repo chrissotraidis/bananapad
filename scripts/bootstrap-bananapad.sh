@@ -62,8 +62,7 @@ if [[ "$target" == device || "$target" == all ]]; then
   "$BANANAPAD_ROOT/scripts/build-bananapad-ios-device.sh"
   device_app="$BANANAPAD_ROOT/generated/build/bananapad-ios-device/Release/BananaPad.app"
   "$BANANAPAD_ROOT/scripts/package-unsigned-ipa.sh" "$device_app"
-  device_hash="$(shasum -a 256 "$device_app/BananaPad" | awk '{print $1}')"
-  ipa="$BANANAPAD_ROOT/generated/packages/BananaPad-unsigned-$device_hash.ipa"
+  ipa="$BANANAPAD_ROOT/generated/packages/BananaPad-v0.1.0-preview.1-unsigned.ipa"
 fi
 
 receipt_dir="$BANANAPAD_ROOT/generated/validation"
@@ -104,5 +103,5 @@ note "receipt: $receipt"
 [[ -z "$mac_app" ]] || note "macOS app: $mac_app"
 [[ -z "$ios_app" ]] || note "iOS/iPadOS Simulator app: $ios_app"
 [[ -z "$device_app" ]] || note "unsigned iOS/iPadOS device app: $device_app"
-[[ -z "$ipa" ]] || note "private ROM-free unsigned IPA: $ipa"
+[[ -z "$ipa" ]] || note "ROM-free unsigned IPA: $ipa"
 note "No Simulator was booted or launched; runtime receipt validation begins with build-bananapad-ios-simulator.sh --run on exactly one booted target."

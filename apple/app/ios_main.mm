@@ -180,7 +180,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
         _utilityButton.layer.cornerRadius = 22.0;
         _utilityButton.layer.borderWidth = 1.0;
         _utilityButton.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.34].CGColor;
-        _utilityButton.accessibilityLabel = @"PaperPad Menu";
+        _utilityButton.accessibilityLabel = @"BananaPad Menu";
         _utilityButton.accessibilityHint = @"Opens settings and game setup";
         [_utilityButton addTarget:self action:@selector(presentUtilityMenu)
                  forControlEvents:UIControlEventTouchUpInside];
@@ -509,7 +509,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
     }
 
     UIAlertController* menu =
-        [UIAlertController alertControllerWithTitle:@"PaperPad"
+        [UIAlertController alertControllerWithTitle:@"BananaPad"
                                             message:nil
                                      preferredStyle:UIAlertControllerStyleActionSheet];
     [menu addAction:[UIAlertAction actionWithTitle:@"Settings"
@@ -995,8 +995,8 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
     stack.translatesAutoresizingMaskIntoConstraints = NO;
     [content addSubview:stack];
 
-    UILabel* title = [self label:@"PaperPad Settings"];
-    title.text = @"PaperPad Settings";
+    UILabel* title = [self label:@"BananaPad Settings"];
+    title.text = @"BananaPad Settings";
     title.font = [UIFont boldSystemFontOfSize:24.0];
     title.accessibilityTraits |= UIAccessibilityTraitHeader;
     [stack addArrangedSubview:title];

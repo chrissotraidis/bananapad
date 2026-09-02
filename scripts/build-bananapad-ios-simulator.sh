@@ -16,7 +16,7 @@ mode="${1:---build}"
 workspace="${BANANAPAD_WORKSPACE:-$BANANAPAD_ROOT/worktrees/bananapad-static-macos}"
 build_dir="${BANANAPAD_BUILD_DIR:-$BANANAPAD_ROOT/generated/build/bananapad-ios-simulator}"
 app="$build_dir/Release/BananaPad.app"
-sdl2_source="$BANANAPAD_ROOT/ref/paperpad/ref/SDL2"
+sdl2_source="$BANANAPAD_ROOT/generated/dependencies/sdl2-bananapad"
 file_to_c="${BANANAPAD_FILE_TO_C:-$BANANAPAD_ROOT/generated/build/bananapad-static-macos/file_to_c}"
 spirv_cross_msl="${BANANAPAD_SPIRV_CROSS_MSL:-$BANANAPAD_ROOT/worktrees/bananapad-static-macos/build/bin/spirv_cross_msl}"
 promoted="$(lock_value '.upstream.promoted.commit')"
@@ -25,10 +25,12 @@ game_set="${BANANAPAD_GAME_SET:-$BANANAPAD_ROOT/generated/aot/current-game}"
 patch_set="${BANANAPAD_PATCH_SET:-$BANANAPAD_ROOT/generated/aot/current-patches}"
 decompressed_rom="${BANANAPAD_DECOMPRESSED_ROM:-$BANANAPAD_ROOT/generated/rom/donkeykong64.decompressed.us.z64}"
 host_tools="${BANANAPAD_HOST_TOOLS:-$BANANAPAD_ROOT/generated/build/host-tools}"
+reproducible_flags="-ffile-prefix-map=$workspace=BananaPadSource -fdebug-prefix-map=$workspace=BananaPadSource -ffile-prefix-map=$BANANAPAD_ROOT=BananaPadProject -fdebug-prefix-map=$BANANAPAD_ROOT=BananaPadProject"
 
 [[ -e "$workspace/.git" ]] || die "prepared BananaPad worktree is missing; run scripts/build-bananapad-static-macos.sh first"
 [[ "$(git -C "$workspace" rev-parse HEAD)" == "$expected_commit" ]] || die "BananaPad worktree is not at the expected DK64Recompiled pin"
-[[ -f "$sdl2_source/CMakeLists.txt" ]] || die "pinned PaperPad SDL2 source is missing"
+"$BANANAPAD_ROOT/scripts/prepare-bananapad-sdl2.sh"
+[[ -f "$sdl2_source/CMakeLists.txt" ]] || die "patched BananaPad SDL2 source is missing"
 [[ -x "$file_to_c" ]] || die "native file_to_c is missing; run scripts/build-bananapad-static-macos.sh first"
 [[ -x "$spirv_cross_msl" ]] || die "native spirv_cross_msl is missing; run scripts/build-bananapad-static-macos.sh first"
 [[ -d "$game_set/RecompiledFuncs" && -d "$patch_set/RecompiledPatches" ]] || die "G1 generated source sets are missing"
@@ -58,6 +60,10 @@ if [[ "$mode" != "--smoke" ]]; then
     -DCMAKE_OSX_SYSROOT=iphonesimulator \
     -DCMAKE_OSX_ARCHITECTURES=arm64 \
     -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+    "-DCMAKE_C_FLAGS=$reproducible_flags" \
+    "-DCMAKE_CXX_FLAGS=$reproducible_flags" \
+    "-DCMAKE_OBJC_FLAGS=$reproducible_flags" \
+    "-DCMAKE_OBJCXX_FLAGS=$reproducible_flags" \
     -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
     -DVCPKG_TARGET_TRIPLET=arm64-ios \
     -DBANANAPAD_NATIVE_SHELL=ON \

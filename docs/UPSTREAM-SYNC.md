@@ -1,15 +1,23 @@
 # DK64Recompiled upstream synchronization
 
-Last updated: 2026-09-01 08:55 CDT
+Last updated: 2026-09-02 20:15 JST
 
 ## Identities
 
 | Role | Identity | State |
 |---|---|---|
 | Promoted | tag `1.0.1`, `c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43` | Initial reproducibility anchor; normal build input |
-| Last observed stable | tag `1.0.1`, `c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43` | Observed 2026-09-01 08:04 CDT |
-| Last observed `main` | `1b22409b5297dbb710843cc4493d9b7a4a303bdc` | Mechanically evaluated 2026-09-01 08:23 CDT; not promoted |
-| Candidate | tag `1.0.1`, `c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43` | Clean same-pin candidate restored after the newer-`main` rehearsal; mechanical result `pass`, executable `b9c1d2a90d5dd47ec945413e642a827ca5b9d0836e403de29c75cfd242517955` |
+| Last observed stable | tag `1.0.2`, `9177e21a3f633e834779573783b399750f20e7fe` | Observed and mechanically evaluated 2026-09-02 |
+| Last observed `main` | `fe291083` | Observed 2026-09-02; not selected or promoted |
+| Candidate | none | The successful `1.0.2` rehearsal was archived recoverably after a subsequent Xbox/iPadOS input repair changed the Apple product identity; restage with `evaluate-latest` before qualification |
+
+## 2026-09-02 stable 1.0.2 rehearsal
+
+`scripts/manage-upstream.sh evaluate-latest` selected the real stable `1.0.2` tag in an isolated worktree without changing the promoted `1.0.1` checkout, dependency lock, hardware app, ROM, or saves. The first replay found an overly broad trailing context line in the BananaPad `main.cpp` patch after upstream added CLI `argc`/`argv`; narrowing that hunk preserved the intended native-shell guard and applies cleanly to both versions. The next macOS link exposed that RT64's new Application Support helper was listed only in the iOS source set. Moving that existing Objective-C++ source into the shared Apple native-shell source set fixed both macOS and mobile without duplicating the implementation.
+
+The final candidate replay passed exact patch application, deterministic ROM/game/patch/RSP generation, macOS build, iPhone/iPad Simulator build, code signing verification, exact PaperPad branding/touch/ROM contracts, and the ROM-free iOS package audit. Identities are recursive manifest `c5bf0f1fbc15d6044312816c9c8803b0e074f4837a851f0c86b89237e85feb18`, recursive worktree `08a83782323421d4b9f684faa8518011881b1956e95526b93ca942ada142085d`, patch series `a9c05e4fa8d4f06816c1ea0a3144bbfd185890bd8453a73eeadb412a2b24f5c3`, macOS executable `05ad6d3a71349ab042e16201c0576de5d97a02da1b3be8c95deea9e8b807282b`, and Simulator executable `12e963eac4685900621554d245af735f7eb691e088d487a388e985d64311c560`.
+
+The manager correctly returned `needs-full-validation`. `1.0.2` changes game patches and N64ModernRuntime in addition to camera inversion, analog camera, swimming axes, audio, pause-menu interpolation, HUD/lightning rendering, and new-file startup. It therefore needs the named gameplay, audio, settings, save/reload, and exact-candidate Simulator qualification before promotion. A subsequent Xbox/iPadOS input repair changed the Apple product hash, so the now-stale candidate was archived recoverably under `generated/upstream/rollbacks/20260902T111456Z`; `1.0.1` remains the known-good promoted product and `evaluate-latest` will stage a fresh identity when qualification resumes.
 
 ## 2026-09-01 real upstream-drift rehearsal
 

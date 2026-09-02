@@ -2,7 +2,9 @@
 #include <cstring>
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <cstdio>
+#include <filesystem>
 
 #include "hle/rt64_application.h"
 #include "contrib/xxHash/xxhash.h"
@@ -11,6 +13,7 @@
 #include "ultramodern/config.hpp"
 
 #include "bananapad_rt64_context.h"
+#include "paperpad_paths.h"
 
 namespace {
 
@@ -249,6 +252,17 @@ bananapad::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::rende
     // Set up the RT64 application configuration fields.
     RT64::ApplicationConfiguration appConfig;
     appConfig.useConfigurationFile = false;
+#if defined(__APPLE__)
+    // Physical iPadOS does not permit creating RT64's default `.rt64`
+    // directory at the app-container root. Keep its private state beside the
+    // rest of BananaPad's Application Support data instead.
+    const char* support_dir = paperpad_apple_application_support_dir();
+    if (support_dir != nullptr) {
+        appConfig.detectDataPath = false;
+        appConfig.dataPath = std::filesystem::path(support_dir) / "RT64";
+        std::free(const_cast<char*>(support_dir));
+    }
+#endif
 
     // Create the RT64 application.
     app = std::make_unique<RT64::Application>(appCore, appConfig);

@@ -41,6 +41,10 @@ done
 rg -q 'needs-full-validation' "$manager" || \
   die "guided upstream manager must preserve the newer-pin qualification gate"
 
+integration_patch="$BANANAPAD_ROOT/patches/bananapad/bananapad-integration.patch"
+[[ "$(rg -c 'BANANAPAD_APPLE_CORE_DIR}/paperpad_paths\.mm' "$integration_patch")" == "1" ]] || \
+  die "Apple Application Support paths must be linked once from the shared native-shell source set"
+
 rollback="$BANANAPAD_ROOT/scripts/rollback-upstream-update.sh"
 for candidate_output in candidate-inputs bananapad-macos-candidate bananapad-ios-candidate; do
   rg -q "$candidate_output" "$rollback" || \

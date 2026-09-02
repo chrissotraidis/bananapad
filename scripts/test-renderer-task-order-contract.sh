@@ -34,6 +34,13 @@ assert send < late_guard < late_complete < dp_complete
 assert "DK64 can replace its microcode data as soon as SP completes" in block
 
 context = Path(sys.argv[2]).read_text()
+support_path = context.index("paperpad_apple_application_support_dir()")
+disable_detection = context.index("appConfig.detectDataPath = false", support_path)
+rt64_path = context.index('std::filesystem::path(support_dir) / "RT64"', disable_detection)
+app_create = context.index("std::make_unique<RT64::Application>", rt64_path)
+assert support_path < disable_detection < rt64_path < app_create
+assert "Physical iPadOS does not permit" in context
+
 load = context.index("app->interpreter->loadUCodeGBI")
 guard = context.index("if (app->interpreter->hleGBI == nullptr)", load)
 invalidate_text = context.index("UCode.textAddress = UINT32_MAX", guard)

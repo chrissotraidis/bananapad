@@ -12,6 +12,7 @@ simulator_build_dir="${BANANAPAD_SIMULATOR_BUILD_DIR:-$BANANAPAD_ROOT/generated/
 [[ -f "$simulator_build_dir/CMakeCache.txt" ]] || die "candidate Simulator build cache is missing: $simulator_build_dir"
 
 for test_script in \
+  test-save-slot-injector.py \
   test-paperpad-ui-fidelity.sh \
   test-touch-input-contract.sh \
   test-native-settings-contract.sh \

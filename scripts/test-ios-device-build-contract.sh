@@ -57,9 +57,17 @@ package_script="$BANANAPAD_ROOT/scripts/package-unsigned-ipa.sh"
 [[ -x "$package_script" ]] || die "unsigned IPA packaging script is missing or not executable"
 rg -q 'audit-ios-package\.sh' "$package_script" \
   || die "unsigned IPA packaging must audit the source app and package"
-rg -q 'Payload/BananaPad\.app' "$package_script" \
+rg -q 'Payload/BananaPad\.app|Payload/BananaPad.app' "$package_script" \
   || die "unsigned IPA packaging must use the standard Payload app layout"
-rg -q 'codesign --verify --deep --strict' "$package_script" \
-  || die "unsigned IPA packaging must reject a signed input"
+rg -q 'codesign --remove-signature' "$package_script" \
+  || die "unsigned IPA packaging must remove a local development signature"
+rg -q 'touch -h -t 202001010000' "$package_script" \
+  || die "unsigned IPA packaging must normalize archive timestamps"
+rg -q 'zip -X' "$package_script" \
+  || die "unsigned IPA packaging must omit host-specific ZIP metadata"
+rg -q 'Licenses/DK64Recompiled' "$package_script" \
+  || die "unsigned IPA packaging must collect the pinned runtime licenses"
+rg -q 'INSTALL_IPA.md' "$package_script" \
+  || die "unsigned IPA packaging must bundle installation instructions"
 
 note "iOS/iPadOS device build contract: pass"

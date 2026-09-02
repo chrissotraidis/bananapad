@@ -82,7 +82,10 @@ product_source_hash() {
     {
       find apple -type f -print
       printf '%s\n' \
+        patches/sdl2/ios-controller-uipress-duplication.patch \
+        scripts/build-bananapad-ios-device.sh \
         scripts/build-bananapad-ios-simulator.sh \
+        scripts/prepare-bananapad-sdl2.sh \
         scripts/lib/common.sh
     } | LC_ALL=C sort -u | while IFS= read -r source_file; do
       [[ -f "$source_file" ]] || die "product source input is missing: $source_file"

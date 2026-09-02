@@ -9,7 +9,7 @@ require_command plutil
 workspace="${BANANAPAD_WORKSPACE:-$BANANAPAD_ROOT/worktrees/bananapad-static-macos}"
 build_dir="${BANANAPAD_BUILD_DIR:-$BANANAPAD_ROOT/generated/build/bananapad-ios-device}"
 app="$build_dir/Release/BananaPad.app"
-sdl2_source="$BANANAPAD_ROOT/ref/paperpad/ref/SDL2"
+sdl2_source="$BANANAPAD_ROOT/generated/dependencies/sdl2-bananapad"
 file_to_c="${BANANAPAD_FILE_TO_C:-$BANANAPAD_ROOT/generated/build/bananapad-static-macos/file_to_c}"
 spirv_cross_msl="${BANANAPAD_SPIRV_CROSS_MSL:-$BANANAPAD_ROOT/worktrees/bananapad-static-macos/build/bin/spirv_cross_msl}"
 expected_commit="${BANANAPAD_EXPECTED_COMMIT:-$(lock_value '.upstream.promoted.commit')}"
@@ -18,10 +18,12 @@ patch_set="${BANANAPAD_PATCH_SET:-$BANANAPAD_ROOT/generated/aot/current-patches}
 decompressed_rom="${BANANAPAD_DECOMPRESSED_ROM:-$BANANAPAD_ROOT/generated/rom/donkeykong64.decompressed.us.z64}"
 host_tools="${BANANAPAD_HOST_TOOLS:-$BANANAPAD_ROOT/generated/build/host-tools}"
 development_team="${BANANAPAD_DEVELOPMENT_TEAM:-}"
+reproducible_flags="-ffile-prefix-map=$workspace=BananaPadSource -fdebug-prefix-map=$workspace=BananaPadSource -ffile-prefix-map=$BANANAPAD_ROOT=BananaPadProject -fdebug-prefix-map=$BANANAPAD_ROOT=BananaPadProject"
 
 [[ -e "$workspace/.git" ]] || die "prepared BananaPad worktree is missing; run build-bananapad-static-macos.sh first"
 [[ "$(git -C "$workspace" rev-parse HEAD)" == "$expected_commit" ]] || die "BananaPad worktree is not at the expected upstream pin"
-[[ -f "$sdl2_source/CMakeLists.txt" ]] || die "pinned SDL2 source is missing"
+"$BANANAPAD_ROOT/scripts/prepare-bananapad-sdl2.sh"
+[[ -f "$sdl2_source/CMakeLists.txt" ]] || die "patched BananaPad SDL2 source is missing"
 [[ -x "$file_to_c" && -x "$spirv_cross_msl" ]] || die "native renderer build tools are missing"
 [[ -d "$game_set/RecompiledFuncs" && -d "$patch_set/RecompiledPatches" ]] || die "generated source sets are missing"
 [[ -f "$decompressed_rom" ]] || die "decompressed build ROM is missing"
@@ -61,6 +63,10 @@ cmake -S "$workspace" -B "$build_dir" -G Xcode \
   -DCMAKE_OSX_SYSROOT=iphoneos \
   -DCMAKE_OSX_ARCHITECTURES=arm64 \
   -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+  "-DCMAKE_C_FLAGS=$reproducible_flags" \
+  "-DCMAKE_CXX_FLAGS=$reproducible_flags" \
+  "-DCMAKE_OBJC_FLAGS=$reproducible_flags" \
+  "-DCMAKE_OBJCXX_FLAGS=$reproducible_flags" \
   "${signing_args[@]}" \
   -DVCPKG_TARGET_TRIPLET=arm64-ios \
   -DBANANAPAD_NATIVE_SHELL=ON \

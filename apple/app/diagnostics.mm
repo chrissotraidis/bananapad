@@ -136,7 +136,7 @@ NSString* diagnosticReport(NSURL* root) {
     if ([settings[@"schemaVersion"] integerValue] < 2 && resolution == 1) resolution = 2;
 
     NSMutableString* report = [NSMutableString string];
-    [report appendString:@"PaperPad diagnostics\n"];
+    [report appendString:@"BananaPad diagnostics\n"];
     [report appendString:@"====================\n"];
     [report appendFormat:@"Generated: %@\n", NSDate.date];
     [report appendFormat:@"App version: %@ (%@)\n",
@@ -304,7 +304,7 @@ void paperpad_present_diagnostics_share(void* presenter_pointer,
 
         NSURL* root = applicationSupportRoot();
         NSURL* reportURL = [NSURL fileURLWithPath:[NSTemporaryDirectory()
-            stringByAppendingPathComponent:@"PaperPad-Diagnostics.txt"]];
+            stringByAppendingPathComponent:@"BananaPad-Diagnostics.txt"]];
         NSError* error = nil;
         if (![diagnosticReport(root) writeToURL:reportURL
                                      atomically:YES

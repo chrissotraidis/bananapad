@@ -1,0 +1,9 @@
+diff --git a/src/video/uikit/SDL_uikitview.m b/src/video/uikit/SDL_uikitview.m
+--- a/src/video/uikit/SDL_uikitview.m
++++ b/src/video/uikit/SDL_uikitview.m
+@@ -383 +383,2 @@
+ #endif
++#if TARGET_OS_TV
+@@ -410 +411,2 @@
+ #endif /* !SDL_JOYSTICK_DISABLED */
++#endif /* TARGET_OS_TV */

@@ -1,6 +1,6 @@
 # BananaPad source map
 
-Last updated: 2026-08-31
+Last updated: 2026-09-02
 
 ## Ownership rule
 
@@ -41,6 +41,32 @@ DK64Recompiled remains the game source of truth. BananaPad-owned Apple shell, ad
 | `scripts/` | Deterministic source/build/package/repository machinery |
 
 Paper Mario-specific HLE audio, timing, save, or game hooks are hypotheses until DK64 reproduces their need.
+
+## Tracked adapted-file inventory
+
+The public BananaPad tree contains no reference checkout. The exact PaperPad
+revision is named above, and these tracked files retain the following source
+relationship:
+
+| BananaPad path | Provenance |
+|---|---|
+| `apple/app/ios_main.mm` | PaperPad touch/menu/settings source with only the reviewed BananaPad product-label substitutions permitted by the fidelity test |
+| `apple/app/rom_setup.*` | PaperPad picker/manager adapted for the locked DK64 revision, private DK64 filename, atomic replacement/removal, and BananaPad wording |
+| `apple/app/diagnostics.*` | PaperPad bounded diagnostics adapted for BananaPad identity and runtime state |
+| `apple/app/Info.plist.in` | PaperPad iOS bundle template adapted for BananaPad identity and controller declarations |
+| `apple/app/PrivacyInfo.xcprivacy`, `recompui_stub.cpp`, `touch_tap_latch.h` | Exact files from the pinned PaperPad revision |
+| `apple/app/ThirdPartyNotices.txt` | BananaPad-specific notices replacing the PaperPad game/dependency inventory |
+| `apple/core/paperpad_input.h`, `paperpad_paths.h` | Exact PaperPad interface snapshots retained under their source-identifying names |
+| `apple/core/paperpad_paths.mm` | PaperPad private-path implementation adapted so the shared BananaPad Apple core owns path creation on macOS and iOS |
+| `apple/core/bananapad_*`, `apple/app/native_ui_state.*` | BananaPad integration source written for the DK64 Apple product boundary |
+| `patches/bananapad/bananapad-integration.patch` | Reviewable delta against the exact pinned DK64Recompiled tree; no patched upstream tree is committed |
+| `patches/sdl2/ios-controller-uipress-duplication.patch` | Reviewable one-file delta against the exact pinned SDL2 tree, restricting the Apple TV remote fallback to tvOS |
+| `apple/app/Assets.xcassets/AppIcon.appiconset/` | Original BananaPad artwork with its own provenance record and master hash |
+
+`COPYING`, the dependency lock, these provenance records, the complete pinned
+license set collected into the IPA, and the matching source revision form the
+source/license handoff. They do not grant rights to Nintendo/Rare game data or
+generated translated game content.
 
 ## SunPad mapping
 

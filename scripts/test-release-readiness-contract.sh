@@ -38,6 +38,7 @@ rg -qF "$product_hash" "$readiness" || die "release-readiness product-source has
 rg -qF "$executable_hash" "$readiness" || die "release-readiness executable hash is stale"
 rg -qF "$candidate_executable_hash" "$readiness" || die "release-readiness clean candidate hash is stale"
 rg -qF "$gameplay_executable_hash" "$readiness" || die "release-readiness gameplay executable hash is stale"
-rg -q 'Decision: \*\*NO-GO for public release\*\*' "$readiness" || die "release decision is missing or unsafe"
+rg -q 'Decision: \*\*GO for the private source rollup and exact local IPA candidate; NO-GO for public upload\*\*' "$readiness" || \
+  die "release decision is missing or unsafe"
 
 note "release readiness contract: pass"

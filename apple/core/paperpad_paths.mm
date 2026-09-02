@@ -36,8 +36,8 @@ const char* paperpad_apple_choose_rom_path(void) {
 #else
     @autoreleasepool {
         NSOpenPanel* panel = [NSOpenPanel openPanel];
-        panel.title = @"Choose Paper Mario (US) 1.0 ROM";
-        panel.message = @"PaperPad accepts .z64, .v64, and .n64 files and validates the exact supported revision.";
+        panel.title = @"Choose Donkey Kong 64 (US) 1.0 ROM";
+        panel.message = @"BananaPad accepts .z64, .v64, and .n64 files and validates the exact supported revision.";
         panel.prompt = @"Choose ROM";
         panel.canChooseDirectories = NO;
         panel.allowsMultipleSelection = NO;

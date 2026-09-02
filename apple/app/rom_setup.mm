@@ -388,7 +388,7 @@ extern "C" bool paperpad_prepare_rom_setup(void) {
     NSError* error = nil;
     NSURL* root = applicationSupportRoot(&error);
     if (root == nil) {
-        std::fprintf(stderr, "[PaperPad] setup storage unavailable: %s\n",
+        std::fprintf(stderr, "[BananaPad] setup storage unavailable: %s\n",
                      error.localizedDescription.UTF8String);
         return false;
     }
