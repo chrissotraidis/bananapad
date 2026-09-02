@@ -4,9 +4,9 @@ Last updated: 2026-09-02
 
 ## Current authorization
 
-**Chris has authorized the current source rollup and push to the existing private `main` branch, plus creation and audit of the exact first ROM-free unsigned IPA candidate. Repository visibility and public IPA upload remain separate actions and are not changed by this release-preparation pass.**
+**Chris has explicitly authorized public source publication and public upload of the exact audited Preview 1 ROM-free unsigned IPA. The repository is public and the approved release is `v0.1.0-preview.1`.**
 
-This status permits the requested private-source merge/push, release documentation, and local candidate creation/audit. It blocks a visibility change or public upload of a tag, release archive, screenshot set, or IPA until Chris authorizes that exact publication action. ROM-derived/private inputs remain non-publishable in every case.
+This authorization covers the exact source tag, GitHub prerelease, IPA, and checksum named in the Preview 1 release notes. It does not authorize ROMs, saves, generated private game inputs, screenshots containing unreviewed game material, signing assets, or user/device data.
 
 ## Current boundary
 
@@ -19,8 +19,6 @@ This status permits the requested private-source merge/push, release documentati
 
 ## Decisions still required
 
-1. Audit and record the exact source commit and local IPA candidate.
-2. Decide whether the repository should become public and whether the exact IPA may be attached to a public release.
-3. If approved, verify the hosted source and IPA bytes against the local audited artifacts.
+The release operator must download the hosted IPA and checksum after publication, compare them byte-for-byte with the audited local artifacts, and verify the checksum before announcement.
 
 This document is an engineering gate, not legal advice.

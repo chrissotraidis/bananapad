@@ -1,9 +1,9 @@
 # BananaPad v0.1.0-preview.1
 
-Developer Preview 1 is the first ROM-free unsigned BananaPad IPA candidate for
+Developer Preview 1 is the first public ROM-free unsigned BananaPad IPA for
 arm64 iPhone and iPad devices running iOS or iPadOS 15 or newer.
 
-## Candidate assets
+## Assets
 
 - `BananaPad-v0.1.0-preview.1-unsigned.ipa`
 - `BananaPad-v0.1.0-preview.1-unsigned.ipa.sha256`

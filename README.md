@@ -20,11 +20,11 @@ BananaPad is an integration and hardening project built around [Donkey Kong 64: 
 
 BananaPad is game-specific, not a general Nintendo 64 emulator. It targets only an unmodified **Donkey Kong 64 (US/NTSC-U 1.0)** ROM supplied by the user.
 
-This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, saves, or a playable ROM-derived package. The first ROM-free unsigned IPA candidate has been built and audited for the developer preview, but it is not a public download until the exact asset appears on the official [Releases page](https://github.com/chrissotraidis/bananapad/releases). See the [rights and publication status](docs/RIGHTS-STATUS.md).
+This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. The first ROM-free unsigned IPA is available from the official [BananaPad Preview 1 release](https://github.com/chrissotraidis/bananapad/releases/tag/v0.1.0-preview.1). See the [rights and publication status](docs/RIGHTS-STATUS.md).
 
 ## Project status
 
-BananaPad has playable macOS, Simulator, and physical-iPad development builds. Its hardened native core is accepted for boot, Metal video, audio, input, static overlays/patches, save/reload, and clean exit; the mobile-safe AOT execution model is fully inventoried and passes exact-candidate Mach-O/package audits. The current mobile build independently created and visibly reloaded Game 1 on both Simulator form factors, and the signed device build visibly renders DK64 on the attached iPad. DK64Recompiled is the accepted game implementation; BananaPad does not duplicate its full-game qualification. Remaining work is the Apple product boundary: controller handoff, lifecycle/memory/audio interruption behavior, broader hands-on device acceptance, final release licensing/provenance, and exact-artifact packaging.
+BananaPad has playable macOS, Simulator, and physical-iPad development builds. Its hardened native core is accepted for boot, Metal video, audio, input, static overlays/patches, save/reload, and clean exit; the mobile-safe AOT execution model is fully inventoried and passes exact-candidate Mach-O/package audits. The current mobile build independently created and visibly reloaded Game 1 on both Simulator form factors, and the signed device build visibly renders DK64 on the attached iPad. DK64Recompiled is the accepted game implementation; BananaPad does not duplicate its full-game qualification. Remaining preview work is the Apple product boundary: controller reconnect, lifecycle/memory/audio interruption behavior, broader hands-on device acceptance, and qualification of later DK64Recompiled versions.
 
 | Target | Current status |
 |---|---|
@@ -32,7 +32,7 @@ BananaPad has playable macOS, Simulator, and physical-iPad development builds. I
 | iPad Simulator | Exact build runs DK64 through Metal, exposes the PaperPad-derived touch UI with BananaPad-branded three-dot Settings, accepts stick/A/B/Z/R/C input, writes a save, and visibly reloads it after termination |
 | iPhone Simulator | The same build fits both compact landscape safe areas, supports layout editing and lifecycle resume, accepts stick/A/B gameplay input, writes a save, and visibly reloads it |
 | Physical iPad/iPhone | Signed universal app builds, audits, installs in place, launches, and visibly renders DK64 with the touch overlay on the attached iPad; broader hands-on acceptance remains open |
-| Public distribution | Developer-preview source release in preparation; ROM-free unsigned IPA coming soon |
+| Public distribution | Public developer-preview source plus ROM-free unsigned Preview 1 IPA |
 
 The engineering bar is intentionally strict: compilation is not launch, launch is not gameplay, gameplay is not persisted progression, and Simulator evidence is not device acceptance. Follow [current status](docs/STATUS.md), the append-only [journal](docs/JOURNAL.md), and the [goal loop](docs/GOAL-LOOP.md).
 
@@ -116,9 +116,9 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 ### Install on iPhone or iPad
 
 > [!IMPORTANT]
-> BananaPad Preview 1 has an audited release candidate, but it has not been uploaded publicly. Until the exact asset appears on this repository's [Releases page](https://github.com/chrissotraidis/bananapad/releases), there is no official public binary to install. Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
+> Download only from the official [BananaPad Preview 1 release](https://github.com/chrissotraidis/bananapad/releases/tag/v0.1.0-preview.1). Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
 
-The audited candidate is `BananaPad-v0.1.0-preview.1-unsigned.ipa`, SHA-256 `a7f3a7a280770644bb175553c2d70c5af032959fd1e425d89b164f721b53d55e`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Once officially released, verify that checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
+Download `BananaPad-v0.1.0-preview.1-unsigned.ipa` and its `.sha256` file. The IPA SHA-256 is `a7f3a7a280770644bb175553c2d70c5af032959fd1e425d89b164f721b53d55e`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Verify the checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
 
 After installation:
 
@@ -332,7 +332,7 @@ Yes. BananaPad preserves the pinned PaperPad `ios_main.mm` touch/settings behavi
 <details>
 <summary><strong>Can I publish the source or IPA?</strong></summary>
 
-The source rollup is on the existing private `main` branch, and the exact first ROM-free unsigned IPA candidate has been built twice with matching bytes and audited. Repository visibility, a public tag/release, and upload remain separate publication actions. Until an exact asset appears on the official Releases page, do not redistribute working-tree builds or unofficial packages. The release will never include a ROM, save, generated private input, signing material, or other user data.
+Yes. The source is public on `main`, and the exact first ROM-free unsigned IPA is published in the official Preview 1 release after two matching deterministic builds and independent audits. Do not redistribute working-tree builds or modified packages as official BananaPad releases. The official release does not include a ROM, save, generated private input, signing material, or other user data.
 </details>
 
 ## Documentation
