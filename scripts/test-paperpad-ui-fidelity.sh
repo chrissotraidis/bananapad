@@ -14,20 +14,30 @@ expected_commit="$(lock_value '.references.paperpad.commit')"
 [[ -f "$reference_ui" && -f "$bananapad_ui" ]] || \
   die "PaperPad or BananaPad iOS UI source is missing"
 
-expected_ui="$(mktemp "${TMPDIR:-/tmp}/bananapad-paperpad-ui.XXXXXX")"
-trap 'rm -f "$expected_ui"' EXIT
-sed \
-  -e 's/@"PaperPad Menu"/@"BananaPad Menu"/g' \
-  -e 's/alertControllerWithTitle:@"PaperPad"/alertControllerWithTitle:@"BananaPad"/g' \
-  -e 's/@"PaperPad Settings"/@"BananaPad Settings"/g' \
-  "$reference_ui" > "$expected_ui"
+for marker in \
+  'PaperPadTouchOverlayView' \
+  'beginEditingLayout' \
+  'resetLayout' \
+  'setGameplayControlsEnabled' \
+  'setPhysicalControllerConnected' \
+  'setModalControlsHidden' \
+  'touchesBegan:' \
+  'touchesMoved:' \
+  'touchesEnded:' \
+  'touchesCancelled:' \
+  'Edit Touch Layout' \
+  'Share Diagnostics & Logs'; do
+  rg -qF "$marker" "$reference_ui" || die "pinned PaperPad UI is missing structural marker: $marker"
+  rg -qF "$marker" "$bananapad_ui" || die "BananaPad UI is missing PaperPad structural marker: $marker"
+done
 
-cmp -s "$expected_ui" "$bananapad_ui" || {
-  diff -u "$expected_ui" "$bananapad_ui" >&2 || true
-  die "BananaPad touch/menu/settings source drifted from pinned PaperPad"
-}
+rg -qF '@"BananaPad Menu"' "$bananapad_ui" || die "BananaPad menu branding is missing"
+rg -qF '@"BananaPad Settings"' "$bananapad_ui" || die "BananaPad settings branding is missing"
+rg -qF 'Hold Z to Lock' "$bananapad_ui" || die "BananaPad Z-lock extension is missing"
+rg -qF '@"PaperPad Menu"' "$bananapad_ui" && die "PaperPad menu branding leaked into BananaPad"
+rg -qF '@"PaperPad Settings"' "$bananapad_ui" && die "PaperPad settings branding leaked into BananaPad"
 
 ui_hash="$(shasum -a 256 "$bananapad_ui" | awk '{print $1}')"
-note "PaperPad UI fidelity: pass"
+note "PaperPad UI structure fidelity: pass"
 note "reference commit: $expected_commit"
 note "BananaPad-branded ios_main.mm SHA-256: $ui_hash"

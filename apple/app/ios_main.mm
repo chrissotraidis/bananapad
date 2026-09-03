@@ -39,6 +39,8 @@ std::atomic<int32_t> g_touch_flick_y{0};
 std::atomic<uint8_t> g_touch_flick_polls{0};
 
 constexpr uint8_t kTapHoldPolls = 6;
+constexpr uint16_t kZButtonMask = 0x2000;
+constexpr NSTimeInterval kZLockHoldSeconds = 1.0;
 // Preserve a very short released flick for one runtime poll. Replaying it for
 // several polls makes grid/name-entry selectors overshoot after the thumb has
 // already returned to neutral.
@@ -137,6 +139,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
 - (void)beginEditingLayout;
 - (void)resetLayout;
 - (void)setGameplayControlsEnabled:(BOOL)enabled opacity:(CGFloat)opacity;
+- (void)setZLockEnabled:(BOOL)enabled;
 - (void)setPhysicalControllerConnected:(BOOL)connected;
 - (void)setModalControlsHidden:(BOOL)hidden;
 @end
@@ -158,6 +161,10 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
     BOOL _gameplayControlsEnabled;
     BOOL _physicalControllerConnected;
     BOOL _modalControlsHidden;
+    BOOL _zLockEnabled;
+    BOOL _zLocked;
+    UITouch* _zHoldTouch;
+    NSUInteger _zHoldGeneration;
     CGFloat _globalOpacity;
     UIButton* _utilityButton;
 }
@@ -172,6 +179,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
         _controls = defaultControls();
         _selected = 9;
         _gameplayControlsEnabled = YES;
+        _zLockEnabled = YES;
         _globalOpacity = 0.70;
         _utilityButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_utilityButton setTitle:@"\u2022\u2022\u2022" forState:UIControlStateNormal];
@@ -409,6 +417,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
                 break;
             }
         }
+        if (_zLocked && control.mask == kZButtonMask) pressed = YES;
         UIColor* accent = [self accentColorForControl:control];
         UIColor* fill = accent != nil
             ? [accent colorWithAlphaComponent:pressed ? MIN(0.92, alpha + 0.24) : alpha]
@@ -679,6 +688,17 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
     [self setNeedsDisplay];
 }
 
+- (void)setZLockEnabled:(BOOL)enabled {
+    _zLockEnabled = enabled;
+    if (!enabled) {
+        _zLocked = NO;
+        _zHoldTouch = nil;
+        ++_zHoldGeneration;
+        [self publishInput];
+    }
+    [self setNeedsDisplay];
+}
+
 - (void)setPhysicalControllerConnected:(BOOL)connected {
     _physicalControllerConnected = connected;
     if (connected) [self clearInput];
@@ -780,6 +800,7 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
             buttons |= control.mask;
         }
     }
+    if (_zLocked) buttons |= kZButtonMask;
     g_touch_buttons.store(buttons, std::memory_order_relaxed);
     g_touch_x.store((int32_t)std::lround(x * 10000.0), std::memory_order_relaxed);
     g_touch_y.store((int32_t)std::lround(y * 10000.0), std::memory_order_relaxed);
@@ -791,6 +812,9 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
     _touchOffsets.clear();
     _stickOrigin = CGPointZero;
     _stickKnob = CGPointZero;
+    _zLocked = NO;
+    _zHoldTouch = nil;
+    ++_zHoldGeneration;
     g_touch_buttons.store(0, std::memory_order_relaxed);
     g_touch_taps.clearAll();
     g_touch_x.store(0, std::memory_order_relaxed);
@@ -829,6 +853,28 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
             // Preserve quick taps across several runtime polls without turning
             // a single shoulder tap into a long press.
             g_touch_taps.extend(_controls[control].mask, kTapHoldPolls);
+            if (_zLockEnabled && _controls[control].mask == kZButtonMask &&
+                _zHoldTouch == nil) {
+                _zHoldTouch = touch;
+                const NSUInteger generation = ++_zHoldGeneration;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                    (int64_t)(kZLockHoldSeconds * NSEC_PER_SEC)),
+                    dispatch_get_main_queue(), ^{
+                    if (generation != _zHoldGeneration || _zHoldTouch != touch) return;
+                    auto found = _touchRoles.find(touch);
+                    if (found == _touchRoles.end() ||
+                        _controls[found->second].mask != kZButtonMask) return;
+                    _zLocked = !_zLocked;
+                    UIImpactFeedbackGenerator* feedback =
+                        [[UIImpactFeedbackGenerator alloc]
+                            initWithStyle:UIImpactFeedbackStyleLight];
+                    [feedback impactOccurred];
+#if !__has_feature(objc_arc)
+                    [feedback release];
+#endif
+                    [self publishInput];
+                });
+            }
         }
     }
     if (!_editing) [self publishInput];
@@ -857,6 +903,10 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
             if (role <= 0 || role >= (NSInteger)kControlCount) continue;
             CGPoint point = [touch locationInView:self];
             if (!CGRectContainsPoint(CGRectInset([self frameForControl:_controls[role]], -8.0, -8.0), point)) {
+                if (_zHoldTouch == touch) {
+                    _zHoldTouch = nil;
+                    ++_zHoldGeneration;
+                }
                 _touchRoles.erase(found);
             }
         }
@@ -866,6 +916,10 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
 
 - (void)finishTouches:(NSSet<UITouch*>*)touches {
     for (UITouch* touch in touches) {
+        if (_zHoldTouch == touch) {
+            _zHoldTouch = nil;
+            ++_zHoldGeneration;
+        }
         auto found = _touchRoles.find(touch);
         if (found != _touchRoles.end()) {
             _touchRoles.erase(found);
@@ -903,9 +957,12 @@ extern "C" void paperpad_touch_attach(void* window_pointer) {
             [NSUserDefaults.standardUserDefaults dictionaryForKey:settingsDefaultsKey()];
         BOOL controlsEnabled = settings[@"touchControls"] == nil ||
             [settings[@"touchControls"] boolValue];
+        BOOL zLockEnabled = settings[@"zLockEnabled"] == nil ||
+            [settings[@"zLockEnabled"] boolValue];
         CGFloat controlsOpacity = settings[@"touchOpacity"] == nil
             ? 0.70 : [settings[@"touchOpacity"] doubleValue];
         [overlay setGameplayControlsEnabled:controlsEnabled opacity:controlsOpacity];
+        [overlay setZLockEnabled:zLockEnabled];
         [overlay setPhysicalControllerConnected:
             g_physical_controller_connected.load(std::memory_order_relaxed)];
         g_touch_overlay = overlay;
@@ -965,6 +1022,7 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
     NSTimer* _resolutionTimer;
     UISegmentedControl* _aspectControl;
     UISwitch* _touchControlsSwitch;
+    UISwitch* _zLockSwitch;
     UISlider* _touchOpacitySlider;
     UILabel* _touchOpacityLabel;
 }
@@ -1052,6 +1110,17 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
                    forControlEvents:UIControlEventValueChanged];
     [touchControlsRow addArrangedSubview:_touchControlsSwitch];
     [stack addArrangedSubview:touchControlsRow];
+
+    UIStackView* zLockRow = [[UIStackView alloc] init];
+    zLockRow.axis = UILayoutConstraintAxisHorizontal;
+    zLockRow.alignment = UIStackViewAlignmentCenter;
+    [zLockRow addArrangedSubview:[self label:@"Hold Z to Lock"]];
+    _zLockSwitch = [[UISwitch alloc] init];
+    _zLockSwitch.accessibilityLabel = @"Hold Z to Lock";
+    [_zLockSwitch addTarget:self action:@selector(zLockChanged:)
+           forControlEvents:UIControlEventValueChanged];
+    [zLockRow addArrangedSubview:_zLockSwitch];
+    [stack addArrangedSubview:zLockRow];
 
     UIStackView* touchOpacityRow = [[UIStackView alloc] init];
     touchOpacityRow.axis = UILayoutConstraintAxisHorizontal;
@@ -1187,12 +1256,14 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
     NSInteger resolution = resolutionModeFromSettings(saved);
     int aspect = saved[@"aspect"] ? [saved[@"aspect"] intValue] : 0;
     BOOL touchControls = saved[@"touchControls"] == nil || [saved[@"touchControls"] boolValue];
+    BOOL zLockEnabled = saved[@"zLockEnabled"] == nil || [saved[@"zLockEnabled"] boolValue];
     float touchOpacity = saved[@"touchOpacity"] ? [saved[@"touchOpacity"] floatValue] : 0.70f;
     _volumeSlider.value = volume * 100.0;
     _volumeLabel.text = [NSString stringWithFormat:@"%d%%", (int)lround(volume * 100.0)];
     _resolutionControl.selectedSegmentIndex = resolution;
     _aspectControl.selectedSegmentIndex = aspect;
     _touchControlsSwitch.on = touchControls;
+    _zLockSwitch.on = zLockEnabled;
     _touchOpacitySlider.value = touchOpacity * 100.0f;
     _touchOpacityLabel.text = [NSString stringWithFormat:@"%d%%", (int)lround(touchOpacity * 100.0f)];
     _touchOpacitySlider.accessibilityValue = _touchOpacityLabel.text;
@@ -1205,6 +1276,7 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
         @"resolution": @(_resolutionControl.selectedSegmentIndex),
         @"aspect": @(_aspectControl.selectedSegmentIndex),
         @"touchControls": @(_touchControlsSwitch.isOn),
+        @"zLockEnabled": @(_zLockSwitch.isOn),
         @"touchOpacity": @(_touchOpacitySlider.value / 100.0),
     };
     [NSUserDefaults.standardUserDefaults setObject:saved forKey:settingsDefaultsKey()];
@@ -1228,6 +1300,11 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
 - (void)touchControlsChanged:(UISwitch*)control {
     [g_touch_overlay setGameplayControlsEnabled:control.isOn
                                          opacity:_touchOpacitySlider.value / 100.0];
+    [self persist];
+}
+
+- (void)zLockChanged:(UISwitch*)control {
+    [g_touch_overlay setZLockEnabled:control.isOn];
     [self persist];
 }
 

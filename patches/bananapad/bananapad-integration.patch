@@ -82,7 +82,7 @@ index 7c9d929..91dbfa9 100644
  # Detect if we're using pkgx
  if(PKGX_EXECUTABLE)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 14db898..034a790 100644
+index 14db898..97f72e3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,7 +7,11 @@ endif()
@@ -137,7 +137,7 @@ index 14db898..034a790 100644
  # SDL incorrectly includes a definition of _m_prefetch when compiling with clang-cl, which conflicts with the builtin definition and causes a build error. -
  # Defining this guard prevents it from doing so
  add_compile_definitions(__PRFCHWINTRIN_H)
-@@ -149,14 +181,27 @@ add_custom_command(OUTPUT
+@@ -149,14 +181,26 @@ add_custom_command(OUTPUT
  # Main executable
  add_executable(DK64Recompiled)
  
@@ -152,8 +152,7 @@ index 14db898..034a790 100644
 +    target_sources(DK64Recompiled PRIVATE
 +        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native.cpp"
 +        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_native_config.cpp"
-+        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp"
-+        "${BANANAPAD_APPLE_CORE_DIR}/paperpad_paths.mm")
++        "${BANANAPAD_APPLE_CORE_DIR}/bananapad_rt64_context.cpp")
 +    target_include_directories(DK64Recompiled PRIVATE "${BANANAPAD_APPLE_CORE_DIR}")
 +endif()
 +
@@ -213,7 +212,7 @@ index 14db898..034a790 100644
      # Use a wrapper around ld64 that respects segprot's `max_prot` value in order
      # to make our executable memory writable (required for mod function patching)
      target_link_options(DK64Recompiled PRIVATE
-@@ -260,16 +316,67 @@ if (WIN32)
+@@ -260,16 +315,68 @@ if (WIN32)
  endif()
  
  if (APPLE)
@@ -226,6 +225,7 @@ index 14db898..034a790 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/rom_setup.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/diagnostics.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/native_ui_state.mm"
++            "${BANANAPAD_APPLE_CORE_DIR}/paperpad_paths.mm"
 +            "${BANANAPAD_APPLE_APP_DIR}/PrivacyInfo.xcprivacy"
 +            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets")
@@ -235,7 +235,7 @@ index 14db898..034a790 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets"
 +            PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 +        set(BANANAPAD_VERSION "0.1.0")
-+        set(BANANAPAD_BUILD_NUMBER "1")
++        set(BANANAPAD_BUILD_NUMBER "2")
 +        set(BANANAPAD_BUILD_PROFILE "simulator")
 +        set(PAPERPAD_VERSION "${BANANAPAD_VERSION}")
 +        set(PAPERPAD_BUILD_NUMBER "${BANANAPAD_BUILD_NUMBER}")
@@ -284,7 +284,7 @@ index 14db898..034a790 100644
  endif()
  
  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-@@ -343,19 +449,22 @@ endif()
+@@ -343,19 +450,22 @@ endif()
  set(RECOMP_FRONTEND_N64MODERNRUNTIME_PATH ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
  set(RECOMP_FRONTEND_RT64_PATH ${CMAKE_SOURCE_DIR}/lib/rt64)
  
@@ -567,10 +567,17 @@ index 56d4182..e313fd4 100644
  }
 -
 diff --git a/src/main/main.cpp b/src/main/main.cpp
-index ec03f76..91a211e 100644
+index ec03f76..428a650 100644
 --- a/src/main/main.cpp
 +++ b/src/main/main.cpp
-@@ -8,8 +8,13 @@
+@@ -1,5 +1,6 @@
+ #include <cstdio>
+ #include <cassert>
++#include <cmath>
+ #include <unordered_map>
+ #include <vector>
+ #include <array>
+@@ -8,8 +9,13 @@
  #include <stdexcept>
  #include <cinttypes>
  #include <chrono>
@@ -584,7 +591,7 @@ index ec03f76..91a211e 100644
  
  #include "ultramodern/ultra64.h"
  #include "ultramodern/ultramodern.hpp"
-@@ -29,6 +34,16 @@
+@@ -29,6 +35,16 @@
  #undef Always
  #endif
  
@@ -601,7 +608,7 @@ index ec03f76..91a211e 100644
  #include "recompui/recompui.h"
  #include "recompui/program_config.h"
  #include "recompui/renderer.h"
-@@ -37,19 +52,29 @@
+@@ -37,19 +53,29 @@
  #include "recompinput/input_events.h"
  #include "recompinput/recompinput.h"
  #include "recompinput/profiles.h"
@@ -631,7 +638,7 @@ index ec03f76..91a211e 100644
  #include "../../patches/graphics.h"
  #include "../../patches/input.h"
  #include "../../patches/sound.h"
-@@ -59,6 +84,14 @@
+@@ -59,6 +85,14 @@
  
  namespace {
  
@@ -646,7 +653,7 @@ index ec03f76..91a211e 100644
  class PacingRendererContext final : public ultramodern::renderer::RendererContext {
  public:
      explicit PacingRendererContext(std::unique_ptr<ultramodern::renderer::RendererContext> inner_context)
-@@ -109,7 +142,11 @@ private:
+@@ -109,7 +143,11 @@ private:
  
  std::unique_ptr<ultramodern::renderer::RendererContext> create_pacing_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
      auto presentation_mode = ultramodern::renderer::PresentationMode::PresentEarly;
@@ -658,7 +665,16 @@ index ec03f76..91a211e 100644
      return std::make_unique<PacingRendererContext>(std::move(render_context));
  }
  }
-@@ -154,6 +191,9 @@ ultramodern::gfx_callbacks_t::gfx_data_t create_gfx() {
+@@ -132,7 +170,7 @@ void exit_error(const char* str, Ts ...args) {
+     // TODO pop up an error
+     ((void)fprintf(stderr, str, args), ...);
+     assert(false);
+-        
++
+     ultramodern::error_handling::quick_exit(__FILE__, __LINE__, __FUNCTION__);
+ }
+ 
+@@ -154,6 +192,9 @@ ultramodern::gfx_callbacks_t::gfx_data_t create_gfx() {
  }
  
  ultramodern::input::connected_device_info_t get_connected_device_info(int controller_num) {
@@ -668,7 +684,7 @@ index ec03f76..91a211e 100644
      if (recompinput::players::is_single_player_mode() || recompinput::players::get_player_is_assigned(controller_num)) {
          return ultramodern::input::connected_device_info_t{
              .connected_device = ultramodern::input::Device::Controller,
-@@ -165,6 +205,7 @@ ultramodern::input::connected_device_info_t get_connected_device_info(int contro
+@@ -165,6 +206,7 @@ ultramodern::input::connected_device_info_t get_connected_device_info(int contro
          .connected_device = ultramodern::input::Device::None,
          .connected_pak = ultramodern::input::Pak::None,
      };
@@ -676,7 +692,7 @@ index ec03f76..91a211e 100644
  }
  
  #include "icon_bytes.h"
-@@ -227,11 +268,14 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
+@@ -227,11 +269,14 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
      flags |= SDL_WINDOW_VULKAN;
  #endif
  
@@ -692,7 +708,7 @@ index ec03f76..91a211e 100644
  
      SDL_SysWMinfo wmInfo;
      SDL_VERSION(&wmInfo.version);
-@@ -250,15 +294,33 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
+@@ -250,15 +295,33 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
  #elif defined(__linux__) || defined(__ANDROID__)
      return ultramodern::renderer::WindowHandle{ window };
  #elif defined(__APPLE__)
@@ -726,7 +742,85 @@ index ec03f76..91a211e 100644
  }
  
  static SDL_AudioCVT audio_convert;
-@@ -300,7 +362,11 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
+@@ -280,6 +343,77 @@ static uint32_t discarded_output_frames;
+ 
+ constexpr uint32_t bytes_per_frame = input_channels * sizeof(float);
+ 
++#if defined(BANANAPAD_NATIVE_SHELL)
++struct AudioTelemetry {
++    std::chrono::steady_clock::time_point next_report{};
++    uint64_t submissions = 0;
++    uint64_t input_frames = 0;
++    uint64_t output_frames = 0;
++    uint64_t max_submission_gap_us = 0;
++    uint64_t min_prequeue_us = UINT64_MAX;
++    uint64_t peak_queue_us = 0;
++    uint64_t zero_prequeue_submissions = 0;
++    uint64_t under_5ms_prequeue_submissions = 0;
++    uint64_t over_100ms_prequeue_submissions = 0;
++    uint64_t decimation_events = 0;
++    uint32_t max_skip_factor = 0;
++    uint32_t peak_boundary_delta_ppm = 0;
++    uint32_t peak_within_delta_ppm = 0;
++    uint64_t conversion_errors = 0;
++    uint64_t queue_errors = 0;
++};
++
++AudioTelemetry audio_telemetry;
++std::chrono::steady_clock::time_point previous_audio_submission{};
++std::array<float, 2> previous_output_frame{};
++bool has_previous_output_frame = false;
++
++uint64_t queued_audio_microseconds() {
++    if (audio_device == 0 || output_sample_rate == 0 || output_channels == 0) return 0;
++    const uint64_t queued_frames = uint64_t(SDL_GetQueuedAudioSize(audio_device)) /
++        (output_channels * sizeof(float));
++    return queued_frames * 1000000 / output_sample_rate;
++}
++
++void report_audio_telemetry(uint64_t current_queue_us) {
++    const auto now = std::chrono::steady_clock::now();
++    if (audio_telemetry.next_report.time_since_epoch().count() == 0) {
++        audio_telemetry.next_report = now + std::chrono::seconds(2);
++        return;
++    }
++    if (now < audio_telemetry.next_report) return;
++
++    std::fprintf(stderr,
++        "[audio] input_hz=%u output_hz=%u submissions=%llu max_gap_us=%llu "
++        "input_frames=%llu output_frames=%llu prequeue_min_us=%llu "
++        "prequeue_zero=%llu prequeue_under_5ms=%llu prequeue_over_100ms=%llu "
++        "queue_us=%llu peak_queue_us=%llu decimation_events=%llu max_skip_factor=%u "
++        "boundary_peak_ppm=%u within_peak_ppm=%u conversion_errors=%llu queue_errors=%llu\n",
++        sample_rate,
++        output_sample_rate,
++        static_cast<unsigned long long>(audio_telemetry.submissions),
++        static_cast<unsigned long long>(audio_telemetry.max_submission_gap_us),
++        static_cast<unsigned long long>(audio_telemetry.input_frames),
++        static_cast<unsigned long long>(audio_telemetry.output_frames),
++        static_cast<unsigned long long>(audio_telemetry.min_prequeue_us == UINT64_MAX
++            ? 0 : audio_telemetry.min_prequeue_us),
++        static_cast<unsigned long long>(audio_telemetry.zero_prequeue_submissions),
++        static_cast<unsigned long long>(audio_telemetry.under_5ms_prequeue_submissions),
++        static_cast<unsigned long long>(audio_telemetry.over_100ms_prequeue_submissions),
++        static_cast<unsigned long long>(current_queue_us),
++        static_cast<unsigned long long>(audio_telemetry.peak_queue_us),
++        static_cast<unsigned long long>(audio_telemetry.decimation_events),
++        audio_telemetry.max_skip_factor,
++        audio_telemetry.peak_boundary_delta_ppm,
++        audio_telemetry.peak_within_delta_ppm,
++        static_cast<unsigned long long>(audio_telemetry.conversion_errors),
++        static_cast<unsigned long long>(audio_telemetry.queue_errors));
++
++    audio_telemetry = {};
++    audio_telemetry.next_report = now + std::chrono::seconds(2);
++}
++#endif
++
+ void queue_samples(int16_t* audio_data, size_t sample_count) {
+     // Buffer for holding the output of swapping the audio channels. This is reused across
+     // calls to reduce runtime allocations.
+@@ -300,7 +434,11 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
  
      // Convert the audio from 16-bit values to floats and swap the audio channels into the
      // swap buffer to correct for the address xor caused by endianness handling.
@@ -738,8 +832,112 @@ index ec03f76..91a211e 100644
      for (size_t i = 0; i < sample_count; i += input_channels) {
          swap_buffer[i + 0 + duplicated_input_frames * input_channels] = audio_data[i + 1] * (0.5f / 32768.0f) * cur_main_volume;
          swap_buffer[i + 1 + duplicated_input_frames * input_channels] = audio_data[i + 0] * (0.5f / 32768.0f) * cur_main_volume;
-@@ -402,7 +468,11 @@ bool reset_audio(uint32_t output_freq) {
-     audio_device = SDL_OpenAudioDevice(nullptr, false, &spec_desired, nullptr, 0);
+@@ -320,18 +458,51 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
+     int ret = SDL_ConvertAudio(&audio_convert);
+ 
+     if (ret < 0) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++        audio_telemetry.conversion_errors++;
++#endif
+         printf("Error using SDL audio converter: %s\n", SDL_GetError());
+         throw std::runtime_error("Error using SDL audio converter");
+     }
+ 
+-    uint64_t cur_queued_microseconds = uint64_t(SDL_GetQueuedAudioSize(audio_device)) / bytes_per_frame * 1000000 / sample_rate;
++#if defined(BANANAPAD_NATIVE_SHELL)
++    const auto submission_now = std::chrono::steady_clock::now();
++    if (previous_audio_submission.time_since_epoch().count() != 0) {
++        const uint64_t submission_gap_us = static_cast<uint64_t>(
++            std::chrono::duration_cast<std::chrono::microseconds>(
++                submission_now - previous_audio_submission).count());
++        audio_telemetry.max_submission_gap_us = std::max(
++            audio_telemetry.max_submission_gap_us, submission_gap_us);
++    }
++    previous_audio_submission = submission_now;
++    const uint64_t cur_queued_microseconds = queued_audio_microseconds();
++    audio_telemetry.submissions++;
++    audio_telemetry.input_frames += sample_count / input_channels;
++    audio_telemetry.min_prequeue_us = std::min(
++        audio_telemetry.min_prequeue_us, cur_queued_microseconds);
++    audio_telemetry.peak_queue_us = std::max(
++        audio_telemetry.peak_queue_us, cur_queued_microseconds);
++    if (cur_queued_microseconds == 0) audio_telemetry.zero_prequeue_submissions++;
++    if (cur_queued_microseconds < 5000) audio_telemetry.under_5ms_prequeue_submissions++;
++    if (cur_queued_microseconds >= 100000) audio_telemetry.over_100ms_prequeue_submissions++;
++#else
++    // SDL reports queued bytes in the output format, so convert using the
++    // output rate rather than the game's input rate.
++    uint64_t cur_queued_microseconds = uint64_t(SDL_GetQueuedAudioSize(audio_device)) /
++        bytes_per_frame * 1000000 / output_sample_rate;
++#endif
+     uint32_t num_bytes_to_queue = audio_convert.len_cvt - output_channels * discarded_output_frames * sizeof(swap_buffer[0]);
+     float* samples_to_queue = swap_buffer.data() + output_channels * discarded_output_frames / 2;
+ 
+     // Prevent audio latency from building up by skipping samples in incoming audio when too many samples are already queued.
+     // Skip samples based on how many microseconds of samples are queued already.
+-    uint32_t skip_factor = cur_queued_microseconds / 100000;
++    uint32_t skip_factor = static_cast<uint32_t>(cur_queued_microseconds / 100000);
+     if (skip_factor != 0) {
++#if defined(BANANAPAD_NATIVE_SHELL)
++        audio_telemetry.decimation_events++;
++        audio_telemetry.max_skip_factor = std::max(
++            audio_telemetry.max_skip_factor, skip_factor);
++#endif
+         uint32_t skip_ratio = 1 << skip_factor;
+         num_bytes_to_queue /= skip_ratio;
+         for (size_t i = 0; i < num_bytes_to_queue / (output_channels * sizeof(swap_buffer[0])); i++) {
+@@ -342,7 +513,44 @@ void queue_samples(int16_t* audio_data, size_t sample_count) {
+ 
+     // Queue the swapped audio data.
+     // Offset the data start by only half the discarded frame count as the other half of the discarded frames are at the end of the buffer.
++#if defined(BANANAPAD_NATIVE_SHELL)
++    const uint32_t output_frame_count =
++        num_bytes_to_queue / (output_channels * sizeof(float));
++    if (output_frame_count != 0) {
++        if (has_previous_output_frame) {
++            const float boundary_delta = std::max(
++                std::abs(samples_to_queue[0] - previous_output_frame[0]),
++                std::abs(samples_to_queue[1] - previous_output_frame[1]));
++            audio_telemetry.peak_boundary_delta_ppm = std::max(
++                audio_telemetry.peak_boundary_delta_ppm,
++                static_cast<uint32_t>(std::lround(boundary_delta * 1000000.0f)));
++        }
++        for (uint32_t frame = 1; frame < output_frame_count; ++frame) {
++            const size_t current = frame * output_channels;
++            const size_t previous = current - output_channels;
++            const float within_delta = std::max(
++                std::abs(samples_to_queue[current] - samples_to_queue[previous]),
++                std::abs(samples_to_queue[current + 1] - samples_to_queue[previous + 1]));
++            audio_telemetry.peak_within_delta_ppm = std::max(
++                audio_telemetry.peak_within_delta_ppm,
++                static_cast<uint32_t>(std::lround(within_delta * 1000000.0f)));
++        }
++        const size_t last = (output_frame_count - 1) * output_channels;
++        previous_output_frame = {samples_to_queue[last], samples_to_queue[last + 1]};
++        has_previous_output_frame = true;
++    }
++    audio_telemetry.output_frames += output_frame_count;
++    if (SDL_QueueAudio(audio_device, samples_to_queue, num_bytes_to_queue) < 0) {
++        audio_telemetry.queue_errors++;
++        std::fprintf(stderr, "Error queueing audio: %s\n", SDL_GetError());
++    }
++    const uint64_t queued_microseconds = queued_audio_microseconds();
++    audio_telemetry.peak_queue_us = std::max(
++        audio_telemetry.peak_queue_us, queued_microseconds);
++    report_audio_telemetry(queued_microseconds);
++#else
+     SDL_QueueAudio(audio_device, samples_to_queue, num_bytes_to_queue);
++#endif
+ }
+ 
+ size_t get_frames_remaining() {
+@@ -399,16 +607,28 @@ bool reset_audio(uint32_t output_freq) {
+         .userdata = nullptr
+     };
+ 
+-    audio_device = SDL_OpenAudioDevice(nullptr, false, &spec_desired, nullptr, 0);
++    SDL_AudioSpec spec_obtained{};
++    audio_device = SDL_OpenAudioDevice(nullptr, false, &spec_desired, &spec_obtained, 0);
      if (audio_device == 0) {
          std::string audio_error = std::string("No audio device could be found. Please make sure an audio device is available.\nError opening audio device: ") + std::string(SDL_GetError());
 +#if defined(BANANAPAD_NATIVE_SHELL)
@@ -750,7 +948,21 @@ index ec03f76..91a211e 100644
          return false;
      }
  
-@@ -626,17 +696,29 @@ void release_preload(PreloadContext& context) {
++    output_sample_rate = static_cast<uint32_t>(spec_obtained.freq);
++    output_channels = spec_obtained.channels;
++    std::fprintf(stderr, "[audio] driver=%s requested_hz=%u obtained_hz=%u channels=%u samples=%u\n",
++        SDL_GetCurrentAudioDriver() != nullptr ? SDL_GetCurrentAudioDriver() : "unknown",
++        output_freq,
++        output_sample_rate,
++        output_channels,
++        spec_obtained.samples);
+     SDL_PauseAudioDevice(audio_device, 0);
+ 
+-    output_sample_rate = output_freq;
+     update_audio_converter();
+ 
+     return true;
+@@ -626,17 +846,29 @@ void release_preload(PreloadContext& context) {
  #endif
  
  void enable_texture_pack(recomp::mods::ModContext& context, const recomp::mods::ModHandle& mod) {
@@ -780,7 +992,7 @@ index ec03f76..91a211e 100644
  void on_launcher_init(recompui::LauncherMenu *menu) {
      auto game_options_menu = menu->init_game_options_menu(
          supported_games[0].game_id,
-@@ -676,12 +758,27 @@ void on_launcher_init(recompui::LauncherMenu *menu) {
+@@ -676,12 +908,27 @@ void on_launcher_init(recompui::LauncherMenu *menu) {
  
      dk64::launcher_animation_setup(menu);
  }
@@ -809,7 +1021,7 @@ index ec03f76..91a211e 100644
      recomp::Version project_version{};
      if (!recomp::Version::from_string(version_string, project_version)) {
          ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
-@@ -749,12 +846,14 @@ int main(int argc, char** argv) {
+@@ -749,12 +996,14 @@ int main(int argc, char** argv) {
      std::filesystem::current_path("/var/data", ec);
  #endif
  
@@ -825,7 +1037,7 @@ index ec03f76..91a211e 100644
      
      // Initialize SDL audio and set the output frequency.
      SDL_InitSubSystem(SDL_INIT_AUDIO);
-@@ -764,17 +863,28 @@ int main(int argc, char** argv) {
+@@ -764,17 +1013,28 @@ int main(int argc, char** argv) {
      }
  
      // Source controller mappings file
@@ -856,7 +1068,7 @@ index ec03f76..91a211e 100644
  
      // Register supported games and patches
      for (const auto& game : supported_games) {
-@@ -801,9 +911,13 @@ int main(int argc, char** argv) {
+@@ -801,9 +1061,13 @@ int main(int argc, char** argv) {
      REGISTER_FUNC(recomp_get_analog_inverted_axes);
      REGISTER_FUNC(recomp_get_swimming_inverted_axes);
      REGISTER_FUNC(recomp_get_first_person_inverted_axes);
@@ -870,7 +1082,7 @@ index ec03f76..91a211e 100644
  
      dk64::register_bk_overlays();
      dk64::register_bk_patches();
-@@ -811,12 +925,16 @@ int main(int argc, char** argv) {
+@@ -811,12 +1075,16 @@ int main(int argc, char** argv) {
      // Register extensions for two types: Props and ActorMarkers.
      recomputil::init_extended_object_data(2);
  
@@ -887,7 +1099,7 @@ index ec03f76..91a211e 100644
  
      recomp::rsp::callbacks_t rsp_callbacks{
          .get_rsp_microcode = get_rsp_microcode,
-@@ -839,19 +957,33 @@ int main(int argc, char** argv) {
+@@ -839,19 +1107,33 @@ int main(int argc, char** argv) {
      };
  
      ultramodern::input::callbacks_t input_callbacks{
@@ -921,7 +1133,7 @@ index ec03f76..91a211e 100644
      };
  
      ultramodern::threads::callbacks_t threads_callbacks{
-@@ -859,6 +991,7 @@ int main(int argc, char** argv) {
+@@ -859,6 +1141,7 @@ int main(int argc, char** argv) {
      };
  
      // Register the texture pack content type with rt64.json as its content file.
@@ -929,13 +1141,15 @@ index ec03f76..91a211e 100644
      recomp::mods::ModContentType texture_pack_content_type{
          .content_filename = "rt64.json",
          .allow_runtime_toggle = true,
-@@ -870,4 +1003,5 @@ int main(int argc, char** argv) {
+@@ -870,6 +1153,7 @@ int main(int argc, char** argv) {
  
      // Register the .rtz texture pack file format with the previous content type as its only allowed content type.
      recomp::mods::register_mod_container_type("rtz", std::vector{ texture_pack_content_type_id }, false);
 +#endif
  
-@@ -887,9 +1021,37 @@ int main(int argc, char** argv) {
+     recomp::Configuration cfg {
+         .project_version = project_version,
+@@ -887,9 +1171,37 @@ int main(int argc, char** argv) {
          },
      };
  
@@ -1252,7 +1466,7 @@ index 0f7de83..3c9bf89 100644
  void recomp::mods::unmet_dependency_handler(uint8_t* rdram, recomp_context* ctx, uintptr_t arg) {
      size_t caller_mod_index = (arg >>  0) & uint64_t(0xFFFFFFFF);
 diff --git a/lib/N64ModernRuntime/librecomp/src/recomp.cpp b/lib/N64ModernRuntime/librecomp/src/recomp.cpp
-index ea1c49b..8ebae5e 100644
+index ea1c49b..529aad5 100644
 --- a/lib/N64ModernRuntime/librecomp/src/recomp.cpp
 +++ b/lib/N64ModernRuntime/librecomp/src/recomp.cpp
 @@ -23,7 +23,9 @@
@@ -1308,6 +1522,15 @@ index ea1c49b..8ebae5e 100644
  }
  
  void recomp::mods::close_mods() {
+@@ -226,7 +238,7 @@ bool recomp::load_stored_rom(std::u8string& game_id) {
+     if (find_it == game_roms.end()) {
+         return false;
+     }
+-    
++
+     std::vector<uint8_t> stored_rom_data = read_file(config_path / find_it->second.stored_filename());
+ 
+     if (!check_hash(stored_rom_data, find_it->second.rom_hash)) {
 @@ -718,7 +730,15 @@ bool wait_for_game_started(uint8_t* rdram, recomp_context* context) {
                  }
  
@@ -1778,59 +2001,6 @@ index f83c583..a1a62da 100644
  # Define the library
  add_library(${TARGET_NAME} ${SOURCE_FILES})
  
-diff --git a/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
-new file mode 100644
-index 0000000..9ff0e46
---- /dev/null
-+++ b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
-@@ -0,0 +1,47 @@
-+#include "include/nfd.h"
-+
-+#include <cstdlib>
-+
-+extern "C" {
-+
-+nfdresult_t NFD_Init(void) { return NFD_OKAY; }
-+void NFD_Quit(void) {}
-+void NFD_FreePathN(nfdnchar_t *path) { free(path); }
-+void NFD_FreePathU8(nfdu8char_t *path) { free(path); }
-+
-+nfdresult_t NFD_OpenDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_OpenDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_OpenDialogMultipleN(const nfdpathset_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_OpenDialogMultipleU8(const nfdpathset_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_SaveDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *, const nfdnchar_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_SaveDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *, const nfdu8char_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_PickFolderN(nfdnchar_t **, const nfdnchar_t *) { return NFD_CANCEL; }
-+nfdresult_t NFD_PickFolderU8(nfdu8char_t **, const nfdu8char_t *) { return NFD_CANCEL; }
-+
-+const char *NFD_GetError(void) { return "Native file dialogs are provided by BananaPad's UIKit shell"; }
-+void NFD_ClearError(void) {}
-+
-+nfdresult_t NFD_PathSet_GetCount(const nfdpathset_t *, nfdpathsetsize_t *count) {
-+    if (count != nullptr) *count = 0;
-+    return NFD_OKAY;
-+}
-+nfdresult_t NFD_PathSet_GetPathN(const nfdpathset_t *, nfdpathsetsize_t, nfdnchar_t **) { return NFD_ERROR; }
-+nfdresult_t NFD_PathSet_GetPathU8(const nfdpathset_t *, nfdpathsetsize_t, nfdu8char_t **) { return NFD_ERROR; }
-+void NFD_PathSet_FreePathN(const nfdnchar_t *path) { free(const_cast<nfdnchar_t *>(path)); }
-+void NFD_PathSet_FreePathU8(const nfdu8char_t *path) { free(const_cast<nfdu8char_t *>(path)); }
-+nfdresult_t NFD_PathSet_GetEnum(const nfdpathset_t *, nfdpathsetenum_t *enumerator) {
-+    if (enumerator != nullptr) *enumerator = {};
-+    return NFD_OKAY;
-+}
-+void NFD_PathSet_FreeEnum(nfdpathsetenum_t *) {}
-+nfdresult_t NFD_PathSet_EnumNextN(nfdpathsetenum_t *, nfdnchar_t **path) {
-+    if (path != nullptr) *path = nullptr;
-+    return NFD_OKAY;
-+}
-+nfdresult_t NFD_PathSet_EnumNextU8(nfdpathsetenum_t *, nfdu8char_t **path) {
-+    if (path != nullptr) *path = nullptr;
-+    return NFD_OKAY;
-+}
-+void NFD_PathSet_Free(const nfdpathset_t *) {}
-+
-+}
 diff --git a/lib/rt64/src/contrib/plume/CMakeLists.txt b/lib/rt64/src/contrib/plume/CMakeLists.txt
 index 0789c20..a51e745 100644
 --- a/lib/rt64/src/contrib/plume/CMakeLists.txt

@@ -168,6 +168,8 @@ NSString* diagnosticReport(NSURL* root) {
     [report appendString:@"Image filter: Smooth (fixed)\n"];
     [report appendFormat:@"Touch controls: %@\n",
         yesNo(settings[@"touchControls"] == nil || [settings[@"touchControls"] boolValue])];
+    [report appendFormat:@"Hold Z to lock: %@\n",
+        yesNo(settings[@"zLockEnabled"] == nil || [settings[@"zLockEnabled"] boolValue])];
     const double opacity = settings[@"touchOpacity"] == nil
         ? 0.70 : [settings[@"touchOpacity"] doubleValue];
     [report appendFormat:@"Touch opacity: %.0f%%\n", opacity * 100.0];
