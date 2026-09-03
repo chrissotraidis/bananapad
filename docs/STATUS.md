@@ -5,7 +5,7 @@ Last updated: 2026-09-03
 ## Current state
 
 - **Active goal:** Publish Preview 3 with the reporter-requested faster Z-lock engage and release timing, then obtain physical-iPhone confirmation.
-- **Current step:** Product source `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e` produces clean unsigned release executable `dc6a2cdc5d674a6c7684457c10948d63a30fe0beb8058e1d268fec1aa404dc2d`. Two deterministic packages of `BananaPad-v0.1.0-preview.3-unsigned.ipa` matched byte-for-byte at SHA-256 `101e02d4e00b4ab0eb13bb8530a4d5262be0f8bef9213c24b5697974f578d1d1`. Hosted-download verification remains the final publication step. The existing signed hardware app and its private ROM/save/preferences were not changed.
+- **Current step:** Product source `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e` produces merged-tree unsigned release executable `8d7085f3082ab0647257bd5d2ea785fd47002c6b8d00e111727f7bd6b6e59e40`. Two deterministic packages of `BananaPad-v0.1.0-preview.3-unsigned.ipa` matched byte-for-byte at SHA-256 `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`. Hosted-download verification remains the final publication step. The existing signed hardware app and its private ROM/save/preferences were not changed.
 - **Rights state:** public source, tag, prerelease, exact IPA, and checksum publication are explicitly authorized. ROM/save/generated private inputs and signing/user/device data remain prohibited.
 - **Tracked source:** public `main` is the handoff branch; use `git rev-parse HEAD` for its exact revision. `PRD.md` and `GOAL-LOOP.md` live under `docs/`.
 - **Booted Simulators:** none; iPad and iPhone were tested sequentially and each was shut down before the other target or documentation work.

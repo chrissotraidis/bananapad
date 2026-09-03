@@ -8,9 +8,9 @@ newer and includes the Preview 2 audio correction.
 
 - `BananaPad-v0.1.0-preview.3-unsigned.ipa`
 - `BananaPad-v0.1.0-preview.3-unsigned.ipa.sha256`
-- SHA-256: `101e02d4e00b4ab0eb13bb8530a4d5262be0f8bef9213c24b5697974f578d1d1`
+- SHA-256: `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`
 - Size: 7,479,560 bytes
-- App executable SHA-256: `dc6a2cdc5d674a6c7684457c10948d63a30fe0beb8058e1d268fec1aa404dc2d`
+- App executable SHA-256: `8d7085f3082ab0647257bd5d2ea785fd47002c6b8d00e111727f7bd6b6e59e40`
 - Product-source SHA-256: `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e`
 
 The IPA is unsigned and must be re-signed with the user's own Apple Account.

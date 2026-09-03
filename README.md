@@ -118,7 +118,7 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 > [!IMPORTANT]
 > Download only from the official [BananaPad Preview 3 release](https://github.com/chrissotraidis/bananapad/releases/tag/v0.1.0-preview.3). Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
 
-Download `BananaPad-v0.1.0-preview.3-unsigned.ipa` and its `.sha256` file. The IPA SHA-256 is `101e02d4e00b4ab0eb13bb8530a4d5262be0f8bef9213c24b5697974f578d1d1`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Verify the checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
+Download `BananaPad-v0.1.0-preview.3-unsigned.ipa` and its `.sha256` file. The IPA SHA-256 is `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Verify the checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
 
 After installation:
 
