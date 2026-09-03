@@ -8,7 +8,7 @@ Last updated: 2026-09-03
 
 This authorization covers the exact source tag, GitHub prerelease, IPA, and checksum named in the Preview 2 release notes. It does not authorize ROMs, saves, generated private game inputs, screenshots containing unreviewed game material, signing assets, or user/device data.
 
-Preview 1 publication is complete. Preview 2 publication must retain the same deterministic package and hosted-download verification boundary.
+Preview 2 publication is complete. The hosted IPA and checksum were downloaded without GitHub authentication, matched the audited local artifacts byte-for-byte, and passed fresh checksum, ZIP, package, and no-dynamic-code audits.
 
 ## Current boundary
 
