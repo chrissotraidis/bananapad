@@ -42,7 +42,7 @@ rg -qF "$product_hash" "$readiness" || die "release-readiness product-source has
 rg -qF "$executable_hash" "$readiness" || die "release-readiness executable hash is stale"
 rg -qF "$candidate_executable_hash" "$readiness" || die "release-readiness clean candidate hash is stale"
 rg -qF "$gameplay_executable_hash" "$readiness" || die "release-readiness gameplay executable hash is stale"
-rg -q 'Decision: \*\*GO for public BananaPad Preview 2\*\*' "$readiness" || \
+rg -q 'Decision: \*\*GO for public BananaPad Preview 3\*\*' "$readiness" || \
   die "release decision is missing or unsafe"
 
 note "release readiness contract: pass"

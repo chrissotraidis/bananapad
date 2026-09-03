@@ -82,7 +82,7 @@ index 7c9d929..91dbfa9 100644
  # Detect if we're using pkgx
  if(PKGX_EXECUTABLE)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 14db898..97f72e3 100644
+index 14db898..9362a25 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,7 +7,11 @@ endif()
@@ -235,7 +235,7 @@ index 14db898..97f72e3 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets"
 +            PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 +        set(BANANAPAD_VERSION "0.1.0")
-+        set(BANANAPAD_BUILD_NUMBER "2")
++        set(BANANAPAD_BUILD_NUMBER "3")
 +        set(BANANAPAD_BUILD_PROFILE "simulator")
 +        set(PAPERPAD_VERSION "${BANANAPAD_VERSION}")
 +        set(PAPERPAD_BUILD_NUMBER "${BANANAPAD_BUILD_NUMBER}")

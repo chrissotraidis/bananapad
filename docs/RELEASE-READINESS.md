@@ -2,25 +2,24 @@
 
 Last updated: 2026-09-03
 
-Decision: **GO for public BananaPad Preview 2**. The user explicitly authorized public source publication and upload of the exact audited ROM-free unsigned IPA. The root GPL text, adapted-file provenance inventory, BananaPad-specific notices, deterministic packager, and expanded package audit are part of the release. Reporter confirmation of Z lock and audible iPhone output remains separate acceptance evidence.
+Decision: **GO for public BananaPad Preview 3**. The user explicitly authorized public source publication and upload of the exact audited ROM-free unsigned IPA. The root GPL text, adapted-file provenance inventory, BananaPad-specific notices, deterministic packager, and expanded package audit are part of the release. Reporter confirmation of the adjusted Z-lock timing remains separate acceptance evidence.
 
 ## Exact current identity
 
 - Promoted DK64Recompiled source: tag `1.0.1`, commit `c6730d2f244d7b2d9d8c47c94c2eecfa1bfb1a43`.
-- Dependency lock SHA-256: `6437d06f00d83202e1332d65230abd965961579a3f2777f233b6fde83c00b072`.
-- Current external BananaPad patch-series SHA-256: `b0da73937344430f43d544a4a961356ae020c165f873251436fbb4b49a3dba42`; the promoted upstream pin remains `1.0.1` while stable `1.0.2` is isolated for qualification.
-- BananaPad product-source SHA-256: `e0cf86eca3f0113716b25055d991df31a4b8234181a45270a08a09b60ff8e400`.
-- Preview 2 Simulator executable SHA-256: `0636c991b1761d8128ab07c20abbc25e58a67f15fb4bfa06fbae2d53e103b4d7`; the arm64 Simulator target compiles and links with build number 2.
-- Last issue-fix gameplay/audio-telemetry executable SHA-256: `1d2df153054b6a2e5c4a46b6f36d9d1043c4c2ac17fe1cd035db9536a7330bdb`; its extended run predates only the Preview 2 build-number and release-document updates.
+- Dependency lock SHA-256: `9bec7deef0ba59e67be771e58ff5655a509a411d094ed019bbc0d289f1203d3b`.
+- Current external BananaPad patch-series SHA-256: `f66282259bcba942fa68b959dbb9a6de3ca7f48553cb7322db92e2fe4d282112`; the promoted upstream pin remains `1.0.1` while stable `1.0.2` is isolated for qualification.
+- BananaPad product-source SHA-256: `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e`.
+- Preview 3 Simulator executable SHA-256: `5c341b51915d2624da047e76a410b96403e9e54da6a02836e60f68a988cb51b3`; the arm64 Simulator target compiles and links with build number 3.
+- Last issue-fix gameplay/audio-telemetry executable SHA-256: `1d2df153054b6a2e5c4a46b6f36d9d1043c4c2ac17fe1cd035db9536a7330bdb`; Preview 3 changes only Z-lock timing and release metadata, leaving that audio path unchanged.
 - The last isolated `1.0.2` build/audit Simulator executable was `12e963eac4685900621554d245af735f7eb691e088d487a388e985d64311c560`; that candidate was archived after the later Xbox input repair changed the product identity and must be restaged before qualification.
 - Branding-accepted Simulator executable SHA-256: `96b80b1a61b796634de558c7eca5ae0a5d1be706506206d07a8a606f0b353b22`; its three-dot action sheet, accessibility label, and native Settings sheet use BananaPad naming.
 - Signed physical-iPad executable SHA-256: `0cf47f413d544a59d6fd7b96b4838a4325b03044bd40f217226b47711f1b5abd`; arm64, iOS 15 minimum, and both iPhone/iPad families. Package/no-dynamic-code/signature audits, exact generated SDL patching, in-place install, preserved ROM/save/preferences, launch, and visible DK64 rendering pass on the attached iPad. The SDL-level Xbox A duplicate-Start repair awaits the user's direct jump/pause retest.
-- Exact unsigned release executable SHA-256: `4849f0d5bcfc1e43ad5ad53452f28c4ef1b0e1b3f0206cc32bd81d98fd912689`; clean arm64 iPhoneOS build 2, iOS 15 minimum, iPhone/iPad families, no personal build paths, no forbidden dynamic-code behavior, and no signature/profile.
-- Exact public IPA: `BananaPad-v0.1.0-preview.2-unsigned.ipa`, 7,479,552 bytes, SHA-256 `2ab9265e0a9eb980c5be85cea829bec98c38a790e022b47361c8c9e60ad7c762`. Two independent deterministic package runs are byte-identical; ZIP integrity, complete licenses/notices/install/rights content, ROM/save/private/signing exclusion, Mach-O, privacy, dependency, and no-dynamic-code audits pass. The anonymously downloaded hosted IPA/checksum matched the local artifacts byte-for-byte and passed fresh hosted checksum, ZIP, package, and no-dynamic-code audits.
-- Release identity: remote `main` and dereferenced tag `v0.1.0-preview.2` resolved to merge commit `367a3da129fa405042531c0d3d5b65feef0e3864` at publication time.
+- Exact unsigned release executable SHA-256: `dc6a2cdc5d674a6c7684457c10948d63a30fe0beb8058e1d268fec1aa404dc2d`; clean arm64 iPhoneOS build 3, iOS 15 minimum, iPhone/iPad families, no personal build paths, no forbidden dynamic-code behavior, and no signature/profile.
+- Exact public IPA candidate: `BananaPad-v0.1.0-preview.3-unsigned.ipa`, 7,479,560 bytes, SHA-256 `101e02d4e00b4ab0eb13bb8530a4d5262be0f8bef9213c24b5697974f578d1d1`. Two independent deterministic package runs are byte-identical; ZIP integrity, complete licenses/notices/install/rights content, ROM/save/private/signing exclusion, Mach-O, privacy, dependency, and no-dynamic-code audits pass. Hosted verification remains pending until publication.
 - Last full touch/play/save/reload candidate executable SHA-256: `f4fab84e2b0b99c8cba45ccfd576f256810eebd660f25fbf00805564b910f182`; the current delta is confined to ROM-management safety and native-modal controller suppression, not game code.
 - Archived `1.0.2` rehearsal worktree SHA-256: `08a83782323421d4b9f684faa8518011881b1956e95526b93ca942ada142085d`.
-- BananaPad-branded PaperPad-derived `ios_main.mm` SHA-256: `75759c9137c416d19df7612b8abe4beb892553d6ee7fe752776c0d7aa526fb39`; the fidelity gate allows only the reviewed product-label substitutions.
+- BananaPad-branded PaperPad-derived `ios_main.mm` SHA-256: `477439dba75b154e654830398731b5d025b2b86752642208091409ea832e4560`; the structural fidelity gate preserves the inherited menu/layout/control shape while explicit BananaPad extensions have focused contracts.
 - Rights state: public source, tag, prerelease, exact IPA, and checksum publication are explicitly authorized. Private game/user/signing inputs remain prohibited.
 
 ## PRD technical matrix
@@ -57,7 +56,7 @@ Decision: **GO for public BananaPad Preview 2**. The user explicitly authorized 
 | 26 | Audio continuity/routes | Partial | Preview 2 corrects the inherited 22.05 kHz input/48 kHz output queue-duration mismatch and adds two-second queue/starvation/gap/decimation/boundary/error telemetry. An 81-window Simulator run recorded zero decimation, zero conversion/queue errors, and no sustained starvation; physical audible iPhone and route/interruption confirmation remain. |
 | 27 | Baseline timing/rendering | Partial | Native original-mode rendering/gameplay is stable for current smokes and interaction. Scene measurements, long-run memory, and physical baselines remain. |
 | 28 | Enhanced modes | Partial | Resolution/aspect/settings contracts and 3x/4x native route are verified. Per-mode gameplay, persistence, timing, and physical qualification remain. |
-| 29 | Touch overlay/chords | Partial | Every control mask, independent ownership, merging, cancellation, clamping, lifecycle release, and default-on one-second Z-lock path pass compiled contracts; stick/A/B and iPad Z/R/C/swimming are game-visible. Physical timed Z lock and independent-finger Z chords remain hands-on. |
+| 29 | Touch overlay/chords | Partial | Every control mask, independent ownership, merging, cancellation, clamping, lifecycle release, and default-on asymmetric Z-lock timing path pass compiled contracts; stick/A/B and iPad Z/R/C/swimming are game-visible. Preview 3 uses 0.75 seconds to engage and 0.35 seconds to release; physical timing feel and independent-finger Z chords remain hands-on. |
 | 30 | Three-dot/settings/controller | Partial | The inherited menu/settings structure, Z-lock preference persistence/default, controller notification bridge, touch auto-hide, and native-modal controller suppression pass. Real controller takeover/disconnect/reconnect remains physical acceptance. |
 | 31 | Lifecycle/orientation/memory/diagnostics/icon | Partial | The exact current iPad executable completed three background/foreground cycles, retained the open three-dot menu and native Settings, restored the overlay after dismissal, resumed rendering, and rendered in both landscapes. Input clear/neutral rearm, both phone landscapes, diagnostics UI, clean stop, original icon master/provenance/package asset, and privacy/package audits pass. SDL2 forwards all UIKit lifecycle and memory-warning events. Observed memory warning, audible audio interruption/routes, and physical icon/appearance presentation remain. |
 | 32 | Repeated lifecycle/native-UI transitions and soak | Partial | Three exact-candidate iPad Home→foreground cycles pass, including open-menu and open-Settings transitions plus renderer recovery. Three clean terminate/relaunch cycles then survived initialization with no new crash report. Longer sustained operation, memory pressure, and physical sustained-play evidence remain. |
@@ -76,4 +75,4 @@ The command validates the current clean build, PaperPad fidelity, touch/settings
 
 ## Remaining release blockers
 
-Preview 2 publication and hosted verification are complete. Request reporter testing and keep both issues open until physical audible and timed-touch confirmation arrives. Preview status must not imply that unreported acceptance in advance.
+Preview 3 has no remaining local publication blocker. Merge the reviewed tree, tag and upload the deterministic IPA/checksum, download the hosted assets, compare and re-audit them, then request reporter testing. Preview status must not imply physical timing acceptance before that response arrives.
