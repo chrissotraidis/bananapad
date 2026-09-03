@@ -4,8 +4,8 @@ Last updated: 2026-09-03
 
 ## Current state
 
-- **Active goal:** Publish Preview 3 with the reporter-requested faster Z-lock engage and release timing, then obtain physical-iPhone confirmation.
-- **Current step:** Product source `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e` produces merged-tree unsigned release executable `8d7085f3082ab0647257bd5d2ea785fd47002c6b8d00e111727f7bd6b6e59e40`. Two deterministic packages of `BananaPad-v0.1.0-preview.3-unsigned.ipa` matched byte-for-byte at SHA-256 `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`. Hosted-download verification remains the final publication step. The existing signed hardware app and its private ROM/save/preferences were not changed.
+- **Active goal:** Preview 3 is public; obtain the reporter's physical-iPhone confirmation for the faster Z-lock engage and release timing.
+- **Current step:** Product source `b4b4fc8dec848055b84ca265094db13be96feaaaaf9a5a4c022062737ce04b1e` produces merged-tree unsigned release executable `8d7085f3082ab0647257bd5d2ea785fd47002c6b8d00e111727f7bd6b6e59e40`. Two deterministic packages of `BananaPad-v0.1.0-preview.3-unsigned.ipa` matched byte-for-byte at SHA-256 `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`. The anonymously downloaded GitHub IPA/checksum matched the local artifacts exactly and passed hosted checksum, ZIP, package, and no-dynamic-code re-audits. The existing signed hardware app and its private ROM/save/preferences were not changed.
 - **Rights state:** public source, tag, prerelease, exact IPA, and checksum publication are explicitly authorized. ROM/save/generated private inputs and signing/user/device data remain prohibited.
 - **Tracked source:** public `main` is the handoff branch; use `git rev-parse HEAD` for its exact revision. `PRD.md` and `GOAL-LOOP.md` live under `docs/`.
 - **Booted Simulators:** none; iPad and iPhone were tested sequentially and each was shut down before the other target or documentation work.
@@ -27,7 +27,7 @@ Last updated: 2026-09-03
 | G9 | Met | The same executable independently created/reloaded Game 1 on iPhone, accepted compact stick/A/B, wrote a 2,048-byte save, visibly restored `0% / 000 / 00:04`, and preserved the complete layout across edit/reset, Home→foreground, and both landscapes. |
 | G10 | Simulator accepted; physical boot/render accepted | The PaperPad-derived UI preserves baseline N64 touch targets, independent touch tracking, tap latching, lifecycle clearing, touch/controller merging, controller-driven auto-hide, native-modal controller suppression/neutral rearm, three-dot menu, Settings, diagnostics, layout editing, and ROM management while using BananaPad product labels. The corrected signed app now launches and visibly renders DK64 with the full overlay on physical iPad hardware. Physical multi-touch chords, controller handoff/reconnect, audible audio interruption/routes, memory pressure, and sustained operation remain G12. |
 | G11 | Met for the promoted source; stable `1.0.2` rehearsal archived | The live `1.0.2` rehearsal narrowed one stale patch context and shared the Apple path helper across macOS/mobile, then passed exact patch replay, deterministic regeneration, Apple builds, product contracts, and package audit. It remained unpromoted at `needs-full-validation`. The candidate was archived recoverably after the subsequent Xbox input repair changed the Apple product identity; `evaluate-latest` can restage it against the new source. |
-| G12–G13 | G12 started; Preview 3 publication in progress | Preview 3 shortens Z-lock engagement to 0.75 seconds and release to 0.35 seconds. Its local source, app, and deterministic IPA are audited; public upload and hosted verification remain before reporter confirmation. |
+| G12–G13 | G12 started; Preview 3 published | Preview 3 shortens Z-lock engagement to 0.75 seconds and release to 0.35 seconds. Its source/tag/prerelease/IPA/checksum publication and anonymous hosted-byte verification are complete; reporter confirmation remains. |
 
 ## Verified starting facts
 
@@ -46,4 +46,4 @@ Last updated: 2026-09-03
 
 ## Next step
 
-Do not replay DK64 progression without a named BananaPad regression. Publish and hosted-verify Preview 3, then keep Issue #2 open for the reporter's physical-iPhone timing retest. Product-quality work continues through the remaining hands-on G12 worksheet: controller reconnect, audible audio routes/interruptions, sustained thermal/memory behavior, and icon appearances. Simulator gameplay is not a substitute.
+Do not replay DK64 progression without a named BananaPad regression. Preview 3 is public and hosted-verified; keep Issue #2 open for the reporter's physical-iPhone timing retest. Product-quality work continues through the remaining hands-on G12 worksheet: controller reconnect, audible audio routes/interruptions, sustained thermal/memory behavior, and icon appearances. Simulator gameplay is not a substitute.
