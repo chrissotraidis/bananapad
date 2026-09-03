@@ -1,11 +1,11 @@
 # BananaPad status
 
-Last updated: 2026-09-02 20:15 JST
+Last updated: 2026-09-03
 
 ## Current state
 
-- **Active goal:** Preview 1 publication is complete; continue physical controller/audio/soak coverage independently as preview-quality work.
-- **Current step:** Product source `4d223ee7f4bd8ed536b2238616c2ac1a23ae3584f66a5869197b0afc349a0d8a` is public on `main`. Clean unsigned release executable `ee876b51aec617563963ee898c6ec36f87a3dffbfc10c2dc2636182c8a7a0442` passed the arm64 iPhoneOS, iOS 15, both-device-family, personal-path, ROM/save, no-dynamic-code, and package audits. Two deterministic packages of `BananaPad-v0.1.0-preview.1-unsigned.ipa` matched byte-for-byte at SHA-256 `a7f3a7a280770644bb175553c2d70c5af032959fd1e425d89b164f721b53d55e`. The anonymously downloaded GitHub IPA/checksum matched the local artifacts exactly and passed hosted checksum, ZIP, package, and no-dynamic-code re-audits. Signed hardware executable `0cf47f413d544a59d6fd7b96b4838a4325b03044bd40f217226b47711f1b5abd` remains installed in place with the user's ROM/save/preferences preserved; the unsigned public release did not alter that device container.
+- **Active goal:** Publish Preview 2 with the Issue #1 audio correction and Issue #2 default-on one-second Z lock, then obtain reporter confirmation on physical iPhone hardware.
+- **Current step:** Product source `e0cf86eca3f0113716b25055d991df31a4b8234181a45270a08a09b60ff8e400` produces clean unsigned release executable `4849f0d5bcfc1e43ad5ad53452f28c4ef1b0e1b3f0206cc32bd81d98fd912689`. It passes the arm64 iPhoneOS, iOS 15, both-device-family, personal-path, ROM/save, no-dynamic-code, and package audits. Two deterministic packages of `BananaPad-v0.1.0-preview.2-unsigned.ipa` matched byte-for-byte at SHA-256 `2ab9265e0a9eb980c5be85cea829bec98c38a790e022b47361c8c9e60ad7c762`. Hosted-download verification remains the final publication step. The existing signed hardware app and its private ROM/save/preferences were not changed.
 - **Rights state:** public source, tag, prerelease, exact IPA, and checksum publication are explicitly authorized. ROM/save/generated private inputs and signing/user/device data remain prohibited.
 - **Tracked source:** public `main` is the handoff branch; use `git rev-parse HEAD` for its exact revision. `PRD.md` and `GOAL-LOOP.md` live under `docs/`.
 - **Booted Simulators:** none; iPad and iPhone were tested sequentially and each was shut down before the other target or documentation work.
@@ -27,7 +27,7 @@ Last updated: 2026-09-02 20:15 JST
 | G9 | Met | The same executable independently created/reloaded Game 1 on iPhone, accepted compact stick/A/B, wrote a 2,048-byte save, visibly restored `0% / 000 / 00:04`, and preserved the complete layout across edit/reset, Home→foreground, and both landscapes. |
 | G10 | Simulator accepted; physical boot/render accepted | The PaperPad-derived UI preserves baseline N64 touch targets, independent touch tracking, tap latching, lifecycle clearing, touch/controller merging, controller-driven auto-hide, native-modal controller suppression/neutral rearm, three-dot menu, Settings, diagnostics, layout editing, and ROM management while using BananaPad product labels. The corrected signed app now launches and visibly renders DK64 with the full overlay on physical iPad hardware. Physical multi-touch chords, controller handoff/reconnect, audible audio interruption/routes, memory pressure, and sustained operation remain G12. |
 | G11 | Met for the promoted source; stable `1.0.2` rehearsal archived | The live `1.0.2` rehearsal narrowed one stale patch context and shared the Apple path helper across macOS/mobile, then passed exact patch replay, deterministic regeneration, Apple builds, product contracts, and package audit. It remained unpromoted at `needs-full-validation`. The candidate was archived recoverably after the subsequent Xbox input repair changed the Apple product identity; `evaluate-latest` can restage it against the new source. |
-| G12–G13 | G12 started; G13 Preview 1 complete | Signed iPad build/install/launch and visible DK64 rendering pass with an artifact-bound preflight receipt. G12 still requires the worksheet's controller reconnect, audible audio routes/interruptions, memory pressure, and sustained-operation checks. G13 public source/tag/prerelease/IPA/checksum publication and anonymous hosted-byte verification are complete. |
+| G12–G13 | G12 started; Preview 2 publication in progress | Signed iPad build/install/launch and visible DK64 rendering pass with an artifact-bound preflight receipt. Preview 2 corrects the audio queue-rate mismatch and adds Z lock, but physical iPhone listening and timed-touch confirmation remain reporter acceptance. G13 completes after public source/tag/prerelease/IPA/checksum publication and anonymous hosted-byte verification. |
 
 ## Verified starting facts
 
@@ -46,4 +46,4 @@ Last updated: 2026-09-02 20:15 JST
 
 ## Next step
 
-Do not replay DK64 progression without a named BananaPad regression. Public Preview 1 source and the exact first ROM-free unsigned IPA are released. Product-quality work continues through the remaining hands-on G12 worksheet: controller reconnect, audible audio routes/interruptions, sustained thermal/memory behavior, and icon appearances. Simulator gameplay is not a substitute.
+Do not replay DK64 progression without a named BananaPad regression. Publish and hosted-verify Preview 2, then keep Issues #1 and #2 open for the reporter's physical-iPhone retest. Product-quality work continues through the remaining hands-on G12 worksheet: controller reconnect, audible audio routes/interruptions, sustained thermal/memory behavior, and icon appearances. Simulator gameplay is not a substitute.

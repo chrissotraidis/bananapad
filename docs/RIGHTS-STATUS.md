@@ -1,14 +1,14 @@
 # BananaPad rights status
 
-Last updated: 2026-09-02
+Last updated: 2026-09-03
 
 ## Current authorization
 
-**Chris has explicitly authorized public source publication and public upload of the exact audited Preview 1 ROM-free unsigned IPA. The repository is public and the approved release is `v0.1.0-preview.1`.**
+**Chris has explicitly authorized public source publication and public upload of the exact audited Preview 2 ROM-free unsigned IPA. The repository is public and the approved release is `v0.1.0-preview.2`.**
 
-This authorization covers the exact source tag, GitHub prerelease, IPA, and checksum named in the Preview 1 release notes. It does not authorize ROMs, saves, generated private game inputs, screenshots containing unreviewed game material, signing assets, or user/device data.
+This authorization covers the exact source tag, GitHub prerelease, IPA, and checksum named in the Preview 2 release notes. It does not authorize ROMs, saves, generated private game inputs, screenshots containing unreviewed game material, signing assets, or user/device data.
 
-Preview 1 publication is complete. The hosted IPA and checksum were downloaded without GitHub authentication and matched the audited local artifacts byte-for-byte.
+Preview 1 publication is complete. Preview 2 publication must retain the same deterministic package and hosted-download verification boundary.
 
 ## Current boundary
 

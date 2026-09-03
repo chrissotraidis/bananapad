@@ -31,6 +31,12 @@ rg -q 'self\.multipleTouchEnabled = YES' "$ui" || die "multi-touch is not enable
 rg -q 'std::unordered_map<UITouch\*, int> _touchRoles' "$ui" || die "touches are not tracked independently"
 rg -q 'g_touch_buttons\.load.*\|' "$ui" || die "held and latched touch buttons are not combined"
 rg -q 'g_touch_taps\.clearAll\(\)' "$ui" || die "touch latches are not released on input clear"
+rg -q 'kZLockHoldSeconds = 1\.0' "$ui" || die "Z lock does not use the one-second hold contract"
+rg -q 'if \(_zLocked\) buttons \|= kZButtonMask' "$ui" || die "locked Z is not published to the N64 input snapshot"
+rg -q '_zLocked = NO' "$ui" || die "locked Z is not cleared at safety boundaries"
+rg -q 'Hold Z to Lock' "$ui" || die "the default-on Z lock setting is missing"
+rg -q 'settings\[@"zLockEnabled"\] == nil \|\|' "$ui" || die "Z lock is not enabled by default"
+rg -q 'Hold Z to lock:' "$BANANAPAD_ROOT/apple/app/diagnostics.mm" || die "diagnostics omit the Z-lock preference"
 rg -q 'UIApplicationWillResignActiveNotification' "$ui" || die "background input release is missing"
 rg -q 'out_buttons \|= touch_buttons' "$native" || die "touch buttons are not merged with other input"
 rg -q 'PaperPad_SetPhysicalControllerConnected\(controller != nullptr \? 1 : 0\)' "$native" \

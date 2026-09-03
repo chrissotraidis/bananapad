@@ -8,7 +8,7 @@ require_command shasum
 require_command zip
 
 app="${1:-$BANANAPAD_ROOT/generated/build/bananapad-ios-device/Release/BananaPad.app}"
-output="${BANANAPAD_UNSIGNED_IPA_OUTPUT:-$BANANAPAD_ROOT/generated/packages/BananaPad-v0.1.0-preview.1-unsigned.ipa}"
+output="${BANANAPAD_UNSIGNED_IPA_OUTPUT:-$BANANAPAD_ROOT/generated/packages/BananaPad-v0.1.0-preview.2-unsigned.ipa}"
 [[ "$app" = /* ]] || app="$BANANAPAD_ROOT/$app"
 [[ "$output" = /* ]] || output="$BANANAPAD_ROOT/$output"
 [[ -d "$app" && -x "$app/BananaPad" ]] || die "device BananaPad.app is missing: $app"
