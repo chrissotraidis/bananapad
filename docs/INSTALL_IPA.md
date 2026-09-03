@@ -9,7 +9,7 @@ Kong 64 and does not require JIT.
 2. Verify the download on macOS from the directory containing both files:
 
    ```sh
-   shasum -a 256 -c BananaPad-v0.1.0-preview.2-unsigned.ipa.sha256
+   shasum -a 256 -c BananaPad-v0.1.0-preview.3-unsigned.ipa.sha256
    ```
 
 3. Re-sign and install the IPA with your own Apple Account using a compatible

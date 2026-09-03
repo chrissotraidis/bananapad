@@ -40,7 +40,8 @@ std::atomic<uint8_t> g_touch_flick_polls{0};
 
 constexpr uint8_t kTapHoldPolls = 6;
 constexpr uint16_t kZButtonMask = 0x2000;
-constexpr NSTimeInterval kZLockHoldSeconds = 1.0;
+constexpr NSTimeInterval kZLockHoldSeconds = 0.75;
+constexpr NSTimeInterval kZUnlockHoldSeconds = 0.35;
 // Preserve a very short released flick for one runtime poll. Replaying it for
 // several polls makes grid/name-entry selectors overshoot after the thumb has
 // already returned to neutral.
@@ -857,8 +858,10 @@ NSInteger resolutionModeFromSettings(NSDictionary* settings) {
                 _zHoldTouch == nil) {
                 _zHoldTouch = touch;
                 const NSUInteger generation = ++_zHoldGeneration;
+                const NSTimeInterval holdSeconds =
+                    _zLocked ? kZUnlockHoldSeconds : kZLockHoldSeconds;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
-                    (int64_t)(kZLockHoldSeconds * NSEC_PER_SEC)),
+                    (int64_t)(holdSeconds * NSEC_PER_SEC)),
                     dispatch_get_main_queue(), ^{
                     if (generation != _zHoldGeneration || _zHoldTouch != touch) return;
                     auto found = _touchRoles.find(touch);

@@ -62,7 +62,7 @@ if [[ "$target" == device || "$target" == all ]]; then
   "$BANANAPAD_ROOT/scripts/build-bananapad-ios-device.sh"
   device_app="$BANANAPAD_ROOT/generated/build/bananapad-ios-device/Release/BananaPad.app"
   "$BANANAPAD_ROOT/scripts/package-unsigned-ipa.sh" "$device_app"
-  ipa="$BANANAPAD_ROOT/generated/packages/BananaPad-v0.1.0-preview.2-unsigned.ipa"
+  ipa="$BANANAPAD_ROOT/generated/packages/BananaPad-v0.1.0-preview.3-unsigned.ipa"
 fi
 
 receipt_dir="$BANANAPAD_ROOT/generated/validation"
