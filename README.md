@@ -20,7 +20,7 @@ BananaPad is an integration and hardening project built around [Donkey Kong 64: 
 
 BananaPad is game-specific, not a general Nintendo 64 emulator. It targets only an unmodified **Donkey Kong 64 (US/NTSC-U 1.0)** ROM supplied by the user.
 
-This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. The current ROM-free unsigned IPA is available from the official [BananaPad Preview 3 release](https://github.com/chrissotraidis/bananapad/releases/tag/v0.1.0-preview.3). See the [rights and publication status](docs/RIGHTS-STATUS.md).
+This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. Previous builds have been retired; a new version is in progress. See the [rights and publication status](docs/RIGHTS-STATUS.md).
 
 ## Project status
 
@@ -115,10 +115,7 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 
 ### Install on iPhone or iPad
 
-> [!IMPORTANT]
-> Download only from the official [BananaPad Preview 3 release](https://github.com/chrissotraidis/bananapad/releases/tag/v0.1.0-preview.3). Do not trust unofficial packages claiming to include BananaPad or Donkey Kong 64.
-
-Download `BananaPad-v0.1.0-preview.3-unsigned.ipa` and its `.sha256` file. The IPA SHA-256 is `ad8efa113b34d3cb80ca330a9fbb8a67297245b6b5ad78f7e0af9aeb48cd882f`. It is an unsigned, ROM-free `iphoneos` app for both iPhone and iPad. Verify the checksum, then re-sign it with your own Apple Account using a compatible sideloading tool such as [AltStore Classic](https://faq.altstore.io/altstore-classic) or [SideStore](https://docs.sidestore.io/docs/installation/install). It will not install by tapping it, and BananaPad does not require JIT.
+Previous builds have been retired; a new version is in progress.
 
 After installation:
 
@@ -344,7 +341,7 @@ Preview 2 corrects an inherited audio-queue timing calculation that mixed DK64's
 <details>
 <summary><strong>Can I publish the source or IPA?</strong></summary>
 
-Yes. The source is public on `main`, and the current ROM-free unsigned IPA is published in the official Preview 3 release after matching deterministic builds and independent audits. Do not redistribute working-tree builds or modified packages as official BananaPad releases. The official release does not include a ROM, save, generated private input, signing material, or other user data.
+The source is public on `main`. Previous builds have been retired; a new version is in progress.
 </details>
 
 ## Documentation
