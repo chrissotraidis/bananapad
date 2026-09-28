@@ -1,5 +1,11 @@
 # Install the BananaPad IPA
 
+> [!IMPORTANT]
+> **Downloads retired.** The preview IPA is no longer published. Build your own
+> unsigned IPA from your own ROM with the one-command build in the
+> [README](../README.md) (`scripts/bootstrap-bananapad.sh --target device`), then
+> sign and install it as described below. Skip the download and checksum steps.
+
 BananaPad's preview IPA is an unsigned, ROM-free iPhoneOS app for arm64 iPhone
 and iPad devices running iOS or iPadOS 15 or newer. It does not include Donkey
 Kong 64 and does not require JIT.
