@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "bananapad",
+  "name": "BananaPad",
+  "game": "Donkey Kong 64 (N64, US 1.0) via static recompilation",
+  "kind": "disc-translation",
+  "status": "draft-untested",
+  "inputs": [
+    {
+      "type": "n64-rom",
+      "formats": [
+        "v64",
+        "z64",
+        "n64"
+      ],
+      "when": "build",
+      "description": "Your own DK64 US 1.0 ROM (absolute path); prepared, decompressed and translated privately during the build."
+    }
+  ],
+  "targets": {
+    "ios": {
+      "hosts": {
+        "macos-arm64": "experimental"
+      },
+      "output": "ipa",
+      "check": "ipa",
+      "steps": [
+        {
+          "stage": "build",
+          "command": [
+            "/bin/bash",
+            "{repo}/scripts/bootstrap-bananapad.sh",
+            "--rom",
+            "{disc}",
+            "--target",
+            "device"
+          ]
+        },
+        {
+          "stage": "package",
+          "command": [
+            "/bin/cp",
+            "{repo}/generated/packages/BananaPad-v0.1.0-preview.3-unsigned.ipa",
+            "{output}"
+          ]
+        }
+      ]
+    },
+    "macos": {
+      "hosts": {
+        "macos-arm64": "planned"
+      }
+    }
+  },
+  "requirements": {
+    "disk_gb": 25,
+    "tools": [
+      {
+        "name": "git",
+        "version_args": [
+          "--version"
+        ]
+      },
+      {
+        "name": "cmake",
+        "version_args": [
+          "--version"
+        ]
+      },
+      {
+        "name": "ninja",
+        "version_args": [
+          "--version"
+        ]
+      },
+      {
+        "name": "python3",
+        "version_args": [
+          "--version"
+        ]
+      },
+      {
+        "name": "xcodebuild",
+        "version_args": [
+          "-version"
+        ],
+        "note": "Install Xcode and its iOS platform"
+      }
+    ]
+  },
+  "notes": "bootstrap-bananapad.sh --target device runs the documented chain (sources, ROM preparation, generation, patches, macOS support core, unsigned device app, package) in one command.",
+  "publication": {
+    "public_binaries": false,
+    "reason": "Personal builds contain game code translated from the player's ROM; public releases are source only."
+  }
+}
