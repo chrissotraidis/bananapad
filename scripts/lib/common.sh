@@ -46,7 +46,9 @@ recursive_manifest_hash() {
   if printf '%s\n' "$state" | grep -Eq '^[+-U]'; then
     die "recursive submodules are missing or do not match gitlinks: $checkout"
   fi
-  printf '%s\n' "$state" | sed 's/^[ +-U]//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}'
+  # Commit and path only: git's describe text in parentheses depends on the tags
+  # a clone happens to have, so it differs between otherwise identical checkouts.
+  printf '%s\n' "$state" | sed -E 's/^[ +-U]//; s/ [(].*[)]$//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}'
 }
 
 recursive_worktree_hash() {
