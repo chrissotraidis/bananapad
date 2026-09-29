@@ -14,6 +14,9 @@
 
 #include "bananapad_rt64_context.h"
 #include "paperpad_paths.h"
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 
 namespace {
 
@@ -252,7 +255,7 @@ bananapad::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::rende
     // Set up the RT64 application configuration fields.
     RT64::ApplicationConfiguration appConfig;
     appConfig.useConfigurationFile = false;
-#if defined(__APPLE__)
+#if defined(__APPLE__) && TARGET_OS_IOS
     // Physical iPadOS does not permit creating RT64's default `.rt64`
     // directory at the app-container root. Keep its private state beside the
     // rest of BananaPad's Application Support data instead.
