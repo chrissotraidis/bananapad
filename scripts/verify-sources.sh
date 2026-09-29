@@ -29,7 +29,7 @@ if printf '%s\n' "$submodule_state" | grep -Eq '^[+-U]'; then
   die "DK64 recursive submodules are missing or do not match the promoted gitlinks"
 fi
 
-manifest_hash="$(printf '%s\n' "$submodule_state" | sed 's/^[ +-U]//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}')"
+manifest_hash="$(printf '%s\n' "$submodule_state" | sed -E 's/^[ +-U]//; s/ [(].*[)]$//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}')"
 expected_manifest_hash="$(lock_value '.upstream.recursiveManifestSha256')"
 [[ "$manifest_hash" == "$expected_manifest_hash" ]] || die "recursive manifest hash $manifest_hash does not match $expected_manifest_hash"
 
@@ -39,7 +39,7 @@ host_tool_state="$(git -C "$BANANAPAD_ROOT/ref/toolchain/n64recomp-host" submodu
 if printf '%s\n' "$host_tool_state" | grep -Eq '^[+-U]'; then
   die "N64Recomp host-tool submodules are missing or do not match the pinned gitlinks"
 fi
-host_tool_hash="$(printf '%s\n' "$host_tool_state" | sed 's/^[ +-U]//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}')"
+host_tool_hash="$(printf '%s\n' "$host_tool_state" | sed -E 's/^[ +-U]//; s/ [(].*[)]$//' | LC_ALL=C sort | shasum -a 256 | awk '{print $1}')"
 expected_host_tool_hash="$(lock_value '.references.n64RecompHostTools.recursiveManifestSha256')"
 [[ "$host_tool_hash" == "$expected_host_tool_hash" ]] || die "host-tool manifest hash $host_tool_hash does not match $expected_host_tool_hash"
 note "verified N64Recomp host-tool manifest: $host_tool_hash"

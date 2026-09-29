@@ -212,7 +212,7 @@ index 14db898..9362a25 100644
      # Use a wrapper around ld64 that respects segprot's `max_prot` value in order
      # to make our executable memory writable (required for mod function patching)
      target_link_options(DK64Recompiled PRIVATE
-@@ -260,16 +315,68 @@ if (WIN32)
+@@ -260,16 +315,69 @@ if (WIN32)
  endif()
  
  if (APPLE)
@@ -234,8 +234,9 @@ index 14db898..9362a25 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets"
 +            PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-+        set(BANANAPAD_VERSION "0.1.0")
-+        set(BANANAPAD_BUILD_NUMBER "3")
++        file(READ "${BANANAPAD_APPLE_APP_DIR}/../../version.json" bananapad_version_json)
++        string(JSON BANANAPAD_VERSION GET "${bananapad_version_json}" version)
++        string(JSON BANANAPAD_BUILD_NUMBER GET "${bananapad_version_json}" build)
 +        set(BANANAPAD_BUILD_PROFILE "simulator")
 +        set(PAPERPAD_VERSION "${BANANAPAD_VERSION}")
 +        set(PAPERPAD_BUILD_NUMBER "${BANANAPAD_BUILD_NUMBER}")
@@ -284,7 +285,7 @@ index 14db898..9362a25 100644
  endif()
  
  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-@@ -343,19 +450,22 @@ endif()
+@@ -343,19 +451,22 @@ endif()
  set(RECOMP_FRONTEND_N64MODERNRUNTIME_PATH ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
  set(RECOMP_FRONTEND_RT64_PATH ${CMAKE_SOURCE_DIR}/lib/rt64)
  
@@ -2001,6 +2002,58 @@ index f83c583..a1a62da 100644
  # Define the library
  add_library(${TARGET_NAME} ${SOURCE_FILES})
  
+diff --git a/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
+new file mode 100644
+--- /dev/null
++++ b/lib/rt64/src/contrib/nativefiledialog-extended/src/nfd_null.cpp
+@@ -0,0 +1,47 @@
++#include "include/nfd.h"
++
++#include <cstdlib>
++
++extern "C" {
++
++nfdresult_t NFD_Init(void) { return NFD_OKAY; }
++void NFD_Quit(void) {}
++void NFD_FreePathN(nfdnchar_t *path) { free(path); }
++void NFD_FreePathU8(nfdu8char_t *path) { free(path); }
++
++nfdresult_t NFD_OpenDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogMultipleN(const nfdpathset_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_OpenDialogMultipleU8(const nfdpathset_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_SaveDialogN(nfdnchar_t **, const nfdnfilteritem_t *, nfdfiltersize_t, const nfdnchar_t *, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_SaveDialogU8(nfdu8char_t **, const nfdu8filteritem_t *, nfdfiltersize_t, const nfdu8char_t *, const nfdu8char_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_PickFolderN(nfdnchar_t **, const nfdnchar_t *) { return NFD_CANCEL; }
++nfdresult_t NFD_PickFolderU8(nfdu8char_t **, const nfdu8char_t *) { return NFD_CANCEL; }
++
++const char *NFD_GetError(void) { return "Native file dialogs are provided by BananaPad's UIKit shell"; }
++void NFD_ClearError(void) {}
++
++nfdresult_t NFD_PathSet_GetCount(const nfdpathset_t *, nfdpathsetsize_t *count) {
++    if (count != nullptr) *count = 0;
++    return NFD_OKAY;
++}
++nfdresult_t NFD_PathSet_GetPathN(const nfdpathset_t *, nfdpathsetsize_t, nfdnchar_t **) { return NFD_ERROR; }
++nfdresult_t NFD_PathSet_GetPathU8(const nfdpathset_t *, nfdpathsetsize_t, nfdu8char_t **) { return NFD_ERROR; }
++void NFD_PathSet_FreePathN(const nfdnchar_t *path) { free(const_cast<nfdnchar_t *>(path)); }
++void NFD_PathSet_FreePathU8(const nfdu8char_t *path) { free(const_cast<nfdu8char_t *>(path)); }
++nfdresult_t NFD_PathSet_GetEnum(const nfdpathset_t *, nfdpathsetenum_t *enumerator) {
++    if (enumerator != nullptr) *enumerator = {};
++    return NFD_OKAY;
++}
++void NFD_PathSet_FreeEnum(nfdpathsetenum_t *) {}
++nfdresult_t NFD_PathSet_EnumNextN(nfdpathsetenum_t *, nfdnchar_t **path) {
++    if (path != nullptr) *path = nullptr;
++    return NFD_OKAY;
++}
++nfdresult_t NFD_PathSet_EnumNextU8(nfdpathsetenum_t *, nfdu8char_t **path) {
++    if (path != nullptr) *path = nullptr;
++    return NFD_OKAY;
++}
++void NFD_PathSet_Free(const nfdpathset_t *) {}
++
++}
 diff --git a/lib/rt64/src/contrib/plume/CMakeLists.txt b/lib/rt64/src/contrib/plume/CMakeLists.txt
 index 0789c20..a51e745 100644
 --- a/lib/rt64/src/contrib/plume/CMakeLists.txt

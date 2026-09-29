@@ -20,7 +20,7 @@ BananaPad is an integration and hardening project built around [Donkey Kong 64: 
 
 BananaPad is game-specific, not a general Nintendo 64 emulator. It targets only an unmodified **Donkey Kong 64 (US/NTSC-U 1.0)** ROM supplied by the user.
 
-This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. Previous builds have been retired; a new version is in progress. See the [rights and publication status](docs/RIGHTS-STATUS.md).
+This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. Releases publish the build recipe only; you make your own app with PadForge (see [Get started](#get-started)). See the [rights and publication status](docs/RIGHTS-STATUS.md).
 
 ## Project status
 
@@ -115,7 +115,16 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 
 ### Install on iPhone or iPad
 
-Previous builds have been retired; a new version is in progress.
+Releases publish no app: BananaPad contains code translated from the game, so you
+make your own from your own ROM. On an Apple Silicon Mac with the tools listed under
+[Requirements](#requirements), download
+[PadForge](https://github.com/chrissotraidis/padforge/releases/latest), unzip it,
+double-click `PadForge.command`, choose BananaPad and pick your Donkey Kong 64
+(US 1.0) ROM. PadForge builds BananaPad from this repository's
+[latest release](https://github.com/chrissotraidis/bananapad/releases/latest) and
+saves an unsigned IPA in the folder you choose. Install it with AltStore Classic,
+SideStore or Sideloadly. The IPA contains code translated from your ROM: it is
+yours alone; never share it.
 
 After installation:
 
@@ -341,7 +350,7 @@ Preview 2 corrects an inherited audio-queue timing calculation that mixed DK64's
 <details>
 <summary><strong>Can I publish the source or IPA?</strong></summary>
 
-The source is public on `main`. Previous builds have been retired; a new version is in progress.
+The source is public on `main`. No IPA is published: the app contains code translated from the game, so everyone builds their own with PadForge.
 </details>
 
 ## Documentation

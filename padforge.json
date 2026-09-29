@@ -40,7 +40,7 @@
           "stage": "package",
           "command": [
             "/bin/cp",
-            "{repo}/generated/packages/BananaPad-v0.1.0-preview.3-unsigned.ipa",
+            "{repo}/generated/packages/BananaPad-unsigned.ipa",
             "{output}"
           ]
         }
