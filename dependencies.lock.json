@@ -13,7 +13,7 @@
       "observedAt": "2026-09-02T22:04:21+09:00"
     },
     "candidate": null,
-    "patchSetSha256": "65a97af2afdb2a35319135ac2f3c649c37ca6e933d542a201c395530bb82512e",
+    "patchSetSha256": "fabedfdead8034fe7a4e57170705158f0eeaef3c9d31011a61132c409fcf9932",
     "recursiveManifestSha256": "92af7b94ef249239315b933e95f4d5e6311f7c8a2beea879fd6861593b5b6d81"
   },
   "references": {

@@ -212,7 +212,7 @@ index 14db898..9362a25 100644
      # Use a wrapper around ld64 that respects segprot's `max_prot` value in order
      # to make our executable memory writable (required for mod function patching)
      target_link_options(DK64Recompiled PRIVATE
-@@ -260,16 +315,68 @@ if (WIN32)
+@@ -260,16 +315,69 @@ if (WIN32)
  endif()
  
  if (APPLE)
@@ -234,7 +234,8 @@ index 14db898..9362a25 100644
 +            "${BANANAPAD_APPLE_APP_DIR}/ThirdPartyNotices.txt"
 +            "${BANANAPAD_APPLE_APP_DIR}/Assets.xcassets"
 +            PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-+        file(READ "${BANANAPAD_APPLE_APP_DIR}/../../version.json" bananapad_version_json) string(JSON BANANAPAD_VERSION GET "${bananapad_version_json}" version)
++        file(READ "${BANANAPAD_APPLE_APP_DIR}/../../version.json" bananapad_version_json)
++        string(JSON BANANAPAD_VERSION GET "${bananapad_version_json}" version)
 +        string(JSON BANANAPAD_BUILD_NUMBER GET "${bananapad_version_json}" build)
 +        set(BANANAPAD_BUILD_PROFILE "simulator")
 +        set(PAPERPAD_VERSION "${BANANAPAD_VERSION}")
@@ -284,7 +285,7 @@ index 14db898..9362a25 100644
  endif()
  
  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-@@ -343,19 +450,22 @@ endif()
+@@ -343,19 +451,22 @@ endif()
  set(RECOMP_FRONTEND_N64MODERNRUNTIME_PATH ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
  set(RECOMP_FRONTEND_RT64_PATH ${CMAKE_SOURCE_DIR}/lib/rt64)
  
