@@ -140,7 +140,7 @@ Keep the same BananaPad bundle identifier and signing path when updating if you 
 
 #### Requirements
 
-Requirements currently include an Apple Silicon Mac, Xcode with the Metal Toolchain, CMake, Ninja, Git, jq, Python 3.11+, Rust/Cargo, GNU `cpp-16`, Homebrew's `llvm@18` (it compiles the MIPS patches), and a legally obtained supported ROM. With Homebrew: `brew install cmake ninja python@3.12 rust gcc llvm@18`.
+Requirements currently include an Apple Silicon Mac, Xcode with the Metal Toolchain, CMake, Ninja, Git, jq, Python 3.11+, Rust/Cargo, GNU `cpp-16`, Homebrew's `llvm@18` (it compiles the MIPS patches), and a legally obtained supported ROM. With Homebrew: `brew install cmake ninja python@3.12 rust gcc llvm@18 ripgrep`.
 
 BananaPad accepts `.z64`, `.v64`, and `.n64` byte orders. The supported ROM normalizes to 32 MiB with SHA-1 `cf806ff2603640a748fca5026ded28802f1f4a50`. This fingerprint verifies compatibility; it is not a download hint.
 

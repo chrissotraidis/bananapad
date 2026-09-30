@@ -106,6 +106,13 @@
           "--version"
         ],
         "note": "brew install rust"
+      },
+      {
+        "name": "rg",
+        "version_args": [
+          "--version"
+        ],
+        "note": "ripgrep, used by the packaging checks: brew install ripgrep"
       }
     ]
   },
