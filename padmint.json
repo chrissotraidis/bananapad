@@ -85,6 +85,34 @@
           "-version"
         ],
         "note": "Install Xcode and its iOS platform"
+      },
+      {
+        "name": "cpp-16",
+        "version_args": [
+          "--version"
+        ],
+        "note": "GNU cpp: brew install gcc"
+      },
+      {
+        "name": "cargo",
+        "version_args": [
+          "--version"
+        ],
+        "note": "brew install rust"
+      },
+      {
+        "name": "rustc",
+        "version_args": [
+          "--version"
+        ],
+        "note": "brew install rust"
+      },
+      {
+        "name": "rg",
+        "version_args": [
+          "--version"
+        ],
+        "note": "ripgrep, used by the packaging checks: brew install ripgrep"
       }
     ]
   },
