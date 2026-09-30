@@ -3,20 +3,35 @@
 set -euo pipefail
 source "$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
 
+# A download that stopped partway (for example empty submodule folders) or local changes would
+# stop every later run. Keep that folder under a new name, never delete it, and download again.
+move_aside() {
+  local directory="$1" earlier
+  earlier="${directory}.earlier-$(date +%Y%m%d-%H%M%S)"
+  mv "$directory" "$earlier"
+  note "${directory#"$BANANAPAD_ROOT"/} was incomplete or changed, maybe from a download that stopped partway."
+  note "Kept it as ${earlier#"$BANANAPAD_ROOT"/} (nothing deleted) and downloading it again."
+}
+
 clone_reference() {
   local key="$1"
   local directory="$2"
-  local url commit
+  local url commit status
 
   url="$(lock_value ".references.${key}.url")"
   commit="$(lock_value ".references.${key}.commit")"
 
-  if [[ ! -d "$directory/.git" ]]; then
-    [[ ! -e "$directory" ]] || die "refusing to replace non-Git path: $directory"
+  if [[ -e "$directory" ]]; then
+    if [[ ! -d "$directory/.git" ]] \
+        || ! status="$(git -C "$directory" status --porcelain --untracked-files=no 2>/dev/null)" \
+        || [[ -n "$status" ]]; then
+      move_aside "$directory"
+    fi
+  fi
+  if [[ ! -e "$directory" ]]; then
     git clone --recursive "$url" "$directory"
   fi
 
-  [[ -z "$(git -C "$directory" status --porcelain --untracked-files=no)" ]] || die "refusing to alter dirty reference: $directory"
   git -C "$directory" cat-file -e "${commit}^{commit}" 2>/dev/null || git -C "$directory" fetch --no-tags origin "$commit"
   git -C "$directory" checkout --detach "$commit"
   git -C "$directory" submodule update --init --recursive
