@@ -122,7 +122,7 @@ make your own from your own ROM. On an Apple Silicon Mac with the tools listed u
 double-click `PadMint.command`, choose BananaPad and pick your Donkey Kong 64
 (US 1.0) ROM. PadMint builds BananaPad from this repository's
 [latest release](https://github.com/chrissotraidis/bananapad/releases/latest) and
-saves an unsigned IPA in the folder you choose. Install it with AltStore Classic,
+saves an unsigned IPA in your Downloads folder. Install it with AltStore Classic,
 SideStore or Sideloadly. The IPA contains code translated from your ROM: it is
 yours alone; never share it.
 
