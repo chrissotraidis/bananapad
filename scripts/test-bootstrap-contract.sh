@@ -21,4 +21,6 @@ if rg -q 'simctl[[:space:]]+(boot|bootstatus|launch)' "$script"; then
   die "bootstrap must not boot or launch a Simulator"
 fi
 
+python3 "$BANANAPAD_ROOT/scripts/test-clone-reference.py"
+
 note "bootstrap contract: pass"
