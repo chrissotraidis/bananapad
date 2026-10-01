@@ -3,6 +3,11 @@
 set -euo pipefail
 source "$(cd "$(dirname "$0")" && pwd)/lib/common.sh"
 
+build_jobs="${CMAKE_BUILD_PARALLEL_LEVEL:-}"
+if [[ -n "$build_jobs" && ! "$build_jobs" =~ ^[1-9][0-9]*$ ]]; then
+  die "CMAKE_BUILD_PARALLEL_LEVEL must be a positive whole number without leading zeros"
+fi
+
 require_command cmake
 require_command plutil
 
@@ -82,10 +87,10 @@ cmake -S "$workspace" -B "$build_dir" -G Xcode \
   -DPATCHES_LD="$llvm_root/ld.lld"
 
 if [[ -n "$development_team" ]]; then
-  cmake --build "$build_dir" --config Release --target DK64Recompiled -j "$(sysctl -n hw.ncpu)" \
+  cmake --build "$build_dir" --config Release --target DK64Recompiled -j "${build_jobs:-$(sysctl -n hw.ncpu)}" \
     -- -allowProvisioningUpdates -allowProvisioningDeviceRegistration
 else
-  cmake --build "$build_dir" --config Release --target DK64Recompiled -j "$(sysctl -n hw.ncpu)"
+  cmake --build "$build_dir" --config Release --target DK64Recompiled -j "${build_jobs:-$(sysctl -n hw.ncpu)}"
 fi
 
 [[ -x "$app/BananaPad" ]] || die "device BananaPad.app was not produced"
