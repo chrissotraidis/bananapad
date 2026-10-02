@@ -29,7 +29,8 @@ clone_reference() {
     fi
   fi
   if [[ ! -e "$directory" ]]; then
-    git clone --recursive "$url" "$directory"
+    # Select the locked revision before fetching its submodules, not today's HEAD.
+    git clone --no-checkout "$url" "$directory"
   fi
 
   git -C "$directory" cat-file -e "${commit}^{commit}" 2>/dev/null || git -C "$directory" fetch --no-tags origin "$commit"

@@ -13,6 +13,7 @@ simulator_build_dir="${BANANAPAD_SIMULATOR_BUILD_DIR:-$BANANAPAD_ROOT/generated/
 
 for test_script in \
   test-save-slot-injector.py \
+  test-build-parallelism.py \
   test-paperpad-ui-fidelity.sh \
   test-touch-input-contract.sh \
   test-native-settings-contract.sh \
