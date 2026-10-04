@@ -85,6 +85,7 @@ product_source_hash() {
       find apple -type f -print
       printf '%s\n' \
         patches/sdl2/ios-controller-uipress-duplication.patch \
+        patches/sdl2/uikit-scenes.patch \
         scripts/build-bananapad-ios-device.sh \
         scripts/build-bananapad-ios-simulator.sh \
         scripts/prepare-bananapad-sdl2.sh \
