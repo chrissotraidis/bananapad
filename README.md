@@ -14,6 +14,8 @@
   <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-arm64-0A84FF?logo=apple">
   <img alt="Renderer: Metal" src="https://img.shields.io/badge/renderer-Metal-5E5CE6">
   <img alt="Game data not included" src="https://img.shields.io/badge/game%20data-not%20included-FF453A">
+  <a href="https://github.com/chrissotraidis/padmint"><img alt="Build BananaPad with PadMint" src="https://img.shields.io/badge/PadMint-build%20your%20own-3EB489"></a>
+  <a href="https://discord.gg/xwHfUD2bxW"><img alt="Join the BananaPad Discord" src="https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?logo=discord&amp;logoColor=white"></a>
 </p>
 
 BananaPad is an integration and hardening project built around [Donkey Kong 64: Recompiled](https://github.com/Rainchus/Donkey-Kong-64-Recompiled), N64Recomp/N64ModernRuntime, and RT64. It is intended to preserve the upstream game's static-recompilation behavior while replacing its desktop-only Apple boundary with an ahead-of-time, no-dynamic-code native shell modeled on PaperPad's proven N64/RT64 Apple work.
@@ -21,6 +23,13 @@ BananaPad is an integration and hardening project built around [Donkey Kong 64: 
 BananaPad is game-specific, not a general Nintendo 64 emulator. It targets only an unmodified **Donkey Kong 64 (US/NTSC-U 1.0)** ROM supplied by the user.
 
 This repository contains integration source, patches, scripts, tests, and documentation. It does **not** contain Donkey Kong 64, a ROM, extracted Nintendo/Rare assets, generated playable game code, generated patches/RSP code, or saves. Releases publish the build recipe only; you make your own app with PadMint (see [Get started](#get-started)). See the [rights and publication status](docs/RIGHTS-STATUS.md).
+
+> [!NOTE]
+> **AI disclosure:** BananaPad uses substantial AI assistance for code, tests,
+> documentation, debugging and maintenance. Some support replies and maintenance
+> tasks are automated. There is no audited percentage of AI-generated code.
+> Build, test and device records describe what was checked. This disclosure
+> concerns BananaPad's workflow, not the authorship of its upstream projects.
 
 ## Project status
 
@@ -378,6 +387,16 @@ The source is public on `main`. No IPA is published: the app contains code trans
 - [New upstream candidate qualification](docs/UPSTREAM-CANDIDATE-QUALIFICATION.md)
 - [Source map and reference ownership](docs/SOURCE-MAP.md)
 - [Rights and publication state](docs/RIGHTS-STATUS.md)
+
+## Community and support
+
+[Join the Discord](https://discord.gg/xwHfUD2bxW) for help and news. It is one
+community for BananaPad and its sibling projects, such as KartPad, BlueWake and
+MeleePad: ask about setup, building with PadMint, and installing, share how it
+runs on your device, and hear about new releases first.
+
+Found a bug? [Open an issue](https://github.com/chrissotraidis/bananapad/issues)
+with your device, its OS version, and the steps that led to it.
 
 ## Legal
 
