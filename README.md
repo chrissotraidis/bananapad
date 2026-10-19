@@ -400,4 +400,11 @@ with your device, its OS version, and the steps that led to it.
 
 ## Legal
 
+BananaPad is an unofficial, fan-made project. It is not affiliated with,
+endorsed by, or sponsored by Nintendo. Donkey Kong 64 and related names and
+marks are trademarks of Nintendo (and their respective owners). This repository
+contains no game data, ROMs, or extracted assets. To use it, you need your own
+legally obtained copy of the game, and you build it yourself on your own
+machine. Please don't share game files or builds made from them.
+
 BananaPad is an independent, unofficial project and is not affiliated with or endorsed by Nintendo, Rare, Microsoft, or any upstream project. Donkey Kong 64 and related names, characters, copyrights, and trademarks belong to their respective owners. Users must supply their own legally obtained supported ROM. BananaPad's GPL text is provided in [COPYING](COPYING); upstream and third-party components retain their respective licenses and notices, which the release packager collects from the exact pinned source graph. Source-license compliance, ROM exclusion, and a ROM-free package do not automatically grant translated-binary distribution rights.
