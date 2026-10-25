@@ -95,3 +95,20 @@ gameplay.
 Before any future game release, PadMint's current-main `scripts/player-check.sh`
 must pass before tagging and again after publication, in addition to the
 repository's artifact audit and explicit publication approval.
+
+Unicode path follow-up at `43048eb`: the Windows ARM64 private backend passed
+with Unicode source, work, ROM and temporary paths, using existing verified
+public source and tool caches. All 274 generated code/header files matched the
+previous private output byte for byte. The matching new shell/module pair
+passed strict imports, sole-export and iOS 15 checks; insertion preserved all
+eight files in the raw empty shell. Independent Apple `nm`/`otool` and archive
+readback passed, and the original ROM stayed unchanged. This was not a fresh
+default player installation or a physical-device test.
+
+The fix uses per-process UTF-8 manifests for host generators, Unicode Visual
+Studio environment capture, explicit UTF-8 Git path decoding, and UTF-8 Python
+entrypoints/CMake children. It changes no system locale setting. Twenty-two
+focused tests passed on Apple Python 3.9 and bundled Windows Python. Native
+Windows x64/ARM64 and macOS CI passed public Unicode CLI/TOML path and generation
+checks, including manifest readback on Windows. These fixtures check generated
+CPU function presence and RSP BREAK output, not execution of the emitted CPU.
