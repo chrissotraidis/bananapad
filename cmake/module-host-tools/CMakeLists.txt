@@ -45,3 +45,10 @@ set_property(TARGET N64Recomp PROPERTY SOURCES ${core_sources} "${CMAKE_CURRENT_
 add_executable(BananaPadGeneratorTest "${BANANAPAD_ROOT}/tests/module_generator_test.cpp")
 target_link_libraries(BananaPadGeneratorTest PRIVATE N64Recomp)
 target_compile_features(BananaPadGeneratorTest PRIVATE cxx_std_20)
+
+# These generators use narrow filesystem strings; opt in per process only.
+if(MSVC)
+    foreach(target N64RecompCLI RSPRecomp BananaPadGeneratorTest)
+        target_sources(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/windows-utf8.manifest")
+    endforeach()
+endif()

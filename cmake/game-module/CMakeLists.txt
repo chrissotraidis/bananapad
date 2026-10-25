@@ -7,7 +7,7 @@ get_filename_component(BANANAPAD_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLU
 set(BANANAPAD_GENERATED "" CACHE PATH "Verified private output from build-game-module.py")
 set(BANANAPAD_SOURCE "${BANANAPAD_ROOT}/work/module-sources/dk64" CACHE PATH "Verified pinned public source")
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
-execute_process(COMMAND "${Python3_EXECUTABLE}" "${BANANAPAD_ROOT}/scripts/check-module-inputs.py" "${BANANAPAD_GENERATED}" "${BANANAPAD_SOURCE}"
+execute_process(COMMAND "${Python3_EXECUTABLE}" -X utf8 "${BANANAPAD_ROOT}/scripts/check-module-inputs.py" "${BANANAPAD_GENERATED}" "${BANANAPAD_SOURCE}"
     COMMAND_ERROR_IS_FATAL ANY)
 include("${BANANAPAD_ROOT}/cmake/ModuleIdentity.cmake")
 bananapad_module_identity("${BANANAPAD_ROOT}" identity)
