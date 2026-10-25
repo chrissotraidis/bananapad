@@ -5,8 +5,9 @@ Mac recipe and build scripts. The draft Windows ARM64 and x64 routes are experim
 shell has been published, and the
 repository's public binary release pause still applies.
 
-The route requires PadMint's managed MIPS compiler and iOS deployment-floor
-updates. These are draft prerequisites, not a claim about the currently shipped
+The route requires PadMint's [managed MIPS compiler](https://github.com/chrissotraidis/padmint/pull/180),
+[host-selective module routing](https://github.com/chrissotraidis/padmint/pull/182)
+and [iOS deployment-floor updates](https://github.com/chrissotraidis/padmint/pull/183). These are draft prerequisites, not a claim about the currently shipped
 PadMint release. The shell supports iOS 15; the module must preserve that floor.
 Windows players need Visual Studio 2022 Build Tools with Desktop development
 with C++ and a Windows SDK. ARM64 tools are preferred on ARM64 Windows; the x64
@@ -80,7 +81,14 @@ Validation recorded on 26 October 2026:
   ARM64 preference, and ARM64 fallback to x64. Native Windows x64/ARM64 public
   generator CI passes without game inputs.
 
-The normal complete packaged Windows command is the next validation step.
+- The complete packaged `padmint build` command passed from `d3c750d` in
+  73 seconds on Windows ARM64. It used the bundled x64 Python, the standard
+  recipe and existing managed tools/source cache, with no source override. The
+  Visual Studio prerequisite passed before the build. Its 308-file output ledger
+  exactly matches the earlier ARM64 backend; all 279 checked text files from
+  both Windows toolchains match Mac after newline normalization. Final readback
+  reconfirms the iOS 15 floor, source identity, imports and unchanged shell.
+
 Signing, iOS loading, gameplay and a full private build on native x64 hardware
 remain separate gates. A passing source test or cross-compile does not establish
 gameplay.
