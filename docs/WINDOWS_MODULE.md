@@ -1,8 +1,8 @@
 # Private Windows module builds (draft)
 
 This branch adds a private iOS module route while preserving the existing full
-Mac recipe and build scripts. Windows support remains planned until an actual
-packaged build has passed. No matching empty shell has been published, and the
+Mac recipe and build scripts. The draft Windows ARM64 and x64 routes are experimental. No matching empty
+shell has been published, and the
 repository's public binary release pause still applies.
 
 The route requires PadMint's managed MIPS compiler and iOS deployment-floor
@@ -54,9 +54,36 @@ actual private Mac source generation. Public CI builds only pinned open-source
 generators and synthetic fixtures on native Windows ARM64, Windows x64 and
 macOS. It uploads no private input, generated game code or personal app.
 
-Actual shell/module imports, full packaged Windows output, default Mac build
-regression, signing, iOS loading and gameplay acceptance are separate remaining
-gates. A passing source test or cross-compile does not establish gameplay.
+Validation recorded on 26 October 2026:
+
+- At `0718979`, the actual private Mac shell/module pair passes strict imports
+  (125 app callbacks and seven known runtime names), the sole-getter export check,
+  matching source identity and physical-device iOS 15 minimum checks. Insertion
+  preserves all 248 base archive entries and adds only the private module.
+- The packaged development PadMint code from `e70b542` ran the actual backend
+  on Windows 11 ARM64 using native ARM64 MSVC generators and LLVM 21.1.8. It
+  completed in 105 seconds after source seeding and SDK preparation. Public
+  source checkouts began unpatched at their locked commits, reused verified
+  local Git objects, and used the normal preparation/patch replay. Managed tools
+  were cached; no source-cache override was used.
+- A separate backend build used x64 MSVC generators and x64 LLVM under Windows
+  ARM64 emulation, completing in 132 seconds. Compiler, generator, LLVM compiler
+  and linker PE headers were checked as x64; native ARM64 coordinator tools were
+  retained. Both Windows outputs pass the same import, identity, iOS 15 and IPA
+  readback checks. This is not native-x64-hardware private-build evidence.
+- The unchanged full static Mac route also compiled and passed package checks
+  at `69076b8`, using task-owned prepared sources and the original pinned
+  generator/compiler path. The earlier static worktree was preserved.
+- Twenty portable behavior/source tests and 15 synthetic loader/patch-precedence
+  cases pass. The host-specific Visual Studio query includes regressions for a
+  newer ARM-only installation hiding an older eligible x64 installation, native
+  ARM64 preference, and ARM64 fallback to x64. Native Windows x64/ARM64 public
+  generator CI passes without game inputs.
+
+The normal complete packaged Windows command is the next validation step.
+Signing, iOS loading, gameplay and a full private build on native x64 hardware
+remain separate gates. A passing source test or cross-compile does not establish
+gameplay.
 Before any future game release, PadMint's current-main `scripts/player-check.sh`
 must pass before tagging and again after publication, in addition to the
 repository's artifact audit and explicit publication approval.
