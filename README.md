@@ -122,6 +122,10 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 
 ## Get started
 
+This branch is developing a [private Windows module route](docs/WINDOWS_MODULE.md).
+It requires draft PadMint updates and a matching local shell; Windows support is
+not yet released. The existing full Mac build below is preserved.
+
 ### Install on iPhone or iPad
 
 Releases publish no app: BananaPad contains code translated from the game, so you

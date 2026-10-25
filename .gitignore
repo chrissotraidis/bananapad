@@ -6,6 +6,7 @@
 
 # ROM-derived and generated build inputs/outputs.
 /generated/
+/work/
 /build/
 /out/
 /dist/
