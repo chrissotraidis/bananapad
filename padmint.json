@@ -4,7 +4,7 @@
   "name": "BananaPad",
   "game": "Donkey Kong 64 (N64, US 1.0) via static recompilation",
   "kind": "disc-translation",
-  "status": "draft-untested",
+  "status": "experimental",
   "inputs": [
     {
       "type": "n64-rom",

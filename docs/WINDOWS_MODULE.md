@@ -112,3 +112,13 @@ focused tests passed on Apple Python 3.9 and bundled Windows Python. Native
 Windows x64/ARM64 and macOS CI passed public Unicode CLI/TOML path and generation
 checks, including manifest readback on Windows. These fixtures check generated
 CPU function presence and RSP BREAK output, not execution of the emitted CPU.
+
+Packaged PadMint release check (2026-11-01): the PadMint 0.5.27 Windows ZIP,
+with its bundled Python on Windows 11 ARM64, ran `padmint build bananapad
+--target ios` from a fresh clone of this branch at `39e5b14`, the supported ROM
+and an empty shell built on a Mac from that same revision. It finished in 108
+seconds with warm managed tools and recorded `personal-only`. All 248 shell
+entries stayed unchanged and only `BananaPadGame.dylib` was added; the IPA's
+CRCs are valid. With this run the recipe moves from `draft-untested` to
+`experimental`. A shell built at `0718979` has a different module identity
+and must not be paired with this revision. Device launch is still untested.
