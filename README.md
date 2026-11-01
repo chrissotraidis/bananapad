@@ -122,13 +122,15 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 
 ## Get started
 
-**No Mac?** Building BananaPad for iPhone or iPad needs an Apple Silicon Mac
-today. BananaPad reads your own ROM while it builds, so it can't use [GitHub's
-Mac](https://github.com/chrissotraidis/padmint#no-mac-build-on-githubs-mac) the
-way some other ports do: that would mean uploading your game file. A Windows
-build is in progress; [PadMint's Windows
-list](https://github.com/chrissotraidis/padmint/blob/main/docs/WINDOWS.md) shows
-where it stands.
+**No Mac? Build it on a Windows PC (experimental).** PadMint 0.5.27 or newer
+builds BananaPad for iPhone or iPad on Windows 11 (x64 or ARM64) from your own
+Donkey Kong 64 (US) ROM. Install Visual Studio 2022 Build Tools with **Desktop development with
+C++**, then choose BananaPad in PadMint. PadMint downloads the game-free BananaPad app
+from this release and adds the game code it builds from your file on your PC;
+nothing of yours is uploaded. The Mac build is unchanged. This Windows route is
+new: builds pass on Windows 11 ARM64, but a Windows-built copy has not yet been
+played on a device. GitHub's Mac can't build BananaPad, because that would mean
+uploading your game file. Details: [Windows module](docs/WINDOWS_MODULE.md).
 
 ### Install on iPhone or iPad
 

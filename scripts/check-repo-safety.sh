@@ -17,7 +17,7 @@ git ls-files --cached --others --exclude-standard -z >"$paths_file"
 
 while IFS= read -r -d '' path; do
   case "$path" in
-    ref/*|generated/*|worktrees/*|artifacts/*|docs/artifacts/*)
+    ref/*|generated/*|work/*|worktrees/*|artifacts/*|docs/artifacts/*)
       fail "private/generated path is publishable: $path"
       ;;
   esac

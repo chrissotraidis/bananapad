@@ -13,6 +13,9 @@
 #import <UIKit/UIKit.h>
 
 #include "rom_setup.h"
+#if defined(BANANAPAD_MODULE_SHELL)
+#include "game_module.h"
+#endif
 #include "diagnostics.h"
 #include "touch_tap_latch.h"
 #include "paperpad_input.h"
@@ -1360,6 +1363,13 @@ extern "C" void paperpad_touch_snapshot(uint16_t* buttons, float* x, float* y) {
 
 extern "C" int SDL_main(int argc, char** argv) {
     @autoreleasepool {
+#if defined(BANANAPAD_MODULE_SHELL)
+        NSString* modulePath = [NSBundle.mainBundle.bundlePath stringByAppendingPathComponent:@"BananaPadGame.dylib"];
+        if (const char* message = bananapad_load_game_module(modulePath.fileSystemRepresentation)) {
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Build BananaPad with PadMint", message, nullptr);
+            return EXIT_FAILURE;
+        }
+#endif
         SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
         SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #if !defined(PAPERPAD_RELEASE_BUILD)
