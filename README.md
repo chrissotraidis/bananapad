@@ -122,6 +122,14 @@ Preparation regenerates the decompressed ROM, game functions, RSP code, and stat
 
 ## Get started
 
+**No Mac?** Building BananaPad for iPhone or iPad needs an Apple Silicon Mac
+today. BananaPad reads your own ROM while it builds, so it can't use [GitHub's
+Mac](https://github.com/chrissotraidis/padmint#no-mac-build-on-githubs-mac) the
+way some other ports do: that would mean uploading your game file. A Windows
+build is in progress; [PadMint's Windows
+list](https://github.com/chrissotraidis/padmint/blob/main/docs/WINDOWS.md) shows
+where it stands.
+
 ### Install on iPhone or iPad
 
 Releases publish no app: BananaPad contains code translated from the game, so you
