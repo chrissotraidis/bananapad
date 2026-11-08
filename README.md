@@ -132,6 +132,8 @@ new: builds pass on Windows 11 ARM64, but a Windows-built copy has not yet been
 played on a device. GitHub's Mac can't build BananaPad, because that would mean
 uploading your game file. Details: [Windows module](docs/WINDOWS_MODULE.md).
 
+**On Linux (experimental).** PadMint 0.5.34 or newer builds BananaPad for iPhone or iPad on Linux (x64 or ARM64) the same way, from your own Donkey Kong 64 (US) ROM. Install a C++ compiler first (`sudo apt install build-essential`, or `sudo dnf install gcc-c++`); PadMint checks for it, and for the libxml2 library its linker needs, before downloading anything. On 8 November PadMint 0.5.34 built it from the v0.3.0 release on Debian 12 ARM64 (282 s) and x86-64 (95 s, under Rosetta), in clean containers on a Mac; a Linux-built copy has not yet been played on a device. Installing the IPA still needs a Windows PC or Mac, because Sideloadly has no Linux version.
+
 ### Install on iPhone or iPad
 
 Releases publish no app: BananaPad contains code translated from the game, so you
