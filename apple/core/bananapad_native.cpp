@@ -144,11 +144,24 @@ void apply(size_t index, float strength, uint16_t& buttons, float& x, float& y) 
     y += action.y * strength;
 }
 
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+// The single SDL controller is Player 1, the player touch input drives. Only a
+// controller with the stick and buttons gameplay needs lets touch auto-hide.
+bool controller_can_play(SDL_GameController* pad) {
+    return pad != nullptr && SDL_GameControllerGetAttached(pad) &&
+        SDL_GameControllerHasAxis(pad, SDL_CONTROLLER_AXIS_LEFTX) &&
+        SDL_GameControllerHasAxis(pad, SDL_CONTROLLER_AXIS_LEFTY) &&
+        SDL_GameControllerHasButton(pad, SDL_CONTROLLER_BUTTON_A) &&
+        SDL_GameControllerHasButton(pad, SDL_CONTROLLER_BUTTON_B) &&
+        SDL_GameControllerHasButton(pad, SDL_CONTROLLER_BUTTON_START);
+}
+#endif
+
 void open_first_controller() {
     std::lock_guard lock(controller_mutex);
     if (controller != nullptr && SDL_GameControllerGetAttached(controller)) {
 #if defined(__APPLE__) && TARGET_OS_IPHONE
-        PaperPad_SetPhysicalControllerConnected(1);
+        PaperPad_SetPhysicalControllerConnected(controller_can_play(controller) ? 1 : 0);
 #endif
         return;
     }
@@ -163,7 +176,7 @@ void open_first_controller() {
         }
     }
 #if defined(__APPLE__) && TARGET_OS_IPHONE
-    PaperPad_SetPhysicalControllerConnected(controller != nullptr ? 1 : 0);
+    PaperPad_SetPhysicalControllerConnected(controller_can_play(controller) ? 1 : 0);
 #endif
 }
 
