@@ -25,6 +25,7 @@ expected_status=" M src/video/uikit/SDL_uikitappdelegate.h
  M src/video/uikit/SDL_uikitvideo.h
  M src/video/uikit/SDL_uikitvideo.m
  M src/video/uikit/SDL_uikitview.m
+ M src/video/uikit/SDL_uikitwindow.h
  M src/video/uikit/SDL_uikitwindow.m"
 
 is_valid_destination() {
