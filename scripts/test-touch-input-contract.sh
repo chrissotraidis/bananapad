@@ -9,6 +9,7 @@ require_command rg
 ui="$BANANAPAD_ROOT/apple/app/ios_main.mm"
 native="$BANANAPAD_ROOT/apple/core/bananapad_native.cpp"
 test_source="$BANANAPAD_ROOT/scripts/test-touch-tap-latch.cpp"
+visibility_test_source="$BANANAPAD_ROOT/scripts/test-touch-visibility.cpp"
 test_dir="$(mktemp -d "${TMPDIR:-/tmp}/bananapad-touch-test.XXXXXX")"
 cleanup() {
   [[ "$test_dir" == "${TMPDIR:-/tmp}/bananapad-touch-test."* ]] || die "refusing unsafe touch-test cleanup path"
@@ -18,6 +19,8 @@ trap cleanup EXIT
 
 clang++ -std=c++20 -Wall -Wextra -Werror "$test_source" -o "$test_dir/touch-tap-latch-test"
 "$test_dir/touch-tap-latch-test"
+clang++ -std=c++20 -Wall -Wextra -Werror "$visibility_test_source" -o "$test_dir/touch-visibility-test"
+"$test_dir/touch-visibility-test"
 
 for binding in \
   '"d_up".*0x0800' '"d_down".*0x0400' '"d_left".*0x0200' '"d_right".*0x0100' \
@@ -41,10 +44,8 @@ rg -q 'settings\[@"zLockEnabled"\] == nil \|\|' "$ui" || die "Z lock is not enab
 rg -q 'Hold Z to lock:' "$BANANAPAD_ROOT/apple/app/diagnostics.mm" || die "diagnostics omit the Z-lock preference"
 rg -q 'UIApplicationWillResignActiveNotification' "$ui" || die "background input release is missing"
 rg -q 'out_buttons \|= touch_buttons' "$native" || die "touch buttons are not merged with other input"
-rg -q 'PaperPad_SetPhysicalControllerConnected\(controller != nullptr \? 1 : 0\)' "$native" \
+rg -q 'PaperPad_SetPhysicalControllerConnected\(controller_can_play\(controller\) \? 1 : 0\)' "$native" \
   || die "physical-controller connect/disconnect is not forwarded to the touch overlay"
-rg -q 'PaperPad_SetPhysicalControllerConnected\(1\)' "$native" \
-  || die "an already-attached controller is not forwarded to the touch overlay"
 rg -q 'std::clamp\(out_x, -1\.0f, 1\.0f\)' "$native" || die "combined touch/controller X is not clamped"
 rg -q 'std::clamp\(out_y, -1\.0f, 1\.0f\)' "$native" || die "combined touch/controller Y is not clamped"
 
