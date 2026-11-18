@@ -1430,7 +1430,10 @@ extern "C" int SDL_main(int argc, char** argv) {
             return EXIT_FAILURE;
         }
 #endif
-        SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+        SDL_SetHint(SDL_HINT_ORIENTATIONS,
+                    UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad
+                        ? "Portrait PortraitUpsideDown LandscapeLeft LandscapeRight"
+                        : "LandscapeLeft LandscapeRight");
         SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #if !defined(PAPERPAD_RELEASE_BUILD)
         setenv("PSR_AUTOBOOT", "1", 1);
